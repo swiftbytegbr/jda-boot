@@ -109,5 +109,6 @@ public class ReadyListener {
     }
 }
 ```
-***Note*** The method must be public and have only single parameter of the event you want to listen for. The name of the method doesn't matter.
+***Note*** The method must be public and have only single parameter of the event you want to listen for. The name of the method doesn't matter. 
+The class need to have a public no-args constructor.
 
