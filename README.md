@@ -95,7 +95,7 @@ public class EchoCommand implements OptionCommand {
         ctx.reply(message);
     }
 }
-
+```
 
 ### Listen for events
 
