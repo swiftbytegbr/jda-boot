@@ -21,7 +21,7 @@ public class JDABoot {
 
 
     protected JDABoot(Class<?> mainClass) {
-        this.builder = JDABuilder.createDefault("OTIzMzM5MzgyNDQwNzUxMTc2.GJRr0K.g2g1_g7doo45enqkyBsM7Q6p54KxDCZRcz24S4");
+        this.builder = JDABuilder.createDefault("TOKEN FOR TESTING PURPOSES");
         this.jda = builder.build();
         this.mainClass = mainClass;
         this.commandHandler = new CommandHandler(jda, mainClass);
