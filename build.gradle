@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group 'de.jonafaust'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JDA
+    implementation("net.dv8tion:JDA:5.0.0-alpha.21")
+
+    // Logging
+    implementation("org.slf4j:slf4j-api:2.0.3")
+    implementation("ch.qos.logback:logback-classic:1.4.4")
+
+    // Reflections
+    implementation('org.reflections:reflections:0.10.2')
+
+    // Lombok
+    implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    // Testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+}
+
+test {
+    useJUnitPlatform()
+}
