@@ -96,6 +96,7 @@ public class EchoCommand implements OptionCommand {
     }
 }
 ```
+---
 
 ### Listen for events
 
@@ -108,5 +109,5 @@ public class ReadyListener {
     }
 }
 ```
-
+***Note*** The method must be public and have only single parameter of the event you want to listen for. The name of the method doesn't matter.
 
