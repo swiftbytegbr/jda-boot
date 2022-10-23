@@ -34,7 +34,7 @@ public class CommandManager extends ListenerAdapter {
                 String name = clazz.getAnnotation(Command.class).name();
                 String description = clazz.getAnnotation(Command.class).description();
 
-                if(SimpleCommand.class.isAssignableFrom(clazz)) {
+                if (SimpleCommand.class.isAssignableFrom(clazz)) {
                     Constructor<?> constructor = clazz.getConstructor();
                     SimpleCommand cmd = (SimpleCommand) constructor.newInstance();
 
@@ -46,8 +46,6 @@ public class CommandManager extends ListenerAdapter {
                 } else {
                     log.warn("Command " + name + " is not a child of SimpleCommand or OptionCommand! Skipping...");
                 }
-
-
 
 
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
@@ -65,7 +63,11 @@ public class CommandManager extends ListenerAdapter {
         String name = event.getName();
         SimpleCommand executor = commands.get(name);
         if (executor != null) {
-            executor.onCommand((CommandContext) event);
+            executor.onCommand(new CommandContext(event.getJDA(), event.getResponseNumber(), event.getInteraction()));
         }
+
     }
+
+
+
 }

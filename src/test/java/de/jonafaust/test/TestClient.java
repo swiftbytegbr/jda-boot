@@ -1,18 +1,20 @@
 package de.jonafaust.test;
 
 import de.jonafaust.jdaboot.JDABoot;
-import de.jonafaust.jdaboot.annotation.EventHandler;
-import net.dv8tion.jda.api.events.session.ReadyEvent;
+import de.jonafaust.jdaboot.annotation.Command;
+import de.jonafaust.jdaboot.command.CommandContext;
+import de.jonafaust.jdaboot.command.SimpleCommand;
 
-public class TestClient {
+@Command(name = "test", description = "Test command")
+public class TestClient implements SimpleCommand {
 
     public static void main(String[] args) {
         JDABoot.run(TestClient.class);
     }
 
-    @EventHandler
-    public void onReady(ReadyEvent event) {
-        System.out.println("Ready from LoginTest");
+    @Override
+    public void onCommand(CommandContext ctx) {
+        ctx.reply("Hello, world").queue();
     }
 
 }
