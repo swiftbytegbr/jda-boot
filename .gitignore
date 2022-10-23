@@ -44,3 +44,4 @@ gradle
 .idea
 /gradle
 /.idea
+/config.properties
