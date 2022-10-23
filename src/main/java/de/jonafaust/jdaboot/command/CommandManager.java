@@ -15,14 +15,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 @Slf4j
-public class CommandHandler extends ListenerAdapter {
+public class CommandManager extends ListenerAdapter {
 
     Reflections reflections;
     HashMap<String, SimpleCommand> commands = new HashMap<>();
 
     JDA jda;
 
-    public CommandHandler(JDA jda, Class<?> mainClass) {
+    public CommandManager(JDA jda, Class<?> mainClass) {
         this.jda = jda;
         this.reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
 
