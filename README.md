@@ -3,5 +3,18 @@
 
 This project uses JDA by Austin Keener. https://github.com/DV8FromTheWorld
 
-
 More information coming soon!
+
+
+### Installation
+
+#### Maven
+
+```xml
+
+
+
+### Listen for the ready event
+```java
+
+```

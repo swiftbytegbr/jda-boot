@@ -40,8 +40,13 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+
+### Custom ###
 gradle
 .idea
 /gradle
 /.idea
 /config.properties
+settings.gradle
+
