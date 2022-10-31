@@ -1,6 +1,7 @@
 package de.jonafaust.jdaboot.annotation.embed;
 
-import net.dv8tion.jda.api.entities.Role;
+import de.jonafaust.jdaboot.annotation.DefaultVariable;
+import de.jonafaust.jdaboot.embeds.EmbedColor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,7 +18,9 @@ public @interface Embed {
 
     String description() default "";
 
-    int color() default Role.DEFAULT_COLOR_RAW;
+    EmbedColor color() default EmbedColor.BLACK;
+
+    String hexColor() default "";
 
     String thumbnailUrl() default "";
 
@@ -28,6 +31,8 @@ public @interface Embed {
     String imageUrl() default "";
 
     EmbedField[] fields() default {};
+
+    DefaultVariable[] defaultVars() default {};
 
 
 }

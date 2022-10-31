@@ -5,6 +5,7 @@ import de.jonafaust.jdaboot.command.CommandManager;
 import de.jonafaust.jdaboot.configuration.Config;
 import de.jonafaust.jdaboot.embeds.EmbedManager;
 import de.jonafaust.jdaboot.event.EventManager;
+import de.jonafaust.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -25,6 +26,9 @@ public class JDABoot {
     private EventManager eventHandler;
     private EmbedManager embedManager;
 
+    @Getter
+    private VariableProcessor variableProcessor;
+
 
     protected JDABoot(Class<?> mainClass) {
         this.config = Config.getInstance();
@@ -41,6 +45,9 @@ public class JDABoot {
     }
 
     private void init() {
+
+        instance = this;
+
         try {
             discordLogin();
         } catch (InterruptedException e) {
@@ -48,6 +55,7 @@ public class JDABoot {
             System.exit(1);
         } catch (InvalidTokenException | IllegalArgumentException e) {
             log.error("There is an invalid token in the config provided. You can create a token here: https://discord.com/developers/applications");
+            e.printStackTrace();
             System.exit(1);
         }
         log.info("JDABoot initialized!");
@@ -57,6 +65,7 @@ public class JDABoot {
         log.info("Logging in to Discord...");
         this.builder = JDABuilder.createDefault(config.getString("discord.token"));
         this.jda = builder.build();
+        this.variableProcessor = new VariableProcessor();
         this.commandHandler = new CommandManager(jda, mainClass);
         this.eventHandler = new EventManager(jda, mainClass);
         this.embedManager = new EmbedManager(mainClass);

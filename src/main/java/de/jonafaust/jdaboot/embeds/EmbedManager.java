@@ -1,11 +1,11 @@
 package de.jonafaust.jdaboot.embeds;
 
 import de.jonafaust.jdaboot.annotation.embed.Embed;
-import de.jonafaust.jdaboot.annotation.embed.EmbedField;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
+
+import java.lang.reflect.Modifier;
 
 @Slf4j
 public class EmbedManager {
@@ -19,29 +19,15 @@ public class EmbedManager {
         this.reflections.getFieldsAnnotatedWith(Embed.class).forEach(field -> {
 
             Embed embedAnnotation = field.getAnnotation(Embed.class);
-            EmbedBuilder embedBuilder = new EmbedBuilder();
 
-            embedBuilder
-                    .setTitle(embedAnnotation.title(), embedAnnotation.url())
-                    .setDescription(embedAnnotation.description())
-                    .setColor(embedAnnotation.color())
-                    .setThumbnail(embedAnnotation.thumbnailUrl())
-                    .setAuthor(embedAnnotation.author().name(), embedAnnotation.author().url(), embedAnnotation.author().iconUrl())
-                    .setFooter(embedAnnotation.footer().text(), embedAnnotation.footer().iconUrl())
-                    .setImage(embedAnnotation.imageUrl());
-
-            for (EmbedField embedField : embedAnnotation.fields()) {
-
-                embedBuilder.addField(embedField.title(), embedField.description(), embedField.inline());
-
-            }
-
-            if (field.canAccess(null)) {
+            if (Modifier.isStatic(field.getModifiers())) {
                 try {
-                    field.set(null, embedBuilder.build());
+                    field.set(null, new TemplateEmbed(embedAnnotation));
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                log.warn("An embed must either be a static field or created in a class managed by JDA-Boot. Skipping field " + field + "...");
             }
         });
     }
