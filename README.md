@@ -24,7 +24,7 @@ More information coming soon!
 
 <dependecies>
     <dependency>
-        <groupId>com.github.jonafaust</groupId>
+        <groupId>de.jonafaust</groupId>
         <artifactId>jda-boot</artifactId>
         <version>1.0.0</version>
     </dependency>
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.jonafaust:jda-boot:1.0.0'
+    implementation 'de.jonafaust:jda-boot:1.0.0'
 }
 ```
 ---
@@ -54,7 +54,7 @@ dependencies {
 ```java
 public class MyBot {
     public static void main(String[] args) {
-        JdaBoot.run(MyBot.class, args);
+        JdaBoot.run(MyBot.class);
     }
 }
 ```
