@@ -46,6 +46,21 @@ dependencies {
 }
 ```
 ---
+### Roadmap
+
+✅ = Implemented, 🚧 = Work in Progress, ⛔ = ToDo
+
+- ✅ Commands
+- ✅ Option Commands
+- ✅ Events
+- ✅ Embeds
+- ✅ Variable System
+- 🚧 Internationalisation (i18n)
+- 🚧 Config System
+- ⛔ Other Interactions (Buttons, Select Menus, Modals)
+- ⛔ Database ORM System
+- ⛔ Configuration Classes
+- ⛔ Music Implementation (LavaPlayer)
 
 ### Usage
 
