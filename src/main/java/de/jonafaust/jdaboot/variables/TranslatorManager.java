@@ -1,6 +1,7 @@
-package de.jonafaust.jdaboot.embeds;
+package de.jonafaust.jdaboot.variables;
 
-import de.jonafaust.jdaboot.annotation.embed.Embed;
+import de.jonafaust.jdaboot.JDABoot;
+import de.jonafaust.jdaboot.annotation.SetTranslator;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -8,27 +9,26 @@ import org.reflections.scanners.Scanners;
 import java.lang.reflect.Modifier;
 
 @Slf4j
-public class EmbedManager {
+public class TranslatorManager {
 
     private Reflections reflections;
 
-    public EmbedManager(Class<?> mainClass) {
+    public TranslatorManager(Class<?> mainClass) {
 
         this.reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.FieldsAnnotated);
 
-        this.reflections.getFieldsAnnotatedWith(Embed.class).forEach(field -> {
-
-            Embed embedAnnotation = field.getAnnotation(Embed.class);
+        this.reflections.getFieldsAnnotatedWith(SetTranslator.class).forEach(field -> {
 
             if (Modifier.isStatic(field.getModifiers())) {
                 try {
-                    field.set(null, new TemplateEmbed(embedAnnotation));
+                    field.set(null, JDABoot.getInstance().getTranslator());
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                log.warn("An embed must be a static field. Skipping field " + field + "...");
+                log.warn("A translator must be a static field. Skipping field " + field + "...");
             }
         });
     }
+
 }

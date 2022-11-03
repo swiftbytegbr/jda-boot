@@ -18,4 +18,8 @@ public class TemplateEmbed {
     public AdvancedEmbed generateAdvancedEmbed(DiscordLocale locale) {
         return new AdvancedEmbed(this, locale);
     }
+
+    public AdvancedEmbed generateAdvancedEmbed() {
+        return new AdvancedEmbed(this, DiscordLocale.ENGLISH_US);
+    }
 }

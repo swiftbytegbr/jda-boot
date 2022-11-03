@@ -1,5 +1,6 @@
 package de.jonafaust.jdaboot.variables;
 
+import de.jonafaust.jdaboot.JDABoot;
 import de.jonafaust.jdaboot.annotation.DefaultVariable;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
@@ -12,7 +13,15 @@ public class VariableProcessor {
 
         String newText = old;
 
-        //TODO Add Localisation
+        newText = JDABoot.getInstance().getTranslator().processTranslation(locale, newText);
+        newText = processVariable(newText, variables, defaultVariable);
+
+        return newText;
+    }
+
+    public String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
+
+        String newText = old;
 
         for (Map.Entry<String, String> entry : variables.entrySet())
             newText = newText.replace("${" + entry.getKey() + "}", entry.getValue());

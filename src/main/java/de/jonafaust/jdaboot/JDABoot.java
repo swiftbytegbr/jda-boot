@@ -5,6 +5,8 @@ import de.jonafaust.jdaboot.command.CommandManager;
 import de.jonafaust.jdaboot.configuration.Config;
 import de.jonafaust.jdaboot.embeds.EmbedManager;
 import de.jonafaust.jdaboot.event.EventManager;
+import de.jonafaust.jdaboot.variables.Translator;
+import de.jonafaust.jdaboot.variables.TranslatorManager;
 import de.jonafaust.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +27,12 @@ public class JDABoot {
     private CommandManager commandHandler;
     private EventManager eventHandler;
     private EmbedManager embedManager;
+    private TranslatorManager translatorManager;
 
     @Getter
     private VariableProcessor variableProcessor;
+    @Getter
+    private Translator translator;
 
 
     protected JDABoot(Class<?> mainClass) {
@@ -65,7 +70,9 @@ public class JDABoot {
         log.info("Logging in to Discord...");
         this.builder = JDABuilder.createDefault(config.getString("discord.token"));
         this.jda = builder.build();
+        this.translator = new Translator();
         this.variableProcessor = new VariableProcessor();
+        this.translatorManager = new TranslatorManager(mainClass);
         this.commandHandler = new CommandManager(jda, mainClass);
         this.eventHandler = new EventManager(jda, mainClass);
         this.embedManager = new EmbedManager(mainClass);

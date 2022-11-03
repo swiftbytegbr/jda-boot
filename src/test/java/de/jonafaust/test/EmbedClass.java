@@ -11,8 +11,8 @@ import de.jonafaust.jdaboot.embeds.TemplateEmbed;
 public class EmbedClass {
 
     @Embed(
-            title = "Test",
-            description = "Test Description ${test}",
+            title = "${test}Test",
+            description = "#{test}",
             author = @EmbedAuthor(
                     name = "Hufeisen",
                     iconUrl = "https://cdn.discordapp.com/avatars/424271496245149698/6a205d13086c2bf5caf3b1c71f1c3ab3.png"
@@ -34,7 +34,7 @@ public class EmbedClass {
             defaultVars = {
                     @DefaultVariable(
                             variable = "test",
-                            value = "DEFAULT"
+                            value = "`Mit Variablen`"
                     )
             }
     )
