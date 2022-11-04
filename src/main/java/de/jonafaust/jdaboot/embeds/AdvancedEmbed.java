@@ -26,14 +26,15 @@ public class AdvancedEmbed {
 
     private AdvancedEmbed(TemplateEmbed template, HashMap<String, String> variables, DiscordLocale locale) {
         this.variables = variables;
+        this.locale = locale;
     }
 
     protected AdvancedEmbed(TemplateEmbed template, DiscordLocale locale) {
         this.template = template;
+        this.locale = locale;
     }
 
     public AdvancedEmbed setVariable(String variable, String value) {
-
         variables.put(variable, value);
 
         return this;
