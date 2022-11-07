@@ -23,7 +23,7 @@ More information coming soon!
 	<dependency>
 	    <groupId>com.github.jonafaust</groupId>
 	    <artifactId>jda-boot</artifactId>
-	    <version>alpha.1</version>
+	    <version>alpha.2</version>
 	</dependency>
 </dependecies>
 ```
@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.jonafaust:jda-boot:alpha.1'
+    implementation 'com.github.jonafaust:jda-boot:alpha.2'
 }
 ```
 ---
