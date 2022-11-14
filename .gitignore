@@ -43,9 +43,7 @@ bin/
 
 
 ### Custom ###
-gradle
 .idea
-/gradle
 /.idea
 /config.properties
 settings.gradle

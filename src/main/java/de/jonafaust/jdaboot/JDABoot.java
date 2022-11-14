@@ -53,6 +53,19 @@ public class JDABoot {
         return instance;
     }
 
+
+    public void updateCommands() {
+        jda.updateCommands().queue();
+    }
+
+    public void updateCommands(String guildid) {
+        jda.getGuildById(guildid).updateCommands().queue();
+    }
+
+    public void registerCommand(String guildId, String commandId) {
+        jda.getGuildById(guildId).upsertCommand(commandHandler.getCommandData().get(commandId)).queue();
+    }
+
     private void init(List<GatewayIntent> allow) {
 
         instance = this;

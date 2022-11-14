@@ -9,6 +9,7 @@ import de.jonafaust.jdaboot.command.info.MessageContextCommandInfo;
 import de.jonafaust.jdaboot.command.info.SlashCommandInfo;
 import de.jonafaust.jdaboot.command.info.UserContextCommandInfo;
 import de.jonafaust.jdaboot.variables.Translator;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
@@ -35,8 +36,13 @@ import java.util.List;
 public class CommandManager extends ListenerAdapter {
 
     Reflections reflections;
+
     HashMap<String, SlashCommand> commands = new HashMap<>();
+
     HashMap<String, ContextCommand<?>> contextCommands = new HashMap<>();
+
+    @Getter
+    HashMap<String, CommandData> commandData = new HashMap<>();
 
     private Translator translator = JDABoot.getInstance().getTranslator();
 
@@ -62,9 +68,11 @@ public class CommandManager extends ListenerAdapter {
                         log.warn("Command " + name + " is not a slash command but is a child of SlashCommand! Skipping...");
                         return;
                     }
+                    commandData.put(data.getName(), data);
                     commands.put(data.getName(), cmd);
-                    jda.upsertCommand(data).queue();
+                    if(!annotation.isGlobal()) return;
                     log.info("Registered command: " + data.getName());
+                    jda.upsertCommand(data).queue();
                     cmd.onEnable((SlashCommandData) data);
 
                 } else if (UserContextCommand.class.isAssignableFrom(clazz)) {
@@ -77,10 +85,11 @@ public class CommandManager extends ListenerAdapter {
                         log.warn("Command " + name + " is not a user context command but is a child of UserContextCommand! Skipping...");
                         return;
                     }
-
+                    commandData.put(data.getName(), data);
                     contextCommands.put(data.getName(), cmd);
-                    jda.upsertCommand(data).queue();
                     log.info("Registered command: " + data.getName());
+                    if(!annotation.isGlobal()) return;
+                    jda.upsertCommand(data).queue();
                     cmd.onEnable(data);
                 } else if (MessageContextCommand.class.isAssignableFrom(clazz)) {
 
@@ -92,10 +101,11 @@ public class CommandManager extends ListenerAdapter {
                         log.warn("Command " + name + " is not a message context command but is a child of MessageContextCommand! Skipping...");
                         return;
                     }
-
+                    commandData.put(data.getName(), data);
                     contextCommands.put(data.getName(), cmd);
-                    jda.upsertCommand(data).queue();
+                    if(!annotation.isGlobal()) return;
                     log.info("Registered command: " + data.getName());
+                    jda.upsertCommand(data).queue();
                     cmd.onEnable(data);
                 } else {
                     log.warn("Command " + name + " is not a child of SlashCommand or ContextCommand! Skipping...");

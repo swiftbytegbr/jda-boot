@@ -14,20 +14,17 @@ More information coming soon!
 ```xml
 <repositories>
     <repository>
-        <id>github</id>
-        <url>https://maven.pkg.github.com/jonafaust/jda-boot</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
     </repository>
 </repositories>
 
 <dependecies>
-    <dependency>
-        <groupId>de.jonafaust</groupId>
-        <artifactId>jda-boot</artifactId>
-        <version>1.0.0</version>
-    </dependency>
+	<dependency>
+	    <groupId>com.github.jonafaust</groupId>
+	    <artifactId>jda-boot</artifactId>
+	    <version>alpha.2</version>
+	</dependency>
 </dependecies>
 ```
 
@@ -35,17 +32,29 @@ More information coming soon!
 #### Gradle
 ```groovy
 repositories {
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/jonafaust/jda-boot")
-    }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'de.jonafaust:jda-boot:1.0.0'
+    implementation 'com.github.jonafaust:jda-boot:alpha.2'
 }
 ```
 ---
+### Roadmap
+
+✅ = Implemented, 🚧 = Work in Progress, ⛔ = ToDo
+
+- ✅ Commands
+- ✅ Option Commands
+- ✅ Events
+- ✅ Embeds
+- ✅ Variable System
+- ✅ Internationalisation (i18n)
+- 🚧 Config System
+- ⛔ Other Interactions (Buttons, Select Menus, Modals)
+- ⛔ Database ORM System
+- ⛔ Configuration Classes
+- ⛔ Music Implementation (LavaPlayer)
 
 ### Usage
 

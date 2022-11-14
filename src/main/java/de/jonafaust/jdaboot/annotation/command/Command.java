@@ -21,6 +21,8 @@ public @interface Command {
 
     boolean guildOnly() default false;
 
+    boolean isGlobal() default true;
+
     CommandOption[] options() default {};
 
     SubcommandGroup[] subcommandGroups() default {};
