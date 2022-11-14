@@ -58,7 +58,6 @@ public class CommandManager extends ListenerAdapter {
                 Command annotation = clazz.getAnnotation(Command.class);
 
                 String name = annotation.name();
-                String description = annotation.description();
 
                 if (SlashCommand.class.isAssignableFrom(clazz)) {
                     Constructor<?> constructor = clazz.getConstructor();
