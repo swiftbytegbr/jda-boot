@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.List;
@@ -39,14 +40,14 @@ public class JDABoot {
     private Translator translator;
 
 
-    protected JDABoot(Class<?> mainClass, List<GatewayIntent> allow) {
+    protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
         this.config = Config.getInstance();
         this.mainClass = mainClass;
-        init(allow);
+        init(memberCachePolicy, allow);
     }
 
-    public static void run(Class<?> mainClass, GatewayIntent... allow) {
-        new JDABoot(mainClass, List.of(allow));
+    public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
+        new JDABoot(mainClass, memberCachePolicy, List.of(allow));
     }
 
     public static JDABoot getInstance() {
@@ -66,12 +67,12 @@ public class JDABoot {
         jda.getGuildById(guildId).upsertCommand(commandHandler.getCommandData().get(commandId)).queue();
     }
 
-    private void init(List<GatewayIntent> allow) {
+    private void init(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
 
         instance = this;
 
         try {
-            discordLogin(allow);
+            discordLogin(memberCachePolicy, allow);
         } catch (InterruptedException e) {
             log.error("Error while logging in to Discord. " + "\nThe system will no exit.");
             System.exit(1);
@@ -83,7 +84,7 @@ public class JDABoot {
         log.info("JDABoot initialized!");
     }
 
-    private void discordLogin(List<GatewayIntent> allow) throws InterruptedException, InvalidTokenException {
+    private void discordLogin(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) throws InterruptedException, InvalidTokenException {
         log.info("Logging in to Discord...");
         this.builder = JDABuilder.createDefault(config.getString("discord.token"));
 
@@ -97,6 +98,7 @@ public class JDABoot {
             builder.disableCache(CacheFlag.SCHEDULED_EVENTS);
         }
 
+        builder.setMemberCachePolicy(memberCachePolicy);
         builder.setEnabledIntents(allow);
 
         this.jda = builder.build();
