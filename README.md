@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.jonafaust:jda-boot:alpha.2'
+    implementation 'com.github.jonafaust:jda-boot:alpha.2.3'
 }
 ```
 ---
