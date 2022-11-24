@@ -49,7 +49,7 @@ dependencies {
 - ✅ Events
 - ✅ Embeds
 - ✅ Variable System
-- ✅ Internationalisation (i18n)
+- ✅ internationalization (i18n)
 - 🚧 Config System
 - ⛔ Other Interactions (Buttons, Select Menus, Modals)
 - ⛔ Database ORM System
