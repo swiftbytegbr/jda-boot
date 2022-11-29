@@ -22,6 +22,7 @@ public class EmbedManager {
 
             if (Modifier.isStatic(field.getModifiers())) {
                 try {
+                    field.setAccessible(true);
                     field.set(null, new TemplateEmbed(embedAnnotation));
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
