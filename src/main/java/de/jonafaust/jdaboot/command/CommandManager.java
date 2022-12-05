@@ -35,24 +35,19 @@ import java.util.List;
 @Slf4j
 public class CommandManager extends ListenerAdapter {
 
-    Reflections reflections;
+    private HashMap<String, SlashCommand> commands = new HashMap<>();
 
-    HashMap<String, SlashCommand> commands = new HashMap<>();
-
-    HashMap<String, ContextCommand<?>> contextCommands = new HashMap<>();
+    private HashMap<String, ContextCommand<?>> contextCommands = new HashMap<>();
 
     @Getter
-    HashMap<String, CommandData> commandData = new HashMap<>();
+    private HashMap<String, CommandData> commandData = new HashMap<>();
 
     private Translator translator = JDABoot.getInstance().getTranslator();
 
-    JDA jda;
-
     public CommandManager(JDA jda, Class<?> mainClass) {
-        this.jda = jda;
-        this.reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
+        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
 
-        this.reflections.getTypesAnnotatedWith(Command.class).forEach(clazz -> {
+        reflections.getTypesAnnotatedWith(Command.class).forEach(clazz -> {
 
             try {
                 Command annotation = clazz.getAnnotation(Command.class);

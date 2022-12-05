@@ -35,8 +35,11 @@ public class AdvancedEmbed {
     }
 
     public AdvancedEmbed setVariable(String variable, String value) {
-        variables.put(variable, value);
 
+        if (variable == null || value == null)
+            throw new RuntimeException("Can not use null as variable key or value on variable " + variable);
+
+        variables.put(variable, value);
         return this;
     }
 
@@ -72,7 +75,6 @@ public class AdvancedEmbed {
     }
 
     private String processVar(String old) {
-
         return JDABoot.getInstance().getVariableProcessor().processVariable(locale, old, variables, template.getEmbed().defaultVars());
     }
 }

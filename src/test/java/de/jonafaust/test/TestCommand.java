@@ -4,6 +4,7 @@ import de.jonafaust.jdaboot.annotation.command.Command;
 import de.jonafaust.jdaboot.annotation.embed.Embed;
 import de.jonafaust.jdaboot.annotation.embed.EmbedField;
 import de.jonafaust.jdaboot.annotation.embed.EmbedFooter;
+import de.jonafaust.jdaboot.button.ButtonManager;
 import de.jonafaust.jdaboot.command.SlashCommand;
 import de.jonafaust.jdaboot.command.info.SlashCommandInfo;
 import de.jonafaust.jdaboot.embeds.AdvancedEmbed;
@@ -34,7 +35,7 @@ public class TestCommand implements SlashCommand {
                     ),
             }
     )
-    public static TemplateEmbed reply;
+    private static TemplateEmbed reply;
 
 
     @Override
@@ -42,7 +43,7 @@ public class TestCommand implements SlashCommand {
 
         AdvancedEmbed embed = reply.generateAdvancedEmbed(DiscordLocale.ENGLISH_US);
 
-        event.replyEmbeds(embed.generateEmbed()).queue();
+        event.replyEmbeds(embed.generateEmbed()).addActionRow(ButtonManager.getButton(TestButton.class)).setEphemeral(true).queue();
 
     }
 }

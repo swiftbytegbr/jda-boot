@@ -1,6 +1,7 @@
 package de.jonafaust.jdaboot;
 
 
+import de.jonafaust.jdaboot.button.ButtonManager;
 import de.jonafaust.jdaboot.command.CommandManager;
 import de.jonafaust.jdaboot.configuration.Config;
 import de.jonafaust.jdaboot.embeds.EmbedManager;
@@ -33,6 +34,9 @@ public class JDABoot {
     private EventManager eventHandler;
     private EmbedManager embedManager;
     private TranslatorManager translatorManager;
+
+    @Getter
+    private ButtonManager buttonManager;
 
     @Getter
     private VariableProcessor variableProcessor;
@@ -107,6 +111,7 @@ public class JDABoot {
         this.translatorManager = new TranslatorManager(mainClass);
         this.commandHandler = new CommandManager(jda, mainClass);
         this.eventHandler = new EventManager(jda, mainClass);
+        this.buttonManager = new ButtonManager(jda, mainClass);
         this.embedManager = new EmbedManager(mainClass);
         jda.awaitReady();
     }
