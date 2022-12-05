@@ -53,6 +53,7 @@ dependencies {
 - 🚧 Config System
 - ⛔ Other Interactions (Buttons, Select Menus, Modals)
 - ⛔ Database ORM System
+- ⛔ Scheduler System
 - ⛔ Configuration Classes
 - ⛔ Music Implementation (LavaPlayer)
 
