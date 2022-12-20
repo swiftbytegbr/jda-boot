@@ -13,11 +13,11 @@ repositories {
 
 dependencies {
     // JDA
-    api("net.dv8tion:JDA:5.0.0-alpha.22")
+    api("net.dv8tion:JDA:5.0.0-beta.2")
 
     // Logging
-    implementation("org.slf4j:slf4j-api:2.0.3")
-    implementation("ch.qos.logback:logback-classic:1.4.4")
+    implementation('org.slf4j:slf4j-api:2.0.5')
+    implementation('ch.qos.logback:logback-classic:1.4.5')
 
     // Reflections
     implementation('org.reflections:reflections:0.10.2')
