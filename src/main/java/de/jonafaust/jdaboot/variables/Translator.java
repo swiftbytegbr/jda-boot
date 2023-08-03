@@ -1,10 +1,9 @@
 package de.jonafaust.jdaboot.variables;
 
+import de.jonafaust.jdaboot.JDABoot;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Locale;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +27,8 @@ public class Translator {
 
     public String getTranslatedString(DiscordLocale locale, String key) {
         Locale.setDefault(Locale.ENGLISH);
-        ResourceBundle resourceBundle = PropertyResourceBundle.getBundle("messages", new Locale(locale.getLocale()));
-        return resourceBundle.getString(key);
+        TranslationBundle translationBundle = JDABoot.getInstance().getTranslationProvider().get();
+        return translationBundle.getTranslation(key, new Locale(locale.getLocale()));
     }
 
 }
