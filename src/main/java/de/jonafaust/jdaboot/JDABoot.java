@@ -6,9 +6,7 @@ import de.jonafaust.jdaboot.command.CommandManager;
 import de.jonafaust.jdaboot.configuration.Config;
 import de.jonafaust.jdaboot.embeds.EmbedManager;
 import de.jonafaust.jdaboot.event.EventManager;
-import de.jonafaust.jdaboot.variables.Translator;
-import de.jonafaust.jdaboot.variables.TranslatorManager;
-import de.jonafaust.jdaboot.variables.VariableProcessor;
+import de.jonafaust.jdaboot.variables.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -19,6 +17,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Slf4j
 public class JDABoot {
@@ -30,6 +29,8 @@ public class JDABoot {
     @Getter
     private Config config;
     private Class<?> mainClass;
+    @Getter
+    private Supplier<TranslationBundle> translationProvider;
     private CommandManager commandHandler;
     private EventManager eventHandler;
     private EmbedManager embedManager;
@@ -44,14 +45,21 @@ public class JDABoot {
     private Translator translator;
 
 
-    protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
+    protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow,
+                      Supplier<TranslationBundle> translationProvider) {
         this.config = Config.getInstance();
         this.mainClass = mainClass;
+        this.translationProvider = translationProvider;
         init(memberCachePolicy, allow);
     }
 
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
-        new JDABoot(mainClass, memberCachePolicy, List.of(allow));
+        run(mainClass, memberCachePolicy, ResourceTranslationBundle::new, allow);
+    }
+
+    public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy,
+                           Supplier<TranslationBundle> translationProvider, GatewayIntent... allow) {
+        new JDABoot(mainClass, memberCachePolicy, List.of(allow), translationProvider);
     }
 
     public static JDABoot getInstance() {
