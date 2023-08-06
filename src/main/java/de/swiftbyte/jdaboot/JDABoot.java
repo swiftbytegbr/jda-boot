@@ -4,9 +4,11 @@ package de.swiftbyte.jdaboot;
 import de.swiftbyte.jdaboot.button.ButtonManager;
 import de.swiftbyte.jdaboot.command.CommandManager;
 import de.swiftbyte.jdaboot.configuration.Config;
+import de.swiftbyte.jdaboot.configuration.PropertiesConfig;
 import de.swiftbyte.jdaboot.embeds.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
 import de.swiftbyte.jdaboot.variables.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -24,12 +26,15 @@ public class JDABoot {
 
     @Getter
     private static JDABoot instance;
+
     @Getter
     private JDA jda;
     private JDABuilder builder;
+
     @Getter
     private Config config;
     private Class<?> mainClass;
+
     @Getter
     private Supplier<TranslationBundle> translationProvider;
     private CommandManager commandHandler;
@@ -42,22 +47,38 @@ public class JDABoot {
 
     @Getter
     private VariableProcessor variableProcessor;
+
     @Getter
     private Translator translator;
 
 
     protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow,
                       Supplier<TranslationBundle> translationProvider) {
-        this.config = Config.getInstance();
+        this.config = PropertiesConfig.getInstance();
         this.mainClass = mainClass;
         this.translationProvider = translationProvider;
         init(memberCachePolicy, allow);
     }
 
-    public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
-        run(mainClass, memberCachePolicy, ResourceTranslationBundle::new, allow);
+    protected JDABoot(JDABoot.Settings properties) {
+        this.config = properties.configProvider.get();
+        this.mainClass = properties.mainClass;
+        this.translationProvider = properties.translationBundleProvider;
+        init(properties.memberCachePolicy, properties.intents);
     }
 
+    public static void run(JDABoot.Settings settings) {
+        new JDABoot(settings);
+    }
+
+    public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
+        new JDABoot(mainClass, memberCachePolicy, List.of(allow), ResourceTranslationBundle::new);
+    }
+
+    /**
+     * @deprecated Use run(JDABoot.Settings) instead
+     */
+    @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy,
                            Supplier<TranslationBundle> translationProvider, GatewayIntent... allow) {
         new JDABoot(mainClass, memberCachePolicy, List.of(allow), translationProvider);
@@ -118,5 +139,18 @@ public class JDABoot {
         this.buttonManager = new ButtonManager(jda, mainClass);
         this.embedManager = new EmbedManager(mainClass);
         jda.awaitReady();
+    }
+
+    @Builder
+    public static class Settings {
+        private Class<?> mainClass;
+        private MemberCachePolicy memberCachePolicy;
+        private List<GatewayIntent> intents;
+
+        @Builder.Default
+        private Supplier<Config> configProvider = PropertiesConfig::getInstance;
+
+        @Builder.Default
+        private Supplier<TranslationBundle> translationBundleProvider = ResourceTranslationBundle::new;
     }
 }

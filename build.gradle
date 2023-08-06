@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'de.jonafaust'
+group 'de.swiftbyte'
 version 'alpha3.4'
 
 repositories {
@@ -34,4 +34,16 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
