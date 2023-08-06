@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'de.swiftbyte'
-version 'alpha3.4'
+version 'alpha3.5'
 
 repositories {
     mavenCentral()
