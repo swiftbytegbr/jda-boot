@@ -5,52 +5,33 @@ plugins {
 }
 
 group 'de.jonafaust'
-version '1.1.0'
+version 'alpha3.4'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
     // JDA
-    api("net.dv8tion:JDA:5.0.0-beta.2")
+    api("net.dv8tion:JDA:5.0.0-beta.12")
 
     // Logging
-    implementation('org.slf4j:slf4j-api:2.0.5')
-    implementation('ch.qos.logback:logback-classic:1.4.5')
+    implementation('org.slf4j:slf4j-api:2.0.7')
+    implementation('ch.qos.logback:logback-classic:1.4.9')
 
     // Reflections
     implementation('org.reflections:reflections:0.10.2')
 
     // Lombok
-    implementation('org.projectlombok:lombok:1.18.24')
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    implementation('org.projectlombok:lombok:1.18.28')
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
 
     // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-
-    implementation('javax.servlet:servlet-api:2.5')
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 test {
     useJUnitPlatform()
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/jonafaust/jda-boot")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
 }

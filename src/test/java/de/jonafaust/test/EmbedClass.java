@@ -1,12 +1,12 @@
 package de.jonafaust.test;
 
-import de.jonafaust.jdaboot.annotation.DefaultVariable;
-import de.jonafaust.jdaboot.annotation.embed.Embed;
-import de.jonafaust.jdaboot.annotation.embed.EmbedAuthor;
-import de.jonafaust.jdaboot.annotation.embed.EmbedField;
-import de.jonafaust.jdaboot.annotation.embed.EmbedFooter;
-import de.jonafaust.jdaboot.embeds.EmbedColor;
-import de.jonafaust.jdaboot.embeds.TemplateEmbed;
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import de.swiftbyte.jdaboot.annotation.embed.Embed;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedAuthor;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedFooter;
+import de.swiftbyte.jdaboot.embeds.EmbedColor;
+import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
 
 public class EmbedClass {
 

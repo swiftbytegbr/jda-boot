@@ -1,8 +1,8 @@
 package de.jonafaust.test;
 
-import de.jonafaust.jdaboot.annotation.EventHandler;
-import de.jonafaust.jdaboot.annotation.SetTranslator;
-import de.jonafaust.jdaboot.variables.Translator;
+import de.swiftbyte.jdaboot.annotation.EventHandler;
+import de.swiftbyte.jdaboot.annotation.SetTranslator;
+import de.swiftbyte.jdaboot.variables.Translator;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
