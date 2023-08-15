@@ -7,6 +7,10 @@ plugins {
 group 'de.swiftbyte'
 version 'alpha3.5'
 
+compileJava {
+    version = 17
+}
+
 repositories {
     mavenCentral()
 }
@@ -14,11 +18,11 @@ repositories {
 dependencies {
 
     // JDA
-    api("net.dv8tion:JDA:5.0.0-beta.12")
+    api("net.dv8tion:JDA:5.0.0-beta.13")
 
     // Logging
     implementation('org.slf4j:slf4j-api:2.0.7')
-    implementation('ch.qos.logback:logback-classic:1.4.9')
+    implementation('ch.qos.logback:logback-classic:1.4.11')
 
     // Reflections
     implementation('org.reflections:reflections:0.10.2')
@@ -34,16 +38,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
 }
