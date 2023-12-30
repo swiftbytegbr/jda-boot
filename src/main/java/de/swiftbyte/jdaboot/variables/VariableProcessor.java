@@ -1,12 +1,14 @@
 package de.swiftbyte.jdaboot.variables;
 
-import de.swiftbyte.jdaboot.JDABoot;
+import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The VariableProcessor class is responsible for processing variables in a given string.
@@ -29,11 +31,11 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public String processVariable(DiscordLocale locale, String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
+    public static String processVariable(DiscordLocale locale, String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
 
         String newText = old;
 
-        newText = JDABoot.getInstance().getTranslator().processTranslation(locale, newText);
+        newText = TranslationProcessor.processTranslation(locale, newText);
         newText = processVariable(newText, variables, defaultVariable);
 
         return newText;
@@ -49,7 +51,7 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
+    public static String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
 
         String newText = old;
 
@@ -59,6 +61,14 @@ public class VariableProcessor {
         }
         for (DefaultVariable variable : defaultVariable)
             newText = newText.replace("${" + variable.variable() + "}", variable.value());
+
+        Pattern p = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
+        Matcher m = p.matcher(newText);
+
+        while (m.find()) {
+            if (JDABootConfigurationManager.getConfigProvider().hasKey(m.group().replace("?{", "").replace("}", "")))
+                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProvider().getString(m.group().replace("?{", "").replace("}", "")));
+        }
 
         return newText;
     }

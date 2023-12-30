@@ -1,13 +1,8 @@
 package de.swiftbyte.jdaboot;
 
 
-import de.swiftbyte.jdaboot.button.ButtonManager;
-import de.swiftbyte.jdaboot.command.CommandManager;
-import de.swiftbyte.jdaboot.configuration.Config;
-import de.swiftbyte.jdaboot.configuration.PropertiesConfig;
-import de.swiftbyte.jdaboot.embeds.EmbedManager;
-import de.swiftbyte.jdaboot.event.EventManager;
-import de.swiftbyte.jdaboot.variables.*;
+import de.swiftbyte.jdaboot.annotation.AutoConfiguration;
+import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +16,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * The JDABoot class is responsible for initializing and starting the Discord bot.
@@ -30,6 +24,7 @@ import java.util.function.Supplier;
  * @since alpha.4
  */
 @Slf4j
+@AutoConfiguration
 public class JDABoot {
 
     @Getter
@@ -39,25 +34,9 @@ public class JDABoot {
     private JDA jda;
     private JDABuilder builder;
 
-    @Getter
-    private Config config;
     private Class<?> mainClass;
 
-    @Getter
-    private Supplier<TranslationBundle> translationProvider;
-    private CommandManager commandHandler;
-    private EventManager eventHandler;
-    private EmbedManager embedManager;
-    private TranslatorManager translatorManager;
-
-    @Getter
-    private ButtonManager buttonManager;
-
-    @Getter
-    private VariableProcessor variableProcessor;
-
-    @Getter
-    private Translator translator;
+    private ConfigProvider configProvider;
 
     /**
      * Protected constructor for JDABoot. Initializes the bot with the specified settings.
@@ -65,14 +44,10 @@ public class JDABoot {
      * @param mainClass The main class of your project.
      * @param memberCachePolicy The policy to use for member caching.
      * @param allow The list of allowed GatewayIntents.
-     * @param translationProvider The custom translation provider to use.
      * @since alpha.4
      */
-    protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow,
-                      Supplier<TranslationBundle> translationProvider) {
-        this.config = PropertiesConfig.getInstance();
+    protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
         this.mainClass = mainClass;
-        this.translationProvider = translationProvider;
         init(memberCachePolicy, allow);
     }
 
@@ -82,10 +57,8 @@ public class JDABoot {
      * @param properties The settings to use when starting the bot.
      * @since alpha.4
      */
-    protected JDABoot(JDABoot.Settings properties) {
-        this.config = properties.configProvider.get();
-        this.mainClass = properties.mainClass;
-        this.translationProvider = properties.translationBundleProvider;
+    protected JDABoot(Class<?> mainClass, DiscordSettings properties) {
+        this.mainClass = mainClass;
         init(properties.memberCachePolicy, properties.intents);
     }
 
@@ -95,13 +68,13 @@ public class JDABoot {
      * @param settings The settings to use when starting the bot.
      * @since alpha.4
      */
-    public static void run(JDABoot.Settings settings) {
-        new JDABoot(settings);
+    public static void run(Class<?> mainClass, DiscordSettings settings) {
+        new JDABoot(mainClass, settings);
     }
 
     /**
      * This method starts the Discord bot with the specified information.
-     * For advanced configuration see {@link #run(Settings)}.
+     * For advanced configuration see {@link #run(Class, DiscordSettings)}.
      *
      * @param mainClass The main class of your project.
      * @param memberCachePolicy The policy to use for member caching.
@@ -109,23 +82,7 @@ public class JDABoot {
      * @since alpha.4
      */
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
-        new JDABoot(mainClass, memberCachePolicy, List.of(allow), ResourceTranslationBundle::new);
-    }
-
-    /**
-     * This method starts the Discord bot with the specified information.
-     *
-     * @param mainClass The main class of your project.
-     * @param memberCachePolicy The policy to use for member caching.
-     * @param translationProvider The custom translation provider to use.
-     * @param allow The list of allowed GatewayIntents.
-     * @deprecated Use {@link #run(Settings)} instead.
-     * @since alpha.4
-     */
-    @Deprecated(forRemoval = true)
-    public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy,
-                           Supplier<TranslationBundle> translationProvider, GatewayIntent... allow) {
-        new JDABoot(mainClass, memberCachePolicy, List.of(allow), translationProvider);
+        new JDABoot(mainClass, memberCachePolicy, List.of(allow));
     }
 
     /**
@@ -158,7 +115,7 @@ public class JDABoot {
      * @since alpha.2
      */
     public void registerCommand(String guildId, String commandId) {
-        jda.getGuildById(guildId).upsertCommand(commandHandler.getCommandData().get(commandId)).queue();
+        jda.getGuildById(guildId).upsertCommand(JDABootConfigurationManager.getCommandManager().getCommandData().get(commandId)).queue();
     }
 
     /**
@@ -172,10 +129,14 @@ public class JDABoot {
 
         instance = this;
 
+        JDABootConfigurationManager.autoConfigure(mainClass);
+
+        configProvider = JDABootConfigurationManager.getConfigProvider();
+
         try {
             discordLogin(memberCachePolicy, allow);
         } catch (InterruptedException e) {
-            log.error("Error while logging in to Discord. " + "\nThe system will no exit.");
+            log.error("Error while logging in to Discord. " + "\nThe system will now exit.");
             System.exit(1);
         } catch (InvalidTokenException | IllegalArgumentException e) {
             log.error("There is an invalid token in the config provided. You can create a token here: https://discord.com/developers/applications", e);
@@ -195,7 +156,7 @@ public class JDABoot {
      */
     private void discordLogin(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) throws InterruptedException, InvalidTokenException {
         log.info("Logging in to Discord...");
-        this.builder = JDABuilder.createDefault(config.getString("discord.token"));
+        this.builder = JDABuilder.createDefault(configProvider.getString("discord.token"));
 
         if (!allow.contains(GatewayIntent.GUILD_VOICE_STATES)) {
             builder.disableCache(CacheFlag.VOICE_STATE);
@@ -211,29 +172,17 @@ public class JDABoot {
         builder.setEnabledIntents(allow);
 
         this.jda = builder.build();
-        this.translator = new Translator();
-        this.variableProcessor = new VariableProcessor();
-        this.translatorManager = new TranslatorManager(mainClass);
-        this.commandHandler = new CommandManager(jda, mainClass);
-        this.eventHandler = new EventManager(jda, mainClass);
-        this.buttonManager = new ButtonManager(jda, mainClass);
-        this.embedManager = new EmbedManager(mainClass);
+        JDABootConfigurationManager.initialiseManagers(mainClass, jda);
         jda.awaitReady();
     }
 
     /**
-     * The Settings class is used for advanced configuration of JDA-Boot.
+     * The DiscordSettings class is used for advanced configuration of JDA-Boot.
      *
      * @since alpha.4
      */
     @Builder
-    public static class Settings {
-
-        /**
-         * The main class of your project.
-         */
-        private Class<?> mainClass;
-
+    public static class DiscordSettings {
         /**
          * The policy to use for member caching.
          */
@@ -243,17 +192,5 @@ public class JDABoot {
          * The list of GatewayIntents to use.
          */
         private List<GatewayIntent> intents;
-
-        /**
-         * The provider to use for configuration.
-         */
-        @Builder.Default
-        private Supplier<Config> configProvider = PropertiesConfig::getInstance;
-
-        /**
-         * The provider to use for translation bundles.
-         */
-        @Builder.Default
-        private Supplier<TranslationBundle> translationBundleProvider = ResourceTranslationBundle::new;
     }
 }

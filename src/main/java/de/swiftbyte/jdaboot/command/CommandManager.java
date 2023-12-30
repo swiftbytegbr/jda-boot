@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.command;
 
-import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.annotation.command.Command;
 import de.swiftbyte.jdaboot.annotation.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.command.Subcommand;
@@ -8,7 +7,7 @@ import de.swiftbyte.jdaboot.annotation.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.command.info.MessageContextCommandInfo;
 import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
 import de.swiftbyte.jdaboot.command.info.UserContextCommandInfo;
-import de.swiftbyte.jdaboot.variables.Translator;
+import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -48,8 +47,6 @@ public class CommandManager extends ListenerAdapter {
 
     @Getter
     private HashMap<String, CommandData> commandData = new HashMap<>();
-
-    private Translator translator = JDABoot.getInstance().getTranslator();
 
     /**
      * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
@@ -205,7 +202,7 @@ public class CommandManager extends ListenerAdapter {
      */
     private CommandData buildCommand(Command command) {
 
-        String id = translator.processTranslation(DiscordLocale.ENGLISH_US, command.name());
+        String id = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.name());
 
         return switch (command.type()) {
             case SLASH -> buildSlashCommand(id, command);
@@ -223,7 +220,7 @@ public class CommandManager extends ListenerAdapter {
      */
     private SlashCommandData buildSlashCommand(String id, Command command) {
 
-        String description = translator.processTranslation(DiscordLocale.ENGLISH_US, command.description());
+        String description = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.description());
         SlashCommandData data = Commands.slash(id, description);
 
         //Command
@@ -237,8 +234,8 @@ public class CommandManager extends ListenerAdapter {
         //SubCommandGroups
         for (SubcommandGroup subcommandGroup : command.subcommandGroups()) {
 
-            String subGroupId = translator.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.name());
-            String subGroupDescription = translator.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.description());
+            String subGroupId = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.name());
+            String subGroupDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.description());
             SubcommandGroupData subGroupData = new SubcommandGroupData(subGroupId, subGroupDescription);
 
             subGroupData.setNameLocalizations(generateDiscordLocalised(subcommandGroup.name()));
@@ -290,7 +287,7 @@ public class CommandManager extends ListenerAdapter {
 
         for (DiscordLocale locale : DiscordLocale.values()) {
             if (locale != DiscordLocale.UNKNOWN) {
-                map.put(locale, translator.processTranslation(locale, old));
+                map.put(locale, TranslationProcessor.processTranslation(locale, old));
             }
         }
 
@@ -310,8 +307,8 @@ public class CommandManager extends ListenerAdapter {
 
         for (CommandOption option : options) {
 
-            String optionId = translator.processTranslation(DiscordLocale.ENGLISH_US, option.name());
-            String optionDescription = translator.processTranslation(DiscordLocale.ENGLISH_US, option.description());
+            String optionId = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, option.name());
+            String optionDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, option.description());
             OptionData optionData = new OptionData(option.type(), optionId, optionDescription, option.required(), option.autoComplete());
 
             if (option.maxLength() > 0) optionData.setMaxLength(option.maxLength());
@@ -345,8 +342,8 @@ public class CommandManager extends ListenerAdapter {
 
         for (Subcommand subcommand : subcommands) {
 
-            String subId = translator.processTranslation(DiscordLocale.ENGLISH_US, subcommand.name());
-            String subDescription = translator.processTranslation(DiscordLocale.ENGLISH_US, subcommand.description());
+            String subId = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommand.name());
+            String subDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommand.description());
             SubcommandData subData = new SubcommandData(subId, subDescription);
 
             subData.setNameLocalizations(generateDiscordLocalised(subcommand.name()));

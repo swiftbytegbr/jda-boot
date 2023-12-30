@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.variables;
 
-import de.swiftbyte.jdaboot.JDABoot;
+import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Locale;
@@ -8,12 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The Translator class is responsible for processing translations in a given string.
+ * The TranslationProcessor class is responsible for processing translations in a given string.
  * It replaces placeholders in the string with the corresponding translated values from a provided translation bundle.
  *
  * @since alpha.4
  */
-public class Translator {
+public class TranslationProcessor {
 
     /**
      * Processes the translations in the given string using the provided locale.
@@ -24,7 +24,7 @@ public class Translator {
      * @return The processed string with placeholders replaced by translated values.
      * @since alpha.4
      */
-    public String processTranslation(DiscordLocale locale, String old) {
+    public static String processTranslation(DiscordLocale locale, String old) {
 
         String newText = old;
 
@@ -48,10 +48,10 @@ public class Translator {
      * @return The translated string.
      * @since alpha.4
      */
-    public String getTranslatedString(DiscordLocale locale, String key) {
+    public static String getTranslatedString(DiscordLocale locale, String key) {
         Locale.setDefault(Locale.ENGLISH);
-        TranslationBundle translationBundle = JDABoot.getInstance().getTranslationProvider().get();
-        return translationBundle.getTranslation(key, new Locale(locale.getLocale()));
+        TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
+        return translationProvider.getTranslation(key, new Locale(locale.getLocale()));
     }
 
 }

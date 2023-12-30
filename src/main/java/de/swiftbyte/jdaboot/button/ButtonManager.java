@@ -1,8 +1,7 @@
 package de.swiftbyte.jdaboot.button;
 
-import de.swiftbyte.jdaboot.JDABoot;
+import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.annotation.Button;
-import de.swiftbyte.jdaboot.variables.Translator;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -38,11 +37,6 @@ public class ButtonManager extends ListenerAdapter {
      * The map of button IDs to Button instances.
      */
     private HashMap<String, net.dv8tion.jda.api.interactions.components.buttons.Button> buttonList = new HashMap<>();
-
-    /**
-     * The Translator instance.
-     */
-    private Translator translator = JDABoot.getInstance().getTranslator();
 
     /**
      * Constructor for ButtonManager. Initializes the manager with the specified JDA instance and main class.
@@ -88,7 +82,7 @@ public class ButtonManager extends ListenerAdapter {
      * @since alpha.4
      */
     public static net.dv8tion.jda.api.interactions.components.buttons.Button getButton(String id) {
-        return JDABoot.getInstance().getButtonManager().buttonList.get(id);
+        return JDABootConfigurationManager.getButtonManager().buttonList.get(id);
     }
 
     /**
@@ -99,7 +93,7 @@ public class ButtonManager extends ListenerAdapter {
      * @since alpha.4
      */
     public static <T> net.dv8tion.jda.api.interactions.components.buttons.Button getButton(Class<T> clazz) {
-        return JDABoot.getInstance().getButtonManager().buttonList.get(JDABoot.getInstance().getButtonManager().classList.get(clazz));
+        return JDABootConfigurationManager.getButtonManager().buttonList.get(JDABootConfigurationManager.getButtonManager().classList.get(clazz));
     }
 
     /**

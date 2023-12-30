@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot.embeds;
 import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
+import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -126,6 +127,6 @@ public class AdvancedEmbed {
      * @since alpha.4
      */
     private String processVar(String old) {
-        return JDABoot.getInstance().getVariableProcessor().processVariable(locale, old, variables, template.getEmbed().defaultVars());
+        return VariableProcessor.processVariable(locale, old, variables, template.getEmbed().defaultVars());
     }
 }

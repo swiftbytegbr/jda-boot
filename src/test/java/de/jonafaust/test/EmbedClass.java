@@ -12,7 +12,7 @@ public class EmbedClass {
 
     @Embed(
             title = "${test}Test",
-            description = "#{test}",
+            description = "Version: ?{app.version}",
             author = @EmbedAuthor(
                     name = "Hufeisen",
                     iconUrl = "https://cdn.discordapp.com/avatars/424271496245149698/6a205d13086c2bf5caf3b1c71f1c3ab3.png"

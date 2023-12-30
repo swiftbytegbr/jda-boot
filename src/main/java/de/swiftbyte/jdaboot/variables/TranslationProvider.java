@@ -3,12 +3,12 @@ package de.swiftbyte.jdaboot.variables;
 import java.util.Locale;
 
 /**
- * The TranslationBundle interface defines a contract for classes that provide translation services.
+ * The TranslationProvider interface defines a contract for classes that provide translation services.
  * Implementations of this interface should provide a way to translate a given key into a specific locale.
  *
  * @since alpha.4
  */
-public interface TranslationBundle {
+public interface TranslationProvider {
 
     /**
      * Retrieves the translated string for the given key using the provided locale.

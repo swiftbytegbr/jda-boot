@@ -50,4 +50,5 @@ gradle-app.setting
 .gradletasknamecache
 .project
 .classpath
-config.properties
+src/test/resources/config.properties
+src/test/resources/config.yml

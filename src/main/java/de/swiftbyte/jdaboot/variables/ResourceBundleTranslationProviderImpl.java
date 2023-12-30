@@ -5,12 +5,12 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * The ResourceTranslationBundle class implements the TranslationBundle interface.
+ * The ResourceBundleTranslationProviderImpl class implements the TranslationProvider interface.
  * It provides a way to translate a given key into a specific locale using a resource bundle.
  *
  * @since alpha.4
  */
-public class ResourceTranslationBundle implements TranslationBundle {
+public class ResourceBundleTranslationProviderImpl implements TranslationProvider {
 
     /**
      * Retrieves the translated string for the given key using the provided locale.
