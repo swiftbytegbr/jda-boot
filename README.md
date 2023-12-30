@@ -17,11 +17,10 @@ More information coming soon!
 - ✅ Embeds
 - ✅ Variable System
 - ✅ internationalization (i18n)
-- 🚧 Config System
-- ⛔ Other Interactions (Buttons, Select Menus, Modals)
+- ✅ Config System
+- 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ⛔ Modals)
 - ⛔ Database ORM System
 - ⛔ Scheduler System
-- ⛔ Configuration Classes
 - ⛔ Music Implementation (LavaPlayer)
 
 
