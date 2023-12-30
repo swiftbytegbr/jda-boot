@@ -32,6 +32,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The CommandManager class is responsible for managing commands in the application.
+ * It uses reflection to find classes annotated with @Command and creates instances of those classes.
+ * It also handles command invocation events and delegates them to the appropriate command instances.
+ *
+ * @since alpha.4
+ */
 @Slf4j
 public class CommandManager extends ListenerAdapter {
 
@@ -44,6 +51,14 @@ public class CommandManager extends ListenerAdapter {
 
     private Translator translator = JDABoot.getInstance().getTranslator();
 
+    /**
+     * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
+     * It uses reflection to find classes annotated with @Command and creates instances of those classes.
+     *
+     * @param jda The JDA instance to use for command handling.
+     * @param mainClass The main class of your project.
+     * @since alpha.4
+     */
     public CommandManager(JDA jda, Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
 
@@ -117,6 +132,13 @@ public class CommandManager extends ListenerAdapter {
         jda.addEventListener(this);
     }
 
+    /**
+     * Handles slash command interaction events. When a slash command is invoked, this method finds the corresponding
+     * command instance and delegates the event to it.
+     *
+     * @param event The slash command interaction event.
+     * @since alpha.4
+     */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         String name = event.getName();
@@ -127,16 +149,37 @@ public class CommandManager extends ListenerAdapter {
 
     }
 
+    /**
+     * Handles user context interaction events. When a user context command is invoked, this method finds the corresponding
+     * command instance and delegates the event to it.
+     *
+     * @param event The user context interaction event.
+     * @since alpha.4
+     */
     @Override
     public void onUserContextInteraction(@Nonnull UserContextInteractionEvent event) {
         genericContextEvent(event);
     }
 
+    /**
+     * Handles message context interaction events. When a message context command is invoked, this method finds the corresponding
+     * command instance and delegates the event to it.
+     *
+     * @param event The message context interaction event.
+     * @since alpha.4
+     */
     @Override
     public void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event) {
         genericContextEvent(event);
     }
 
+    /**
+     * Handles generic context interaction events. When a context command is invoked, this method finds the corresponding
+     * command instance and delegates the event to it.
+     *
+     * @param event The generic context interaction event.
+     * @since alpha.4
+     */
     private void genericContextEvent(GenericContextInteractionEvent<?> event) {
         String name = event.getName();
         ContextCommand<?> executor = contextCommands.get(name);
@@ -152,6 +195,14 @@ public class CommandManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Builds a CommandData object based on the provided Command annotation.
+     * The type of the command (slash, user, or message) determines how the CommandData object is built.
+     *
+     * @param command The Command annotation to use for building the CommandData.
+     * @return The built CommandData.
+     * @since alpha.4
+     */
     private CommandData buildCommand(Command command) {
 
         String id = translator.processTranslation(DiscordLocale.ENGLISH_US, command.name());
@@ -163,6 +214,13 @@ public class CommandManager extends ListenerAdapter {
 
     }
 
+    /**
+     * Builds a SlashCommandData object based on the provided Command annotation.
+     *
+     * @param command The Command annotation to use for building the SlashCommandData.
+     * @return The built SlashCommandData.
+     * @since alpha.4
+     */
     private SlashCommandData buildSlashCommand(String id, Command command) {
 
         String description = translator.processTranslation(DiscordLocale.ENGLISH_US, command.description());
@@ -193,6 +251,15 @@ public class CommandManager extends ListenerAdapter {
         return data;
     }
 
+    /**
+     * Builds a CommandData object based on the provided Command annotation and command type.
+     *
+     * @param type The type of the command.
+     * @param id The id of the command.
+     * @param command The Command annotation to use for building the CommandData.
+     * @return The built CommandData.
+     * @since alpha.4
+     */
     private CommandData buildUserOrChatCommand(Command.Type type, String id, Command command) {
 
         CommandData data = null;
@@ -210,6 +277,13 @@ public class CommandManager extends ListenerAdapter {
         return data;
     }
 
+    /**
+     * Generates a map of localized strings for the provided string.
+     *
+     * @param old The original string to localize.
+     * @return The map of localized strings.
+     * @since alpha.4
+     */
     private HashMap<DiscordLocale, String> generateDiscordLocalised(String old) {
 
         HashMap<DiscordLocale, String> map = new HashMap<>();
@@ -223,6 +297,13 @@ public class CommandManager extends ListenerAdapter {
         return map;
     }
 
+    /**
+     * Builds a list of OptionData objects based on the provided array of CommandOption annotations.
+     *
+     * @param options The array of CommandOption annotations to use for building the OptionData objects.
+     * @return The list of built OptionData objects.
+     * @since alpha.4
+     */
     private List<OptionData> buildOptions(CommandOption[] options) {
 
         List<OptionData> optionDataList = new ArrayList<>();
@@ -251,6 +332,13 @@ public class CommandManager extends ListenerAdapter {
         return optionDataList;
     }
 
+    /**
+     * Builds a list of SubcommandData objects based on the provided array of Subcommand annotations.
+     *
+     * @param subcommands The array of Subcommand annotations to use for building the SubcommandData objects.
+     * @return The list of built SubcommandData objects.
+     * @since alpha.4
+     */
     private List<SubcommandData> buildSubcommands(Subcommand[] subcommands) {
 
         List<SubcommandData> subcommandDataList = new ArrayList<>();

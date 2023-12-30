@@ -8,9 +8,21 @@ import org.reflections.scanners.Scanners;
 
 import java.lang.reflect.Modifier;
 
+/**
+ * The TranslatorManager class is responsible for managing the translation of text in the application.
+ * It uses reflection to find fields annotated with @SetTranslator and sets them to the instance of Translator from JDABoot.
+ *
+ * @since alpha.4
+ */
 @Slf4j
 public class TranslatorManager {
 
+    /**
+     * Constructor for TranslatorManager. Initializes the manager with the specified main class.
+     *
+     * @param mainClass The main class of your project.
+     * @since alpha.4
+     */
     public TranslatorManager(Class<?> mainClass) {
 
         Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.FieldsAnnotated);

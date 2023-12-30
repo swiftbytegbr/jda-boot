@@ -5,6 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The SetTranslator annotation is used to mark a field that should be set with the Translator instance from JDABoot.
+ *
+ * @since alpha.4
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface SetTranslator {

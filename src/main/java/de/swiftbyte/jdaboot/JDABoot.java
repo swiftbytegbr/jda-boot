@@ -24,9 +24,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * This class is for initializing JDA Boot and starting the Discord bot.
+ * The JDABoot class is responsible for initializing and starting the Discord bot.
+ * It manages the bot's configuration, command handling, event handling, and more.
  *
- * @since alpha.1
+ * @since alpha.4
  */
 @Slf4j
 public class JDABoot {
@@ -58,7 +59,15 @@ public class JDABoot {
     @Getter
     private Translator translator;
 
-
+    /**
+     * Protected constructor for JDABoot. Initializes the bot with the specified settings.
+     *
+     * @param mainClass The main class of your project.
+     * @param memberCachePolicy The policy to use for member caching.
+     * @param allow The list of allowed GatewayIntents.
+     * @param translationProvider The custom translation provider to use.
+     * @since alpha.4
+     */
     protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow,
                       Supplier<TranslationBundle> translationProvider) {
         this.config = PropertiesConfig.getInstance();
@@ -67,6 +76,12 @@ public class JDABoot {
         init(memberCachePolicy, allow);
     }
 
+    /**
+     * Protected constructor for JDABoot. Initializes the bot with the specified settings.
+     *
+     * @param properties The settings to use when starting the bot.
+     * @since alpha.4
+     */
     protected JDABoot(JDABoot.Settings properties) {
         this.config = properties.configProvider.get();
         this.mainClass = properties.mainClass;
@@ -75,10 +90,10 @@ public class JDABoot {
     }
 
     /**
-     * This method starts the Discord bot with the specified information.
+     * Starts the Discord bot with the specified settings.
      *
-     * @since alpha.3.5
-     * @param settings the {@link Settings} object to use
+     * @param settings The settings to use when starting the bot.
+     * @since alpha.4
      */
     public static void run(JDABoot.Settings settings) {
         new JDABoot(settings);
@@ -88,10 +103,10 @@ public class JDABoot {
      * This method starts the Discord bot with the specified information.
      * For advanced configuration see {@link #run(Settings)}.
      *
-     * @since alpha.1
-     * @param mainClass the main class of your project
-     * @param memberCachePolicy the {@link MemberCachePolicy} to use
-     * @param allow the list of allowed {@link GatewayIntent} to use
+     * @param mainClass The main class of your project.
+     * @param memberCachePolicy The policy to use for member caching.
+     * @param allow The list of allowed GatewayIntents.
+     * @since alpha.4
      */
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
         new JDABoot(mainClass, memberCachePolicy, List.of(allow), ResourceTranslationBundle::new);
@@ -100,12 +115,12 @@ public class JDABoot {
     /**
      * This method starts the Discord bot with the specified information.
      *
-     * @since alpha.1
-     * @param mainClass the main class of your project
-     * @param memberCachePolicy the {@link MemberCachePolicy} to use
-     * @param translationProvider the custom translation provider to use
-     * @param allow the list of allowed {@link GatewayIntent} to use
-     * @deprecated Use {@link #run(Settings)} instead
+     * @param mainClass The main class of your project.
+     * @param memberCachePolicy The policy to use for member caching.
+     * @param translationProvider The custom translation provider to use.
+     * @param allow The list of allowed GatewayIntents.
+     * @deprecated Use {@link #run(Settings)} instead.
+     * @since alpha.4
      */
     @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy,
@@ -114,6 +129,8 @@ public class JDABoot {
     }
 
     /**
+     * Updates the bot's commands.
+     *
      * @see JDA#updateCommands()
      * @since alpha.2
      */
@@ -122,24 +139,35 @@ public class JDABoot {
     }
 
     /**
+     * Updates the commands for a specific guild.
+     *
+     * @param guildId The ID of the guild to update commands for.
      * @see Guild#updateCommands()
      * @since alpha.2
-     * @param guildId the id of the guild to use
      */
     public void updateCommands(String guildId) {
         jda.getGuildById(guildId).updateCommands().queue();
     }
 
     /**
-     * @see Guild#upsertCommand(CommandData) 
+     * Registers a command for a specific guild.
+     *
+     * @param guildId The ID of the guild to register the command for.
+     * @param commandId The ID of the command to register.
+     * @see Guild#upsertCommand(CommandData)
      * @since alpha.2
-     * @param guildId the id of the guild to use
-     * @param commandId the jda-boot command id to use
      */
     public void registerCommand(String guildId, String commandId) {
         jda.getGuildById(guildId).upsertCommand(commandHandler.getCommandData().get(commandId)).queue();
     }
 
+    /**
+     * Private method to initialize the bot.
+     *
+     * @param memberCachePolicy The policy to use for member caching.
+     * @param allow The list of allowed GatewayIntents.
+     * @since alpha.4
+     */
     private void init(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
 
         instance = this;
@@ -156,6 +184,15 @@ public class JDABoot {
         log.info("JDABoot initialized!");
     }
 
+    /**
+     * Private method to log in to Discord.
+     *
+     * @param memberCachePolicy The policy to use for member caching.
+     * @param allow The list of allowed GatewayIntents.
+     * @throws InterruptedException If the login process is interrupted.
+     * @throws InvalidTokenException If the provided token is invalid.
+     * @since alpha.4
+     */
     private void discordLogin(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) throws InterruptedException, InvalidTokenException {
         log.info("Logging in to Discord...");
         this.builder = JDABuilder.createDefault(config.getString("discord.token"));
@@ -185,9 +222,9 @@ public class JDABoot {
     }
 
     /**
-     * This class is used for advanced configuration of JDA-Boot.
+     * The Settings class is used for advanced configuration of JDA-Boot.
      *
-     * @since alpha.3.5
+     * @since alpha.4
      */
     @Builder
     public static class Settings {
@@ -198,23 +235,23 @@ public class JDABoot {
         private Class<?> mainClass;
 
         /**
-         * The {@link MemberCachePolicy} to use.
+         * The policy to use for member caching.
          */
         private MemberCachePolicy memberCachePolicy;
 
         /**
-         * The list of {@link GatewayIntent} to use.
+         * The list of GatewayIntents to use.
          */
         private List<GatewayIntent> intents;
 
         /**
-         * The config provider to use.
+         * The provider to use for configuration.
          */
         @Builder.Default
         private Supplier<Config> configProvider = PropertiesConfig::getInstance;
 
         /**
-         * The translation bundle provider to use.
+         * The provider to use for translation bundles.
          */
         @Builder.Default
         private Supplier<TranslationBundle> translationBundleProvider = ResourceTranslationBundle::new;

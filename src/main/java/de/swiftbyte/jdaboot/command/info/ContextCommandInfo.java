@@ -1,4 +1,9 @@
 package de.swiftbyte.jdaboot.command.info;
 
-public interface ContextCommandInfo extends CommandInfo {
-}
+/**
+ * The ContextCommandInfo interface extends the CommandInfo interface.
+ * It represents the context information for a command.
+ *
+ * @since alpha.4
+ */
+public interface ContextCommandInfo extends CommandInfo {}

@@ -14,6 +14,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * The EventManager class is responsible for managing events in the application.
+ * It uses reflection to find methods annotated with @EventHandler and invokes them when the corresponding event occurs.
+ *
+ * @since alpha.4
+ */
 @Slf4j
 public class EventManager implements EventListener {
 
@@ -23,6 +29,13 @@ public class EventManager implements EventListener {
 
     JDA jda;
 
+    /**
+     * Constructor for EventManager. Initializes the manager with the specified JDA instance and main class.
+     *
+     * @param jda The JDA instance to use for event handling.
+     * @param mainClass The main class of your project.
+     * @since alpha.4
+     */
     public EventManager(JDA jda, Class<?> mainClass) {
         long start = System.currentTimeMillis();
         this.jda = jda;
@@ -97,6 +110,12 @@ public class EventManager implements EventListener {
         log.info("Registered " + handlers.size() + " event handler(s) in " + (end - start) + "ms");
     }
 
+    /**
+     * Handles the specified event. Invokes the corresponding event handlers for the event.
+     *
+     * @param event The event to handle.
+     * @since alpha.4
+     */
     @Override
     public void onEvent(@NotNull GenericEvent event) {
         if (handlers.containsKey(event.getClass())) {

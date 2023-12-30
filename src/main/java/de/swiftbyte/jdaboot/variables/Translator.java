@@ -7,8 +7,23 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The Translator class is responsible for processing translations in a given string.
+ * It replaces placeholders in the string with the corresponding translated values from a provided translation bundle.
+ *
+ * @since alpha.4
+ */
 public class Translator {
 
+    /**
+     * Processes the translations in the given string using the provided locale.
+     * Replaces placeholders in the string with the corresponding translated values.
+     *
+     * @param locale The locale to use for processing the translations.
+     * @param old The original string with placeholders.
+     * @return The processed string with placeholders replaced by translated values.
+     * @since alpha.4
+     */
     public String processTranslation(DiscordLocale locale, String old) {
 
         String newText = old;
@@ -25,6 +40,14 @@ public class Translator {
 
     }
 
+    /**
+     * Retrieves the translated string for the given key using the provided locale.
+     *
+     * @param locale The locale to use for retrieving the translated string.
+     * @param key The key of the string to translate.
+     * @return The translated string.
+     * @since alpha.4
+     */
     public String getTranslatedString(DiscordLocale locale, String key) {
         Locale.setDefault(Locale.ENGLISH);
         TranslationBundle translationBundle = JDABoot.getInstance().getTranslationProvider().get();

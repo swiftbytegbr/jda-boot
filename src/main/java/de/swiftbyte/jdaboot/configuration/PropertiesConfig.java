@@ -15,8 +15,6 @@ public class PropertiesConfig implements Config {
     private static File file;
     private static Properties properties;
 
-
-
     public static final String CONFIG_FILE_NAME = "config.properties";
 
     protected PropertiesConfig(File configFile) throws IOException {
