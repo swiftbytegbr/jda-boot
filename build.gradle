@@ -8,7 +8,6 @@ group 'de.swiftbyte'
 version 'alpha4'
 description 'jda-boot is an annotation-driven jda framework that lets you create discord bots insanely fast'
 
-
 compileJava {
     version = 17
 }
@@ -20,10 +19,10 @@ repositories {
 dependencies {
 
     // JDA
-    api("net.dv8tion:JDA:5.0.0-beta.18")
+    api("net.dv8tion:JDA:5.0.0-beta.20")
 
     // Logging
-    implementation('org.slf4j:slf4j-api:2.0.10')
+    implementation('org.slf4j:slf4j-api:2.0.11')
     implementation('ch.qos.logback:logback-classic:1.4.14')
 
     // Reflections
