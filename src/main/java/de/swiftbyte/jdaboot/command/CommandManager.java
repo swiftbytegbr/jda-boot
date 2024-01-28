@@ -17,8 +17,6 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
-import net.dv8tion.jda.api.interactions.commands.context.MessageContextInteraction;
-import net.dv8tion.jda.api.interactions.commands.context.UserContextInteraction;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
