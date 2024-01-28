@@ -13,9 +13,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Manages the configuration for the JDABoot framework.
@@ -33,6 +37,19 @@ import java.lang.reflect.InvocationTargetException;
  */
 @Slf4j
 public class JDABootConfigurationManager {
+
+    @Getter(AccessLevel.PROTECTED)
+    private static List<GatewayIntent> intents;
+
+    @Getter(AccessLevel.PROTECTED)
+    private static List<CacheFlag> enabledCacheFlags;
+
+    @Getter(AccessLevel.PROTECTED)
+    private static List<CacheFlag> disabledCacheFlags;
+
+    @Getter(AccessLevel.PROTECTED)
+    private static MemberCachePolicy memberCachePolicy;
+
 
     /**
      * The configuration provider used to retrieve configuration values.
@@ -95,6 +112,11 @@ public class JDABootConfigurationManager {
             log.error("Failed to instantiate translation provider", e);
             System.exit(1);
         }
+
+        intents = List.of(autoConfiguration.intents());
+        enabledCacheFlags = List.of(autoConfiguration.enabledCacheFlags());
+        disabledCacheFlags = List.of(autoConfiguration.disabledCacheFlags());
+        memberCachePolicy = autoConfiguration.memberCachePolicy().getJDAUtilsMemberCachePolicy();
     }
 
     /**

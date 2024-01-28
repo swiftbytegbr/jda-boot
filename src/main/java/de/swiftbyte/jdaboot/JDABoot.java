@@ -32,11 +32,21 @@ public class JDABoot {
 
     @Getter
     private JDA jda;
-    private JDABuilder builder;
 
     private Class<?> mainClass;
 
     private ConfigProvider configProvider;
+
+    /**
+     * Protected constructor for JDABoot. Initializes the bot with the specified settings.
+     *
+     * @param mainClass The main class of your project.
+     * @since alpha.4
+     */
+    protected JDABoot(Class<?> mainClass) {
+        this.mainClass = mainClass;
+        init(null, null);
+    }
 
     /**
      * Protected constructor for JDABoot. Initializes the bot with the specified settings.
@@ -65,9 +75,20 @@ public class JDABoot {
     /**
      * Starts the Discord bot with the specified settings.
      *
-     * @param settings The settings to use when starting the bot.
      * @since alpha.4
      */
+    public static void run(Class<?> mainClass) {
+        new JDABoot(mainClass);
+    }
+
+    /**
+     * Starts the Discord bot with the specified settings.
+     *
+     * @param settings The settings to use when starting the bot.
+     * @since alpha.4
+     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
+     */
+    @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, DiscordSettings settings) {
         new JDABoot(mainClass, settings);
     }
@@ -79,8 +100,10 @@ public class JDABoot {
      * @param mainClass The main class of your project.
      * @param memberCachePolicy The policy to use for member caching.
      * @param allow The list of allowed GatewayIntents.
+     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
      * @since alpha.4
      */
+    @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
         new JDABoot(mainClass, memberCachePolicy, List.of(allow));
     }
@@ -156,7 +179,19 @@ public class JDABoot {
      */
     private void discordLogin(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) throws InterruptedException, InvalidTokenException {
         log.info("Logging in to Discord...");
-        this.builder = JDABuilder.createDefault(configProvider.getString("discord.token"));
+        JDABuilder builder = JDABuilder.createDefault(configProvider.getString("discord.token"));
+
+        if(allow == null) allow = JDABootConfigurationManager.getIntents();
+
+        List<CacheFlag> disabledCacheFlags = JDABootConfigurationManager.getDisabledCacheFlags();
+
+        for (CacheFlag cacheFlag : JDABootConfigurationManager.getEnabledCacheFlags()) {
+            builder.enableCache(cacheFlag);
+        }
+
+        for (CacheFlag cacheFlag : disabledCacheFlags) {
+            builder.disableCache(cacheFlag);
+        }
 
         if (!allow.contains(GatewayIntent.GUILD_VOICE_STATES)) {
             builder.disableCache(CacheFlag.VOICE_STATE);
@@ -168,8 +203,11 @@ public class JDABoot {
             builder.disableCache(CacheFlag.SCHEDULED_EVENTS);
         }
 
-        builder.setMemberCachePolicy(memberCachePolicy);
-        builder.setEnabledIntents(allow);
+        if(memberCachePolicy != null) builder.setMemberCachePolicy(memberCachePolicy);
+        else builder.setMemberCachePolicy(JDABootConfigurationManager.getMemberCachePolicy());
+
+        if(allow.isEmpty()) builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
+        else builder.setEnabledIntents(allow);
 
         this.jda = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, jda);
