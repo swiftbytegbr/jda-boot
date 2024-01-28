@@ -34,12 +34,4 @@ dependencies {
 
     // YML Parsing
     implementation('org.yaml:snakeyaml:2.2')
-
-    // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
-}
-
-test {
-    useJUnitPlatform()
 }
