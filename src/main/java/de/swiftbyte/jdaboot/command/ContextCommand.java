@@ -18,7 +18,8 @@ interface ContextCommand<T extends ContextCommandInfo> {
      * @param data The data of the context command.
      * @since alpha.4
      */
-    default void onEnable(CommandData data) {}
+    default void onEnable(CommandData data) {
+    }
 
     /**
      * Called when the context command is invoked.

@@ -32,7 +32,7 @@ public class EventManager implements EventListener {
     /**
      * Constructor for EventManager. Initializes the manager with the specified JDA instance and main class.
      *
-     * @param jda The JDA instance to use for event handling.
+     * @param jda       The JDA instance to use for event handling.
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
@@ -60,13 +60,13 @@ public class EventManager implements EventListener {
             try {
                 method.getDeclaringClass().getConstructor();
             } catch (NoSuchMethodException e) {
-                log.error("The class " + method.getDeclaringClass().getName()  + " has no no args constructor, this is required for event handling. Ignoring the method " + method.getName());
+                log.error("The class " + method.getDeclaringClass().getName() + " has no no args constructor, this is required for event handling. Ignoring the method " + method.getName());
                 continue;
             }
 
             try {
                 method.getDeclaringClass().getConstructor();
-            }  catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException e) {
                 log.warn("Found @EventHandler method " + method.getClass().getName() + "." + method.getName() + " in a class without a no args constructor! Skipping...");
             }
 

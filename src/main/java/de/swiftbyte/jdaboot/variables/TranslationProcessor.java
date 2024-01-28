@@ -20,7 +20,7 @@ public class TranslationProcessor {
      * Replaces placeholders in the string with the corresponding translated values.
      *
      * @param locale The locale to use for processing the translations.
-     * @param old The original string with placeholders.
+     * @param old    The original string with placeholders.
      * @return The processed string with placeholders replaced by translated values.
      * @since alpha.4
      */
@@ -44,7 +44,7 @@ public class TranslationProcessor {
      * Retrieves the translated string for the given key using the provided locale.
      *
      * @param locale The locale to use for retrieving the translated string.
-     * @param key The key of the string to translate.
+     * @param key    The key of the string to translate.
      * @return The translated string.
      * @since alpha.4
      */

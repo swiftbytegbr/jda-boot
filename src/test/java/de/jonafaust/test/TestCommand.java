@@ -4,7 +4,6 @@ import de.swiftbyte.jdaboot.annotation.command.Command;
 import de.swiftbyte.jdaboot.annotation.command.Subcommand;
 import de.swiftbyte.jdaboot.command.SlashCommand;
 import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 @Command(
         name = "test",
@@ -18,6 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
         }
 )
 public class TestCommand implements SlashCommand {
+
     @Override
     public void onCommand(SlashCommandInfo event) {
 

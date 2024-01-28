@@ -52,7 +52,7 @@ public class CommandManager extends ListenerAdapter {
      * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
      * It uses reflection to find classes annotated with @Command and creates instances of those classes.
      *
-     * @param jda The JDA instance to use for command handling.
+     * @param jda       The JDA instance to use for command handling.
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
@@ -77,7 +77,7 @@ public class CommandManager extends ListenerAdapter {
                     }
                     commandData.put(data.getName(), data);
                     commands.put(data.getName(), cmd);
-                    if(!annotation.isGlobal()) return;
+                    if (!annotation.isGlobal()) return;
                     log.info("Registered command: " + data.getName());
                     jda.upsertCommand(data).queue();
                     cmd.onEnable((SlashCommandData) data);
@@ -95,7 +95,7 @@ public class CommandManager extends ListenerAdapter {
                     commandData.put(data.getName(), data);
                     contextCommands.put(data.getName(), cmd);
                     log.info("Registered command: " + data.getName());
-                    if(!annotation.isGlobal()) return;
+                    if (!annotation.isGlobal()) return;
                     jda.upsertCommand(data).queue();
                     cmd.onEnable(data);
                 } else if (MessageContextCommand.class.isAssignableFrom(clazz)) {
@@ -110,7 +110,7 @@ public class CommandManager extends ListenerAdapter {
                     }
                     commandData.put(data.getName(), data);
                     contextCommands.put(data.getName(), cmd);
-                    if(!annotation.isGlobal()) return;
+                    if (!annotation.isGlobal()) return;
                     log.info("Registered command: " + data.getName());
                     jda.upsertCommand(data).queue();
                     cmd.onEnable(data);
@@ -251,8 +251,8 @@ public class CommandManager extends ListenerAdapter {
     /**
      * Builds a CommandData object based on the provided Command annotation and command type.
      *
-     * @param type The type of the command.
-     * @param id The id of the command.
+     * @param type    The type of the command.
+     * @param id      The id of the command.
      * @param command The Command annotation to use for building the CommandData.
      * @return The built CommandData.
      * @since alpha.4

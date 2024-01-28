@@ -17,7 +17,8 @@ public interface SlashCommand {
      * @param data The data of the slash command.
      * @since alpha.4
      */
-    default void onEnable(SlashCommandData data) {}
+    default void onEnable(SlashCommandData data) {
+    }
 
     /**
      * Called when the slash command is invoked.

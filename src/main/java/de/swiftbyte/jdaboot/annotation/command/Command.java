@@ -1,7 +1,6 @@
 package de.swiftbyte.jdaboot.annotation.command;
 
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

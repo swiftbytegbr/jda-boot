@@ -25,7 +25,6 @@ import java.util.List;
  * Manages the configuration for the JDABoot framework.
  * It applies the configuration specified by the {@link AutoConfiguration} annotation and initializes various managers.
  *
- * @since alpha.4
  * @see AutoConfiguration
  * @see ConfigProvider
  * @see TranslationProvider
@@ -34,6 +33,7 @@ import java.util.List;
  * @see ConfigValueManager
  * @see EventManager
  * @see EmbedManager
+ * @since alpha.4
  */
 @Slf4j
 public class JDABootConfigurationManager {
@@ -70,8 +70,6 @@ public class JDABootConfigurationManager {
     private static TranslationProvider translationProvider;
 
 
-
-
     @Getter(AccessLevel.PROTECTED)
     private static CommandManager commandManager;
 
@@ -101,14 +99,16 @@ public class JDABootConfigurationManager {
     private static void applyAutoConfiguration(@NotNull AutoConfiguration autoConfiguration) {
         try {
             configProvider = autoConfiguration.configProvider().getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             log.error("Failed to instantiate config provider", e);
             System.exit(1);
         }
 
         try {
             translationProvider = autoConfiguration.translationProvider().getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             log.error("Failed to instantiate translation provider", e);
             System.exit(1);
         }
@@ -123,7 +123,7 @@ public class JDABootConfigurationManager {
      * Initializes various managers.
      *
      * @param mainClass The main class of the application.
-     * @param jda The JDA instance.
+     * @param jda       The JDA instance.
      * @since alpha.4
      */
     protected static void initialiseManagers(Class<?> mainClass, JDA jda) {

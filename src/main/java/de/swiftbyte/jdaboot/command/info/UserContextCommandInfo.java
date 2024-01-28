@@ -14,9 +14,9 @@ public class UserContextCommandInfo extends UserContextInteractionEvent implemen
     /**
      * Constructor for UserContextCommandInfo. Initializes the context information with the specified JDA instance, response number, and user context interaction.
      *
-     * @param api The JDA instance associated with the event.
+     * @param api            The JDA instance associated with the event.
      * @param responseNumber The response number for the event.
-     * @param interaction The user context interaction associated with the event.
+     * @param interaction    The user context interaction associated with the event.
      * @since alpha.4
      */
     public UserContextCommandInfo(net.dv8tion.jda.api.JDA api, long responseNumber, UserContextInteraction interaction) {

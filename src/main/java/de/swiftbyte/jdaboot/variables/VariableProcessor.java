@@ -24,9 +24,9 @@ public class VariableProcessor {
      * Processes the variables in the given string using the provided locale, variable map, and default variables.
      * Replaces placeholders in the string with the corresponding values.
      *
-     * @param locale The locale to use for processing the variables.
-     * @param old The original string with placeholders.
-     * @param variables The map of variables to replace in the string.
+     * @param locale          The locale to use for processing the variables.
+     * @param old             The original string with placeholders.
+     * @param variables       The map of variables to replace in the string.
      * @param defaultVariable The array of default variables to replace in the string.
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
@@ -45,8 +45,8 @@ public class VariableProcessor {
      * Processes the variables in the given string using the provided variables map, and default variables.
      * Replaces placeholders in the string with the corresponding values.
      *
-     * @param old The original string with placeholders.
-     * @param variables The map of variables to replace in the string.
+     * @param old             The original string with placeholders.
+     * @param variables       The map of variables to replace in the string.
      * @param defaultVariable The array of default variables to replace in the string.
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4

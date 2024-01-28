@@ -51,9 +51,9 @@ public class JDABoot {
     /**
      * Protected constructor for JDABoot. Initializes the bot with the specified settings.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass         The main class of your project.
      * @param memberCachePolicy The policy to use for member caching.
-     * @param allow The list of allowed GatewayIntents.
+     * @param allow             The list of allowed GatewayIntents.
      * @since alpha.4
      */
     protected JDABoot(Class<?> mainClass, MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
@@ -97,11 +97,11 @@ public class JDABoot {
      * This method starts the Discord bot with the specified information.
      * For advanced configuration see {@link #run(Class, DiscordSettings)}.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass         The main class of your project.
      * @param memberCachePolicy The policy to use for member caching.
-     * @param allow The list of allowed GatewayIntents.
-     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
+     * @param allow             The list of allowed GatewayIntents.
      * @since alpha.4
+     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
      */
     @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
@@ -132,7 +132,7 @@ public class JDABoot {
     /**
      * Registers a command for a specific guild.
      *
-     * @param guildId The ID of the guild to register the command for.
+     * @param guildId   The ID of the guild to register the command for.
      * @param commandId The ID of the command to register.
      * @see Guild#upsertCommand(CommandData)
      * @since alpha.2
@@ -145,7 +145,7 @@ public class JDABoot {
      * Private method to initialize the bot.
      *
      * @param memberCachePolicy The policy to use for member caching.
-     * @param allow The list of allowed GatewayIntents.
+     * @param allow             The list of allowed GatewayIntents.
      * @since alpha.4
      */
     private void init(MemberCachePolicy memberCachePolicy, List<GatewayIntent> allow) {
@@ -172,8 +172,8 @@ public class JDABoot {
      * Private method to log in to Discord.
      *
      * @param memberCachePolicy The policy to use for member caching.
-     * @param allow The list of allowed GatewayIntents.
-     * @throws InterruptedException If the login process is interrupted.
+     * @param allow             The list of allowed GatewayIntents.
+     * @throws InterruptedException  If the login process is interrupted.
      * @throws InvalidTokenException If the provided token is invalid.
      * @since alpha.4
      */
@@ -181,7 +181,7 @@ public class JDABoot {
         log.info("Logging in to Discord...");
         JDABuilder builder = JDABuilder.createDefault(configProvider.getString("discord.token"));
 
-        if(allow == null) allow = JDABootConfigurationManager.getIntents();
+        if (allow == null) allow = JDABootConfigurationManager.getIntents();
 
         List<CacheFlag> disabledCacheFlags = JDABootConfigurationManager.getDisabledCacheFlags();
 
@@ -203,10 +203,10 @@ public class JDABoot {
             builder.disableCache(CacheFlag.SCHEDULED_EVENTS);
         }
 
-        if(memberCachePolicy != null) builder.setMemberCachePolicy(memberCachePolicy);
+        if (memberCachePolicy != null) builder.setMemberCachePolicy(memberCachePolicy);
         else builder.setMemberCachePolicy(JDABootConfigurationManager.getMemberCachePolicy());
 
-        if(allow.isEmpty()) builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
+        if (allow.isEmpty()) builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
         else builder.setEnabledIntents(allow);
 
         this.jda = builder.build();
@@ -221,6 +221,7 @@ public class JDABoot {
      */
     @Builder
     public static class DiscordSettings {
+
         /**
          * The policy to use for member caching.
          */

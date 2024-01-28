@@ -8,4 +8,6 @@ import de.swiftbyte.jdaboot.command.info.UserContextCommandInfo;
  *
  * @since alpha.4
  */
-public interface UserContextCommand extends ContextCommand<UserContextCommandInfo> {}
+public interface UserContextCommand extends ContextCommand<UserContextCommandInfo> {
+
+}

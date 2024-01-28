@@ -31,7 +31,7 @@ public interface ConfigProvider {
      * Retrieves the value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -54,7 +54,7 @@ public interface ConfigProvider {
      * Retrieves the string value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -77,7 +77,7 @@ public interface ConfigProvider {
      * Retrieves the integer value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -100,7 +100,7 @@ public interface ConfigProvider {
      * Retrieves the boolean value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4

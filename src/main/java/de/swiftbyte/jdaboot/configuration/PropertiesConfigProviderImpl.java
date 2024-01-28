@@ -2,15 +2,16 @@ package de.swiftbyte.jdaboot.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * Implements the ConfigProvider interface using a properties file for configuration.
  * The properties file is named "config.properties" and is expected to be in the classpath.
  *
- * @since alpha.4
  * @see ConfigProvider
+ * @since alpha.4
  */
 @Slf4j
 public class PropertiesConfigProviderImpl implements ConfigProvider {
@@ -32,14 +33,14 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
      * Retrieves the value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
      */
     @Override
     public Object get(String key, Object defaultValue) {
-        if(!hasKey(key)) {
+        if (!hasKey(key)) {
             return defaultValue;
         }
         return getString(key, null);
@@ -49,7 +50,7 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
      * Retrieves the string value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -109,7 +110,7 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
         properties = new Properties();
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
-            if(resourceStream == null) {
+            if (resourceStream == null) {
                 log.error("Config file not found, please create a config file with the name \"" + CONFIG_FILE_NAME + "\" in your resources.");
                 System.exit(1);
             } else {

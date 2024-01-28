@@ -1,11 +1,12 @@
 # JDA-Boot
-### jda-boot is an annotation-driven jda framework that lets you create bots insanely fast 
+
+### jda-boot is an annotation-driven jda framework that lets you create bots insanely fast
+
 WIP
 
-This project uses [JDA](https://github.com/DV8FromTheWorld/JDA) by [Austin Keener](https://github.com/DV8FromTheWorld/). 
+This project uses [JDA](https://github.com/DV8FromTheWorld/JDA) by [Austin Keener](https://github.com/DV8FromTheWorld/).
 
 More information coming soon!
-
 
 ### Roadmap
 

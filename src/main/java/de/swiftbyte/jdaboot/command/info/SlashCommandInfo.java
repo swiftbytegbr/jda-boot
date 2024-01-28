@@ -16,9 +16,9 @@ public class SlashCommandInfo extends SlashCommandInteractionEvent implements Co
     /**
      * Constructor for SlashCommandInfo. Initializes the context information with the specified JDA instance, response number, and slash command interaction.
      *
-     * @param api The JDA instance associated with the event.
+     * @param api            The JDA instance associated with the event.
      * @param responseNumber The response number for the event.
-     * @param interaction The slash command interaction associated with the event.
+     * @param interaction    The slash command interaction associated with the event.
      * @since alpha.4
      */
     public SlashCommandInfo(@NotNull JDA api, long responseNumber, @NotNull SlashCommandInteraction interaction) {

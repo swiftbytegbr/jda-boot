@@ -1,7 +1,6 @@
 package de.swiftbyte.jdaboot.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -13,8 +12,8 @@ import java.util.Map;
  * Implements the ConfigProvider interface using a YAML file for configuration.
  * The YAML file is named "config.yml" and is expected to be in the classpath.
  *
- * @since alpha.4
  * @see ConfigProvider
+ * @since alpha.4
  */
 @Slf4j
 public class YmlConfigProviderImpl implements ConfigProvider {
@@ -41,7 +40,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
     @Override
     public void reload() {
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
-            if(resourceStream == null) {
+            if (resourceStream == null) {
                 log.error("Config file not found, please create a config file with the name \"" + CONFIG_FILE_NAME + "\" in your resources.");
                 System.exit(1);
             } else {
@@ -56,16 +55,16 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      * Retrieves the value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
      */
     @Override
     public Object get(String key, Object defaultValue) {
-        if(hasKey(key)) {
+        if (hasKey(key)) {
 
-            if(key.contains(".")) {
+            if (key.contains(".")) {
                 return getFromPath(ymlConfig, key);
             } else return ymlConfig.get(key);
 
@@ -79,7 +78,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      * The path is a dot-separated string representing the hierarchy of keys in the map.
      *
      * @param current The current map to retrieve the value from.
-     * @param path The path of the key.
+     * @param path    The path of the key.
      * @return The value associated with the specified path, or null if the path is not found.
      * @throws RuntimeException If the path is invalid.
      * @since alpha.4
@@ -109,7 +108,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      * Retrieves the string value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -123,7 +122,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      * Retrieves the integer value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -137,7 +136,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      * Retrieves the boolean value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
-     * @param key The key of the configuration value.
+     * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
      * @since alpha.4
@@ -156,7 +155,7 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        if(key.contains(".")) {
+        if (key.contains(".")) {
             return getFromPath(ymlConfig, key) != null;
         } else return ymlConfig.containsKey(key);
     }

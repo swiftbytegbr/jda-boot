@@ -13,7 +13,7 @@ public interface TranslationProvider {
     /**
      * Retrieves the translated string for the given key using the provided locale.
      *
-     * @param key The key of the string to translate.
+     * @param key    The key of the string to translate.
      * @param locale The locale to use for retrieving the translated string.
      * @return The translated string.
      * @since alpha.4

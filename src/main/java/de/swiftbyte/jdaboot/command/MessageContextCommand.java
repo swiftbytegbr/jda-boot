@@ -8,4 +8,6 @@ import de.swiftbyte.jdaboot.command.info.MessageContextCommandInfo;
  *
  * @since alpha.4
  */
-public interface MessageContextCommand extends ContextCommand<MessageContextCommandInfo> {}
+public interface MessageContextCommand extends ContextCommand<MessageContextCommandInfo> {
+
+}

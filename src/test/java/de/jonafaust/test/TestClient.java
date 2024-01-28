@@ -7,7 +7,6 @@ import de.swiftbyte.jdaboot.annotation.SetValue;
 import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 @AutoConfiguration(

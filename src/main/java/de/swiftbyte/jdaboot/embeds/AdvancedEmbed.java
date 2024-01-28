@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.embeds;
 
-import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
@@ -34,9 +33,9 @@ public class AdvancedEmbed {
     /**
      * Constructor for AdvancedEmbed. Initializes the embed with the specified template, variables, and locale.
      *
-     * @param template The TemplateEmbed to use as a base for the advanced embed.
+     * @param template  The TemplateEmbed to use as a base for the advanced embed.
      * @param variables The variables to use in the embed.
-     * @param locale The locale to use for the embed.
+     * @param locale    The locale to use for the embed.
      * @since alpha.4
      */
     private AdvancedEmbed(TemplateEmbed template, HashMap<String, String> variables, DiscordLocale locale) {
@@ -49,7 +48,7 @@ public class AdvancedEmbed {
      * Constructor for AdvancedEmbed. Initializes the embed with the specified template and locale.
      *
      * @param template The TemplateEmbed to use as a base for the advanced embed.
-     * @param locale The locale to use for the embed.
+     * @param locale   The locale to use for the embed.
      * @since alpha.4
      */
     protected AdvancedEmbed(TemplateEmbed template, DiscordLocale locale) {
@@ -61,7 +60,7 @@ public class AdvancedEmbed {
      * Sets a variable to be used in the embed.
      *
      * @param variable The name of the variable.
-     * @param value The value of the variable.
+     * @param value    The value of the variable.
      * @return The AdvancedEmbed instance for chaining.
      * @throws NullPointerException If the variable key or value is null.
      * @since alpha.4

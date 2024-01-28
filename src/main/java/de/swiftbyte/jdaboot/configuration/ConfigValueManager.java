@@ -12,9 +12,9 @@ import java.lang.reflect.Modifier;
  * Manages configuration values for the JDABoot framework.
  * It uses reflection to find fields annotated with {@link SetValue} and sets their values based on the configuration.
  *
- * @since alpha.4
  * @see SetValue
  * @see JDABootConfigurationManager
+ * @since alpha.4
  */
 @Slf4j
 public class ConfigValueManager {

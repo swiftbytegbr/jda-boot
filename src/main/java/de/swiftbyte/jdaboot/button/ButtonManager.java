@@ -42,7 +42,7 @@ public class ButtonManager extends ListenerAdapter {
      * Constructor for ButtonManager. Initializes the manager with the specified JDA instance and main class.
      * It uses reflection to find classes annotated with @Button and creates instances of those classes.
      *
-     * @param jda The JDA instance to use for button handling.
+     * @param jda       The JDA instance to use for button handling.
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
@@ -100,7 +100,7 @@ public class ButtonManager extends ListenerAdapter {
      * Creates a Button based on the provided Button annotation and ID.
      *
      * @param button The Button annotation to use for creating the Button.
-     * @param id The ID of the button.
+     * @param id     The ID of the button.
      * @return The created Button.
      * @since alpha.4
      */

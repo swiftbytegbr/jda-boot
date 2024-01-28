@@ -16,7 +16,7 @@ public class ResourceBundleTranslationProviderImpl implements TranslationProvide
      * Retrieves the translated string for the given key using the provided locale.
      * It uses a resource bundle to find the translated string.
      *
-     * @param key The key of the string to translate.
+     * @param key    The key of the string to translate.
      * @param locale The locale to use for retrieving the translated string.
      * @return The translated string.
      * @since alpha.4

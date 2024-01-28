@@ -14,9 +14,9 @@ public class MessageContextCommandInfo extends MessageContextInteractionEvent im
     /**
      * Constructor for MessageContextCommandInfo. Initializes the context information with the specified JDA instance, response number, and message context interaction.
      *
-     * @param api The JDA instance associated with the event.
+     * @param api            The JDA instance associated with the event.
      * @param responseNumber The response number for the event.
-     * @param interaction The message context interaction associated with the event.
+     * @param interaction    The message context interaction associated with the event.
      * @since alpha.4
      */
     public MessageContextCommandInfo(net.dv8tion.jda.api.JDA api, long responseNumber, MessageContextInteraction interaction) {

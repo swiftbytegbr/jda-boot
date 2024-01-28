@@ -5,4 +5,6 @@ package de.swiftbyte.jdaboot.command.info;
  *
  * @since alpha.4
  */
-public interface CommandInfo {}
+public interface CommandInfo {
+
+}
