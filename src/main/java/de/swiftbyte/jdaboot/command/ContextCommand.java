@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.command;
 
-import de.swiftbyte.jdaboot.command.info.ContextCommandInfo;
+import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 /**
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
  * @param <T> The type of the context in which the command operates.
  * @since alpha.4
  */
-interface ContextCommand<T extends ContextCommandInfo> {
+interface ContextCommand<T extends GenericContextInteractionEvent<?>> {
 
     /**
      * Called when the context command is enabled. The default implementation does nothing.

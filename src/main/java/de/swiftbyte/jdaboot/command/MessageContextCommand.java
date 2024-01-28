@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.command;
 
-import de.swiftbyte.jdaboot.command.info.MessageContextCommandInfo;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 
 /**
  * The MessageContextCommand interface extends the ContextCommand interface with MessageContextCommandInfo as its type parameter.
@@ -8,6 +8,6 @@ import de.swiftbyte.jdaboot.command.info.MessageContextCommandInfo;
  *
  * @since alpha.4
  */
-public interface MessageContextCommand extends ContextCommand<MessageContextCommandInfo> {
+public interface MessageContextCommand extends ContextCommand<MessageContextInteractionEvent> {
 
 }

@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.command;
 
-import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
@@ -23,9 +23,8 @@ public interface SlashCommand {
     /**
      * Called when the slash command is invoked.
      *
-     * @param ctx The context of the slash command.
      * @since alpha.4
      */
-    void onCommand(SlashCommandInfo ctx);
+    void onCommand(SlashCommandInteractionEvent event);
 
 }

@@ -4,9 +4,6 @@ import de.swiftbyte.jdaboot.annotation.command.Command;
 import de.swiftbyte.jdaboot.annotation.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.command.SubcommandGroup;
-import de.swiftbyte.jdaboot.command.info.MessageContextCommandInfo;
-import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
-import de.swiftbyte.jdaboot.command.info.UserContextCommandInfo;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -121,7 +118,7 @@ public class CommandManager extends ListenerAdapter {
 
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                      InvocationTargetException e) {
-                e.printStackTrace();
+                log.error("Error while registering command " + clazz.getSimpleName() + "!", e);
             }
 
         });
@@ -141,7 +138,7 @@ public class CommandManager extends ListenerAdapter {
         String name = event.getName();
         SlashCommand executor = commands.get(name);
         if (executor != null) {
-            executor.onCommand(new SlashCommandInfo(event.getJDA(), event.getResponseNumber(), event.getInteraction()));
+            executor.onCommand(event);
         }
 
     }
@@ -183,11 +180,11 @@ public class CommandManager extends ListenerAdapter {
 
         if (event instanceof UserContextInteractionEvent) {
             if (executor != null) {
-                ((UserContextCommand) executor).onCommand(new UserContextCommandInfo(event.getJDA(), event.getResponseNumber(), (UserContextInteraction) event.getInteraction()));
+                ((UserContextCommand) executor).onCommand((UserContextInteractionEvent) event);
             }
         } else if (event instanceof MessageContextInteractionEvent) {
             if (executor != null) {
-                ((MessageContextCommand) executor).onCommand(new MessageContextCommandInfo(event.getJDA(), event.getResponseNumber(), (MessageContextInteraction) event.getInteraction()));
+                ((MessageContextCommand) executor).onCommand((MessageContextInteractionEvent) event);
             }
         }
     }

@@ -3,7 +3,7 @@ package de.jonafaust.test;
 import de.swiftbyte.jdaboot.annotation.command.Command;
 import de.swiftbyte.jdaboot.annotation.command.Subcommand;
 import de.swiftbyte.jdaboot.command.SlashCommand;
-import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 @Command(
         name = "test",
@@ -19,7 +19,7 @@ import de.swiftbyte.jdaboot.command.info.SlashCommandInfo;
 public class TestCommand implements SlashCommand {
 
     @Override
-    public void onCommand(SlashCommandInfo event) {
+    public void onCommand(SlashCommandInteractionEvent event) {
 
         if (event.getSubcommandName().equals("subcommand")) {
             event.replyEmbeds(EmbedClass.embed.generateAdvancedEmbed().generateEmbed()).queue();
