@@ -1,4 +1,4 @@
-package de.jonafaust.test;
+package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;

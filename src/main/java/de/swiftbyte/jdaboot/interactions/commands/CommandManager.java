@@ -1,9 +1,9 @@
-package de.swiftbyte.jdaboot.command;
+package de.swiftbyte.jdaboot.interactions.commands;
 
-import de.swiftbyte.jdaboot.annotation.command.Command;
-import de.swiftbyte.jdaboot.annotation.command.CommandOption;
-import de.swiftbyte.jdaboot.annotation.command.Subcommand;
-import de.swiftbyte.jdaboot.annotation.command.SubcommandGroup;
+import de.swiftbyte.jdaboot.annotation.interactions.command.Command;
+import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
+import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

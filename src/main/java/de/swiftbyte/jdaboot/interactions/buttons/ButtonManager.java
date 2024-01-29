@@ -1,7 +1,7 @@
-package de.swiftbyte.jdaboot.button;
+package de.swiftbyte.jdaboot.interactions.buttons;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
-import de.swiftbyte.jdaboot.annotation.Button;
+import de.swiftbyte.jdaboot.annotation.interactions.Button;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.emoji.Emoji;

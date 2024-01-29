@@ -1,8 +1,8 @@
-package de.jonafaust.test;
+package de.swiftbyte.test;
 
-import de.swiftbyte.jdaboot.annotation.command.Command;
-import de.swiftbyte.jdaboot.annotation.command.Subcommand;
-import de.swiftbyte.jdaboot.command.SlashCommand;
+import de.swiftbyte.jdaboot.annotation.interactions.command.Command;
+import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
+import de.swiftbyte.jdaboot.interactions.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 @Command(

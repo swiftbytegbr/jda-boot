@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.annotation.command;
+package de.swiftbyte.jdaboot.annotation.interactions.command;
 
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

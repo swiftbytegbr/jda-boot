@@ -1,4 +1,4 @@
-package de.jonafaust.test;
+package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.MemberCachePolicyAutoConfiguration;

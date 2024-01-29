@@ -1,8 +1,8 @@
 package de.swiftbyte.jdaboot;
 
 import de.swiftbyte.jdaboot.annotation.AutoConfiguration;
-import de.swiftbyte.jdaboot.button.ButtonManager;
-import de.swiftbyte.jdaboot.command.CommandManager;
+import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
+import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import de.swiftbyte.jdaboot.configuration.ConfigValueManager;
 import de.swiftbyte.jdaboot.embeds.EmbedManager;

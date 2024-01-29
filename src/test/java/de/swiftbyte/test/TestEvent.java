@@ -1,4 +1,4 @@
-package de.jonafaust.test;
+package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.EventHandler;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
