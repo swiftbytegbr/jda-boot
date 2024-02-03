@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.annotation;
 
-import de.swiftbyte.jdaboot.MemberCachePolicyAutoConfiguration;
+import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import de.swiftbyte.jdaboot.configuration.PropertiesConfigProviderImpl;
 import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface AutoConfiguration {
+public @interface JDABootConfiguration {
 
     /**
      * Specifies the configuration provider class to be used.
@@ -77,6 +77,6 @@ public @interface AutoConfiguration {
      * @return The MemberCachePolicy to use.
      * @since alpha.4
      */
-    MemberCachePolicyAutoConfiguration memberCachePolicy() default MemberCachePolicyAutoConfiguration.DEFAULT;
+    MemberCachePolicyConfiguration memberCachePolicy() default MemberCachePolicyConfiguration.DEFAULT;
 
 }

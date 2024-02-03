@@ -38,7 +38,7 @@ public class ConfigValueManager {
                     throw new RuntimeException(e);
                 }
             } else {
-                log.warn("A translator must be a static field. Skipping field " + field + "...");
+                log.warn("A Set Value must be a static field. Skipping field " + field + "...");
             }
         });
     }

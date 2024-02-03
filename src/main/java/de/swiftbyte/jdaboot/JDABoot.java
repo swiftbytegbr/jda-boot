@@ -1,7 +1,7 @@
 package de.swiftbyte.jdaboot;
 
 
-import de.swiftbyte.jdaboot.annotation.AutoConfiguration;
+import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +24,7 @@ import java.util.List;
  * @since alpha.4
  */
 @Slf4j
-@AutoConfiguration
+@JDABootConfiguration
 public class JDABoot {
 
     @Getter
@@ -86,7 +86,7 @@ public class JDABoot {
      *
      * @param settings The settings to use when starting the bot.
      * @since alpha.4
-     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
+     * @deprecated Use {@link #run(Class)} instead and configure via {@link JDABootConfiguration}.
      */
     @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, DiscordSettings settings) {
@@ -101,7 +101,7 @@ public class JDABoot {
      * @param memberCachePolicy The policy to use for member caching.
      * @param allow             The list of allowed GatewayIntents.
      * @since alpha.4
-     * @deprecated Use {@link #run(Class)} instead and configure via {@link AutoConfiguration}.
+     * @deprecated Use {@link #run(Class)} instead and configure via {@link JDABootConfiguration}.
      */
     @Deprecated(forRemoval = true)
     public static void run(Class<?> mainClass, MemberCachePolicy memberCachePolicy, GatewayIntent... allow) {
@@ -159,10 +159,13 @@ public class JDABoot {
         try {
             discordLogin(memberCachePolicy, allow);
         } catch (InterruptedException e) {
-            log.error("Error while logging in to Discord. " + "\nThe system will now exit.");
+            log.error("Error while logging in to Discord. " + "\nThe system will now exit.", e);
             System.exit(1);
-        } catch (InvalidTokenException | IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             log.error("There is an invalid token in the config provided. You can create a token here: https://discord.com/developers/applications", e);
+            System.exit(1);
+        } catch (IllegalArgumentException e) {
+            log.error("An error occurred while logging in to Discord!", e);
             System.exit(1);
         }
         log.info("JDABoot initialized!");

@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot;
 
-import de.swiftbyte.jdaboot.annotation.AutoConfiguration;
+import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
 import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
@@ -23,9 +23,9 @@ import java.util.List;
 
 /**
  * Manages the configuration for the JDABoot framework.
- * It applies the configuration specified by the {@link AutoConfiguration} annotation and initializes various managers.
+ * It applies the configuration specified by the {@link JDABootConfiguration} annotation and initializes various managers.
  *
- * @see AutoConfiguration
+ * @see JDABootConfiguration
  * @see ConfigProvider
  * @see TranslationProvider
  * @see CommandManager
@@ -77,28 +77,28 @@ public class JDABootConfigurationManager {
     private static ButtonManager buttonManager;
 
     /**
-     * Applies the configuration specified by the {@link AutoConfiguration} annotation.
+     * Applies the configuration specified by the {@link JDABootConfiguration} annotation.
      *
      * @param mainClass The main class of the application.
      * @since alpha.4
      */
     protected static void autoConfigure(Class<?> mainClass) {
-        AutoConfiguration autoConfiguration = mainClass.getAnnotation(AutoConfiguration.class);
-        if (autoConfiguration == null) {
-            autoConfiguration = JDABoot.class.getAnnotation(AutoConfiguration.class);
+        JDABootConfiguration jdaBootConfiguration = mainClass.getAnnotation(JDABootConfiguration.class);
+        if (jdaBootConfiguration == null) {
+            jdaBootConfiguration = JDABoot.class.getAnnotation(JDABootConfiguration.class);
         }
-        applyAutoConfiguration(autoConfiguration);
+        applyAutoConfiguration(jdaBootConfiguration);
     }
 
     /**
-     * Applies the configuration specified by the {@link AutoConfiguration} annotation.
+     * Applies the configuration specified by the {@link JDABootConfiguration} annotation.
      *
-     * @param autoConfiguration The AutoConfiguration annotation to apply.
+     * @param jdaBootConfiguration The AutoConfiguration annotation to apply.
      * @since alpha.4
      */
-    private static void applyAutoConfiguration(@NotNull AutoConfiguration autoConfiguration) {
+    private static void applyAutoConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
         try {
-            configProvider = autoConfiguration.configProvider().getConstructor().newInstance();
+            configProvider = jdaBootConfiguration.configProvider().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             log.error("Failed to instantiate config provider", e);
@@ -106,17 +106,17 @@ public class JDABootConfigurationManager {
         }
 
         try {
-            translationProvider = autoConfiguration.translationProvider().getConstructor().newInstance();
+            translationProvider = jdaBootConfiguration.translationProvider().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             log.error("Failed to instantiate translation provider", e);
             System.exit(1);
         }
 
-        intents = List.of(autoConfiguration.intents());
-        enabledCacheFlags = List.of(autoConfiguration.enabledCacheFlags());
-        disabledCacheFlags = List.of(autoConfiguration.disabledCacheFlags());
-        memberCachePolicy = autoConfiguration.memberCachePolicy().getJDAUtilsMemberCachePolicy();
+        intents = List.of(jdaBootConfiguration.intents());
+        enabledCacheFlags = List.of(jdaBootConfiguration.enabledCacheFlags());
+        disabledCacheFlags = List.of(jdaBootConfiguration.disabledCacheFlags());
+        memberCachePolicy = jdaBootConfiguration.memberCachePolicy().getJDAUtilsMemberCachePolicy();
     }
 
     /**

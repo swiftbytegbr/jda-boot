@@ -31,7 +31,7 @@ public class ButtonManager extends ListenerAdapter {
     /**
      * The map of classes to button IDs.
      */
-    private HashMap<Class, String> classList = new HashMap<>();
+    private HashMap<Class<?>, String> classList = new HashMap<>();
 
     /**
      * The map of button IDs to Button instances.
