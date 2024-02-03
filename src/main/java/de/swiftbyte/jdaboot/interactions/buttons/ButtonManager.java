@@ -26,7 +26,7 @@ public class ButtonManager extends ListenerAdapter {
     /**
      * The map of button IDs to BotButton instances.
      */
-    private HashMap<String, BotButton> buttonExecutableList = new HashMap<>();
+    private HashMap<String, ButtonExecutor> buttonExecutableList = new HashMap<>();
 
     /**
      * The map of classes to button IDs.
@@ -56,9 +56,9 @@ public class ButtonManager extends ListenerAdapter {
 
                 String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
-                if (BotButton.class.isAssignableFrom(clazz)) {
+                if (ButtonExecutor.class.isAssignableFrom(clazz)) {
                     Constructor<?> constructor = clazz.getConstructor();
-                    BotButton cmd = (BotButton) constructor.newInstance();
+                    ButtonExecutor cmd = (ButtonExecutor) constructor.newInstance();
 
                     buttonExecutableList.put(id, cmd);
                     classList.put(clazz, id);

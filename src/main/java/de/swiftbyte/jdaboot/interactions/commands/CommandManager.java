@@ -36,9 +36,9 @@ import java.util.List;
 @Slf4j
 public class CommandManager extends ListenerAdapter {
 
-    private HashMap<String, SlashCommand> commands = new HashMap<>();
+    private HashMap<String, SlashCommandExecutor> commands = new HashMap<>();
 
-    private HashMap<String, ContextCommand<?>> contextCommands = new HashMap<>();
+    private HashMap<String, ContextCommandExecutor<?>> contextCommands = new HashMap<>();
 
     @Getter
     private HashMap<String, CommandData> commandData = new HashMap<>();
@@ -61,9 +61,9 @@ public class CommandManager extends ListenerAdapter {
 
                 String name = annotation.name();
 
-                if (SlashCommand.class.isAssignableFrom(clazz)) {
+                if (SlashCommandExecutor.class.isAssignableFrom(clazz)) {
                     Constructor<?> constructor = clazz.getConstructor();
-                    SlashCommand cmd = (SlashCommand) constructor.newInstance();
+                    SlashCommandExecutor cmd = (SlashCommandExecutor) constructor.newInstance();
 
                     CommandData data = buildCommand(annotation);
                     if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.SLASH)) {
@@ -77,10 +77,10 @@ public class CommandManager extends ListenerAdapter {
                     jda.upsertCommand(data).queue();
                     cmd.onEnable((SlashCommandData) data);
 
-                } else if (UserContextCommand.class.isAssignableFrom(clazz)) {
+                } else if (UserContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
                     Constructor<?> constructor = clazz.getConstructor();
-                    ContextCommand<?> cmd = (ContextCommand<?>) constructor.newInstance();
+                    ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) constructor.newInstance();
 
                     CommandData data = buildCommand(annotation);
                     if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.USER)) {
@@ -93,10 +93,10 @@ public class CommandManager extends ListenerAdapter {
                     if (!annotation.isGlobal()) return;
                     jda.upsertCommand(data).queue();
                     cmd.onEnable(data);
-                } else if (MessageContextCommand.class.isAssignableFrom(clazz)) {
+                } else if (MessageContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
                     Constructor<?> constructor = clazz.getConstructor();
-                    ContextCommand<?> cmd = (ContextCommand<?>) constructor.newInstance();
+                    ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) constructor.newInstance();
 
                     CommandData data = buildCommand(annotation);
                     if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE)) {
@@ -134,7 +134,7 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         String name = event.getName();
-        SlashCommand executor = commands.get(name);
+        SlashCommandExecutor executor = commands.get(name);
         if (executor != null) {
             executor.onCommand(event);
         }
@@ -174,15 +174,15 @@ public class CommandManager extends ListenerAdapter {
      */
     private void genericContextEvent(GenericContextInteractionEvent<?> event) {
         String name = event.getName();
-        ContextCommand<?> executor = contextCommands.get(name);
+        ContextCommandExecutor<?> executor = contextCommands.get(name);
 
         if (event instanceof UserContextInteractionEvent) {
             if (executor != null) {
-                ((UserContextCommand) executor).onCommand((UserContextInteractionEvent) event);
+                ((UserContextCommandExecutor) executor).onCommand((UserContextInteractionEvent) event);
             }
         } else if (event instanceof MessageContextInteractionEvent) {
             if (executor != null) {
-                ((MessageContextCommand) executor).onCommand((MessageContextInteractionEvent) event);
+                ((MessageContextCommandExecutor) executor).onCommand((MessageContextInteractionEvent) event);
             }
         }
     }

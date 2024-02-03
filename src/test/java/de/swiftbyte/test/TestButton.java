@@ -1,7 +1,7 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.interactions.Button;
-import de.swiftbyte.jdaboot.interactions.buttons.BotButton;
+import de.swiftbyte.jdaboot.interactions.buttons.ButtonExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 @Button(
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
         url = "https://hufeisen-games.de",
         type = Button.Type.LINK
 )
-public class TestButton implements BotButton {
+public class TestButton implements ButtonExecutor {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {

@@ -4,13 +4,13 @@ import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionE
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 /**
- * The ContextCommand interface represents a command that operates within a certain context.
+ * The ContextCommandExecutor interface represents a command that operates within a certain context.
  * It provides methods to handle enabling the command and executing the command when it's invoked.
  *
  * @param <T> The type of the context in which the command operates.
  * @since alpha.4
  */
-interface ContextCommand<T extends GenericContextInteractionEvent<?>> {
+interface ContextCommandExecutor<T extends GenericContextInteractionEvent<?>> {
 
     /**
      * Called when the context command is enabled. The default implementation does nothing.

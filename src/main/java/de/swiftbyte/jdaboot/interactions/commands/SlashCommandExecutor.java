@@ -4,12 +4,12 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
- * The SlashCommand interface represents a slash command in the application.
+ * The SlashCommandExecutor interface represents a slash command in the application.
  * It provides methods to handle enabling the command and executing the command when it's invoked.
  *
  * @since alpha.4
  */
-public interface SlashCommand {
+public interface SlashCommandExecutor {
 
     /**
      * Called when the slash command is enabled. The default implementation does nothing.
