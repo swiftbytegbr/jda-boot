@@ -1,6 +1,8 @@
 package de.swiftbyte.jdaboot.interactions.commands;
 
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
@@ -26,5 +28,14 @@ public interface SlashCommandExecutor {
      * @since alpha.4
      */
     void onCommand(SlashCommandInteractionEvent event);
+
+    /**
+     * Called when the slash command is auto-completed.
+     *
+     * @since alpha.4
+     */
+    default void onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event) {
+
+    }
 
 }

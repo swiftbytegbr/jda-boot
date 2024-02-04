@@ -1,6 +1,6 @@
 package de.swiftbyte.jdaboot.interactions.commands;
 
-import de.swiftbyte.jdaboot.annotation.interactions.command.Command;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
@@ -8,10 +8,7 @@ import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -54,10 +51,10 @@ public class CommandManager extends ListenerAdapter {
     public CommandManager(JDA jda, Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
 
-        reflections.getTypesAnnotatedWith(Command.class).forEach(clazz -> {
+        reflections.getTypesAnnotatedWith(SlashCommand.class).forEach(clazz -> {
 
             try {
-                Command annotation = clazz.getAnnotation(Command.class);
+                SlashCommand annotation = clazz.getAnnotation(SlashCommand.class);
 
                 String name = annotation.name();
 
@@ -142,6 +139,22 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /**
+     * Handles command autocomplete interaction events. When a command autocomplete is invoked, this method finds the corresponding
+     * command instance and delegates the event to it.
+     *
+     * @param event The command autocomplete interaction event.
+     * @since alpha.4
+     */
+    @Override
+    public void onCommandAutoCompleteInteraction(@Nonnull CommandAutoCompleteInteractionEvent event) {
+        String name = event.getName();
+        SlashCommandExecutor executor = commands.get(name);
+        if (executor != null) {
+            executor.onAutoComplete(event.getFocusedOption(), event);
+        }
+    }
+
+    /**
      * Handles user context interaction events. When a user context command is invoked, this method finds the corresponding
      * command instance and delegates the event to it.
      *
@@ -195,7 +208,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildCommand(Command command) {
+    private CommandData buildCommand(SlashCommand command) {
 
         String id = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.name());
 
@@ -213,7 +226,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built SlashCommandData.
      * @since alpha.4
      */
-    private SlashCommandData buildSlashCommand(String id, Command command) {
+    private SlashCommandData buildSlashCommand(String id, SlashCommand command) {
 
         String description = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.description());
         SlashCommandData data = Commands.slash(id, description);
@@ -252,13 +265,13 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildUserOrChatCommand(Command.Type type, String id, Command command) {
+    private CommandData buildUserOrChatCommand(SlashCommand.Type type, String id, SlashCommand command) {
 
         CommandData data = null;
 
-        if (type.equals(Command.Type.USER)) {
+        if (type.equals(SlashCommand.Type.USER)) {
             data = Commands.user(id);
-        } else if (type.equals(Command.Type.MESSAGE)) {
+        } else if (type.equals(SlashCommand.Type.MESSAGE)) {
             data = Commands.message(id);
         }
 
