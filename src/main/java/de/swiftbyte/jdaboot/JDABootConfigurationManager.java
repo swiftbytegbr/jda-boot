@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot;
 
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
+import de.swiftbyte.jdaboot.cli.ConsoleCommandManager;
 import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
 import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
@@ -76,18 +77,22 @@ public class JDABootConfigurationManager {
     @Getter(AccessLevel.PUBLIC)
     private static ButtonManager buttonManager;
 
+
+    private static boolean consoleCommandsEnabled;
+
+
     /**
      * Applies the configuration specified by the {@link JDABootConfiguration} annotation.
      *
      * @param mainClass The main class of the application.
      * @since alpha.4
      */
-    protected static void autoConfigure(Class<?> mainClass) {
+    protected static void configure(Class<?> mainClass) {
         JDABootConfiguration jdaBootConfiguration = mainClass.getAnnotation(JDABootConfiguration.class);
         if (jdaBootConfiguration == null) {
             jdaBootConfiguration = JDABoot.class.getAnnotation(JDABootConfiguration.class);
         }
-        applyAutoConfiguration(jdaBootConfiguration);
+        applyConfiguration(jdaBootConfiguration);
     }
 
     /**
@@ -96,7 +101,7 @@ public class JDABootConfigurationManager {
      * @param jdaBootConfiguration The AutoConfiguration annotation to apply.
      * @since alpha.4
      */
-    private static void applyAutoConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
+    private static void applyConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
         try {
             configProvider = jdaBootConfiguration.configProvider().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
@@ -117,6 +122,8 @@ public class JDABootConfigurationManager {
         enabledCacheFlags = List.of(jdaBootConfiguration.enabledCacheFlags());
         disabledCacheFlags = List.of(jdaBootConfiguration.disabledCacheFlags());
         memberCachePolicy = jdaBootConfiguration.memberCachePolicy().getJDAUtilsMemberCachePolicy();
+
+        consoleCommandsEnabled = jdaBootConfiguration.enableConsoleCommands();
     }
 
     /**
@@ -133,5 +140,7 @@ public class JDABootConfigurationManager {
         new ConfigValueManager(mainClass);
         new EventManager(jda, mainClass);
         new EmbedManager(mainClass);
+
+        if(consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
     }
 }

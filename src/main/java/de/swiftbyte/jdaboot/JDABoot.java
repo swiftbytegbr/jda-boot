@@ -152,7 +152,7 @@ public class JDABoot {
 
         instance = this;
 
-        JDABootConfigurationManager.autoConfigure(mainClass);
+        JDABootConfigurationManager.configure(mainClass);
 
         configProvider = JDABootConfigurationManager.getConfigProvider();
 

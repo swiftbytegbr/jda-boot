@@ -79,4 +79,13 @@ public @interface JDABootConfiguration {
      */
     MemberCachePolicyConfiguration memberCachePolicy() default MemberCachePolicyConfiguration.DEFAULT;
 
+    /**
+     * Specifies whether console commands should be enabled.
+     * By default, console commands are enabled.
+     *
+     * @return True if console commands should be enabled, false otherwise.
+     * @since alpha.4
+     */
+    boolean enableConsoleCommands() default true;
+
 }
