@@ -63,7 +63,7 @@ public class ConsoleCommandManager {
      * If the command is still not found, it logs a warning.
      *
      * @param command The command to execute.
-     * @param args The arguments to pass to the command.
+     * @param args    The arguments to pass to the command.
      * @since alpha.4
      */
     protected void runCommand(String command, String[] args) {

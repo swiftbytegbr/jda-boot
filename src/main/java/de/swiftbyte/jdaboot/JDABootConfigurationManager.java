@@ -2,12 +2,12 @@ package de.swiftbyte.jdaboot;
 
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.cli.ConsoleCommandManager;
-import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
-import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import de.swiftbyte.jdaboot.configuration.ConfigValueManager;
 import de.swiftbyte.jdaboot.embeds.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
+import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
+import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -141,6 +141,6 @@ public class JDABootConfigurationManager {
         new EventManager(jda, mainClass);
         new EmbedManager(mainClass);
 
-        if(consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
+        if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
     }
 }

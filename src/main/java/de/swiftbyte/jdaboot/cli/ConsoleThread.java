@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * The ConsoleThread class is responsible for reading console input and executing the corresponding commands.
