@@ -6,8 +6,37 @@
 
     <groupId>de.swiftbyte</groupId>
     <artifactId>jda-boot</artifactId>
-    <version>alpha4</version>
-    <description>jda-boot is an annotation-driven jda framework that lets you create discord bots insanely fast</description>
+    <version>1.0.0-alpha4</version>
+    <packaging>jar</packaging>
+
+    <name>JDA-Boot</name>
+    <description>JDA-Boot is an annotation-driven jda framework that lets you create discord bots insanely fast</description>
+    <url>https://github.com/swiftbytegbr/jda-boot</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>Hufeisen</id>
+            <name>Lion Kaspereit</name>
+            <email>lion.kaspereit@swiftbyte.de</email>
+            <organization>SwiftByte</organization>
+            <organizationUrl>https://github.com/swiftbytegbr</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/swiftbytegbr/jda-boot.git</connection>
+        <developerConnection>scm:git:ssh://github.com/swiftbytegbr/jda-boot.git</developerConnection>
+        <url>https://github.com/swiftbytegbr/jda-boot/tree/master</url>
+    </scm>
+
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -49,4 +78,63 @@
             <version>2.2</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.3.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>maven-central</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
