@@ -3,6 +3,7 @@ package de.swiftbyte.test;
 import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
+import de.swiftbyte.jdaboot.annotation.Scheduler;
 import de.swiftbyte.jdaboot.annotation.SetValue;
 import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -26,4 +27,15 @@ public class TestClient {
         JDABoot.getInstance().updateCommands("774993548579045386");
     }
 
+    public static int testValue = 0;
+
+    @Scheduler(interval = 1000 * 10, initialDelay = 5000)
+    public static boolean testScheduler() {
+
+        testValue++;
+
+        System.out.println("Scheduler test run " + testValue + " times.");
+
+        return testValue < 10;
+    }
 }

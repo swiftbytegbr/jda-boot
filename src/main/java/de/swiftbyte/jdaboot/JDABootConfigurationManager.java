@@ -8,6 +8,7 @@ import de.swiftbyte.jdaboot.embeds.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
 import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
 import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
+import de.swiftbyte.jdaboot.scheduler.SchedulerManager;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,10 +31,12 @@ import java.util.List;
  * @see ConfigProvider
  * @see TranslationProvider
  * @see CommandManager
+ * @see ConsoleCommandManager
  * @see ButtonManager
  * @see ConfigValueManager
  * @see EventManager
  * @see EmbedManager
+ * @see SchedulerManager
  * @since alpha.4
  */
 @Slf4j
@@ -140,6 +143,7 @@ public class JDABootConfigurationManager {
         new ConfigValueManager(mainClass);
         new EventManager(jda, mainClass);
         new EmbedManager(mainClass);
+        new SchedulerManager(mainClass);
 
         if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
     }

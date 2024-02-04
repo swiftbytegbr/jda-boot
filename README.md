@@ -19,9 +19,9 @@ More information coming soon!
 - ✅ Variable System
 - ✅ internationalization (i18n)
 - ✅ Config System
-- 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ⛔ Modals)
+- 🚧 Other Interactions (✅ Buttons, ⛔ Select Menus, ⛔ Modals)
 - ⛔ Database ORM System
-- ⛔ Scheduler System
+- ✅ Scheduler System
 - ⛔ Music Implementation (LavaPlayer)
 
 
