@@ -6,7 +6,7 @@
 
     <groupId>de.swiftbyte</groupId>
     <artifactId>jda-boot</artifactId>
-    <version>1.0.0-alpha4</version>
+    <version>1.0.0-alpha4.1</version>
     <packaging>jar</packaging>
 
     <name>JDA-Boot</name>
@@ -26,6 +26,13 @@
             <id>Hufeisen</id>
             <name>Lion Kaspereit</name>
             <email>lion.kaspereit@swiftbyte.de</email>
+            <organization>SwiftByte</organization>
+            <organizationUrl>https://github.com/swiftbytegbr</organizationUrl>
+        </developer>
+        <developer>
+            <id>jonafaust</id>
+            <name>Jona Faust</name>
+            <email>jona.faust@swiftbyte.de</email>
             <organization>SwiftByte</organization>
             <organizationUrl>https://github.com/swiftbytegbr</organizationUrl>
         </developer>
