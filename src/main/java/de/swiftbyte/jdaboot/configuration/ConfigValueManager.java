@@ -27,7 +27,7 @@ public class ConfigValueManager {
      */
     public ConfigValueManager(Class<?> mainClass) {
 
-        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.FieldsAnnotated);
+        Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
         reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> {
 

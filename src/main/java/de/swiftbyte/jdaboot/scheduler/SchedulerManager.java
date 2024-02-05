@@ -31,7 +31,7 @@ public class SchedulerManager {
      * @since alpha.4
      */
     public SchedulerManager(Class<?> mainClass) {
-        reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.SubTypes.filterResultsBy(c -> true));
+        reflections = new Reflections(mainClass.getPackageName(), Scanners.SubTypes.filterResultsBy(c -> true));
 
         Set<Class<?>> classes = new HashSet<>(reflections.getSubTypesOf(Object.class));
 

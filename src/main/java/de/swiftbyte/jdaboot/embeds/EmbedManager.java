@@ -24,7 +24,7 @@ public class EmbedManager {
      */
     public EmbedManager(Class<?> mainClass) {
 
-        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.FieldsAnnotated);
+        Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
         reflections.getFieldsAnnotatedWith(Embed.class).forEach(field -> {
 

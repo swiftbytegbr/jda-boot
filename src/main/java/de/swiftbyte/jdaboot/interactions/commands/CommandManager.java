@@ -49,7 +49,7 @@ public class CommandManager extends ListenerAdapter {
      * @since alpha.4
      */
     public CommandManager(JDA jda, Class<?> mainClass) {
-        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
+        Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(SlashCommand.class).forEach(clazz -> {
 

@@ -39,7 +39,7 @@ public class EventManager implements EventListener {
     public EventManager(JDA jda, Class<?> mainClass) {
         long start = System.currentTimeMillis();
         this.jda = jda;
-        reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.SubTypes.filterResultsBy(c -> true));
+        reflections = new Reflections(mainClass.getPackageName(), Scanners.SubTypes.filterResultsBy(c -> true));
 
         Set<Class<?>> classes = new HashSet<>(reflections.getSubTypesOf(Object.class));
         Set<Method> methods = new HashSet<>();

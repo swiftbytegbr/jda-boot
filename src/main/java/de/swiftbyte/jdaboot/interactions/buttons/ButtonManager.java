@@ -47,7 +47,7 @@ public class ButtonManager extends ListenerAdapter {
      * @since alpha.4
      */
     public ButtonManager(JDA jda, Class<?> mainClass) {
-        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
+        Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(Button.class).forEach(clazz -> {
 

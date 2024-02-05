@@ -31,7 +31,7 @@ public class ConsoleCommandManager {
      * @since alpha.4
      */
     public ConsoleCommandManager(Class<?> mainClass) {
-        Reflections reflections = new Reflections(mainClass.getPackageName().split("\\.")[0]);
+        Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(ConsoleCommand.class).forEach(clazz -> {
 
