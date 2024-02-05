@@ -4,6 +4,12 @@ import lombok.Getter;
 
 import java.awt.*;
 
+/**
+ * The EmbedColor enum defines a set of predefined colors that can be used in embeds.
+ * Each enum constant represents a color and is associated with a java.awt.Color instance.
+ *
+ * @since alpha.4
+ */
 @Getter
 public enum EmbedColor {
 
@@ -21,8 +27,17 @@ public enum EmbedColor {
     WHITE(Color.white),
     YELLOW(Color.yellow);
 
+    /**
+     * The java.awt.Color instance associated with the enum constant.
+     */
     private final Color color;
 
+    /**
+     * Constructor for EmbedColor. Initializes the enum constant with the specified java.awt.Color instance.
+     *
+     * @param color The java.awt.Color instance to associate with the enum constant.
+     * @since alpha.4
+     */
     EmbedColor(Color color) {
 
         this.color = color;

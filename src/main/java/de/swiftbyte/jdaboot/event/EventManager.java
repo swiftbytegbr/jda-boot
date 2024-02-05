@@ -14,6 +14,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * The EventManager class is responsible for managing events in the application.
+ * It uses reflection to find methods annotated with @EventHandler and invokes them when the corresponding event occurs.
+ *
+ * @since alpha.4
+ */
 @Slf4j
 public class EventManager implements EventListener {
 
@@ -23,10 +29,17 @@ public class EventManager implements EventListener {
 
     JDA jda;
 
+    /**
+     * Constructor for EventManager. Initializes the manager with the specified JDA instance and main class.
+     *
+     * @param jda       The JDA instance to use for event handling.
+     * @param mainClass The main class of your project.
+     * @since alpha.4
+     */
     public EventManager(JDA jda, Class<?> mainClass) {
         long start = System.currentTimeMillis();
         this.jda = jda;
-        reflections = new Reflections(mainClass.getPackageName().split("\\.")[0], Scanners.SubTypes.filterResultsBy(c -> true));
+        reflections = new Reflections(mainClass.getPackageName(), Scanners.SubTypes.filterResultsBy(c -> true));
 
         Set<Class<?>> classes = new HashSet<>(reflections.getSubTypesOf(Object.class));
         Set<Method> methods = new HashSet<>();
@@ -47,13 +60,13 @@ public class EventManager implements EventListener {
             try {
                 method.getDeclaringClass().getConstructor();
             } catch (NoSuchMethodException e) {
-                log.error("The class " + method.getDeclaringClass().getName()  + " has no no args constructor, this is required for event handling. Ignoring the method " + method.getName());
+                log.error("The class " + method.getDeclaringClass().getName() + " has no no args constructor, this is required for event handling. Ignoring the method " + method.getName());
                 continue;
             }
 
             try {
                 method.getDeclaringClass().getConstructor();
-            }  catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException e) {
                 log.warn("Found @EventHandler method " + method.getClass().getName() + "." + method.getName() + " in a class without a no args constructor! Skipping...");
             }
 
@@ -97,6 +110,12 @@ public class EventManager implements EventListener {
         log.info("Registered " + handlers.size() + " event handler(s) in " + (end - start) + "ms");
     }
 
+    /**
+     * Handles the specified event. Invokes the corresponding event handlers for the event.
+     *
+     * @param event The event to handle.
+     * @since alpha.4
+     */
     @Override
     public void onEvent(@NotNull GenericEvent event) {
         if (handlers.containsKey(event.getClass())) {
