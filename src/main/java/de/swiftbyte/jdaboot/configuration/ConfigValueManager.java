@@ -33,7 +33,14 @@ public class ConfigValueManager {
 
             if (Modifier.isStatic(field.getModifiers())) {
                 try {
-                    field.set(null, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value()));
+                    if(field.canAccess(null)) {
+                        field.set(null, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value()));
+                    } else {
+                        field.setAccessible(true);
+                        field.set(null, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value()));
+                        field.setAccessible(false);
+                    }
+
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
