@@ -140,8 +140,8 @@ public class JDABootConfigurationManager {
         commandManager = new CommandManager(jda, mainClass);
         buttonManager = new ButtonManager(jda, mainClass);
 
-        new ConfigValueManager(mainClass);
         new EventManager(jda, mainClass);
+        new ConfigValueManager(mainClass);
         new EmbedManager(mainClass);
         new SchedulerManager(mainClass);
 

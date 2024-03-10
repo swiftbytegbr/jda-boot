@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot.cli;
 
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommand;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,22 +36,17 @@ public class ConsoleCommandManager {
 
         reflections.getTypesAnnotatedWith(ConsoleCommand.class).forEach(clazz -> {
 
-            try {
-                ConsoleCommand annotation = clazz.getAnnotation(ConsoleCommand.class);
+            ConsoleCommand annotation = clazz.getAnnotation(ConsoleCommand.class);
 
-                String name = annotation.name();
+            String name = annotation.name();
 
-                for (String alias : annotation.aliases()) {
-                    aliases.put(alias, name);
-                }
-
-                ConsoleCommandExecutor executor = (ConsoleCommandExecutor) clazz.getConstructor().newInstance();
-                commands.put(name, executor);
-
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                     InvocationTargetException e) {
-                log.error("Error while registering command " + clazz.getSimpleName() + "!", e);
+            for (String alias : annotation.aliases()) {
+                aliases.put(alias, name);
             }
+
+            ConsoleCommandExecutor executor = (ConsoleCommandExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
+            commands.put(name, executor);
+            log.info("Registered console command " + clazz.getName());
         });
 
         ConsoleThread consoleThread = new ConsoleThread(this);

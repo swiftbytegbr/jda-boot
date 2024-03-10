@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot.scheduler;
 
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -36,7 +37,7 @@ public class SchedulerManager {
         Set<Class<?>> classes = new HashSet<>(reflections.getSubTypesOf(Object.class));
 
         for (Class<?> clazz : classes) {
-            for (Method method : clazz.getMethods()) {
+            for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Scheduler.class)) {
 
                     Scheduler scheduler = method.getAnnotation(Scheduler.class);
@@ -45,13 +46,8 @@ public class SchedulerManager {
                         log.error("Method " + method.getName() + " in class " + clazz.getSimpleName() + " is annotated with @Scheduler but has parameters!");
                         continue;
                     }
-
-                    if (!Modifier.isStatic(method.getModifiers())) {
-                        log.error("Method " + method.getName() + " in class " + clazz.getSimpleName() + " is annotated with @Scheduler but is not static!");
-                        continue;
-                    }
-
                     addScheduler(scheduler, method);
+                    log.info("Registered scheduler '" + method.getName() + "' in class " + clazz.getName());
                 }
             }
         }
@@ -70,16 +66,12 @@ public class SchedulerManager {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    if (method.getReturnType() == boolean.class) {
-                        if (!(boolean) method.invoke(null)) {
-                            timer.cancel();
-                        }
-                    } else {
-                        method.invoke(null);
+                if (method.getReturnType() == boolean.class) {
+                    if (!(boolean) JDABootObjectManager.runMethod(method.getDeclaringClass(), method)) {
+                        timer.cancel();
                     }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.error("Error while invoking scheduler " + method.getName() + "!", e);
+                } else {
+                    JDABootObjectManager.runMethod(method.getDeclaringClass(), method);
                 }
             }
         }, scheduler.initialDelay(), scheduler.interval());

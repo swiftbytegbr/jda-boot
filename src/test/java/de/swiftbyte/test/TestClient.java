@@ -20,7 +20,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 public class TestClient {
 
     @SetValue("app.version")
-    public static String version;
+    private String version;
 
     public static void main(String[] args) {
         JDABoot.run(TestClient.class);
@@ -30,7 +30,7 @@ public class TestClient {
     public static int testValue = 0;
 
     @Scheduler(interval = 1000 * 10, initialDelay = 5000)
-    public static boolean testScheduler() {
+    private boolean testScheduler() {
 
         testValue++;
 

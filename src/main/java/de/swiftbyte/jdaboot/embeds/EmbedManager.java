@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot.embeds;
 
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -30,16 +31,8 @@ public class EmbedManager {
 
             Embed embedAnnotation = field.getAnnotation(Embed.class);
 
-            if (Modifier.isStatic(field.getModifiers())) {
-                try {
-                    field.setAccessible(true);
-                    field.set(null, new TemplateEmbed(embedAnnotation));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                log.warn("An embed must be a static field. Skipping field " + field + "...");
-            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, new TemplateEmbed(embedAnnotation));
+
         });
     }
 }

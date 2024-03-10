@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interactions.buttons;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interactions.Button;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -51,23 +52,18 @@ public class ButtonManager extends ListenerAdapter {
 
         reflections.getTypesAnnotatedWith(Button.class).forEach(clazz -> {
 
-            try {
-                Button annotation = clazz.getAnnotation(Button.class);
+            Button annotation = clazz.getAnnotation(Button.class);
 
-                String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
+            String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
-                if (ButtonExecutor.class.isAssignableFrom(clazz)) {
-                    Constructor<?> constructor = clazz.getConstructor();
-                    ButtonExecutor cmd = (ButtonExecutor) constructor.newInstance();
+            if (ButtonExecutor.class.isAssignableFrom(clazz)) {
+                ButtonExecutor cmd = (ButtonExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
 
-                    buttonExecutableList.put(id, cmd);
-                    classList.put(clazz, id);
-                    buttonList.put(id, createButton(annotation, id));
+                buttonExecutableList.put(id, cmd);
+                classList.put(clazz, id);
+                buttonList.put(id, createButton(annotation, id));
 
-                }
-            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
-                     IllegalAccessException e) {
-                log.error("Error while creating button", e);
+                log.info("Registered button " + clazz.getName());
             }
         });
 
