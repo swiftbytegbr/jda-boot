@@ -96,7 +96,7 @@ public class TestEvent {
 ```
 
 ### Create an Embed
-Embeddings can be created by adding the Embed annotation to a variable of type TemplateEmbed. It is possible to define several embeds in a class that is intended for this purpose, or directly in the class in which the embed is used.
+Embeds can be created by adding the Embed annotation to a variable of type TemplateEmbed. It is possible to define several embeds in a class that is intended for this purpose, or directly in the class in which the embed is used.
 ```java
 public class EmbedClass {
 
