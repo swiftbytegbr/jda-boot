@@ -1,8 +1,8 @@
 package de.swiftbyte.jdaboot.interactions.commands;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
@@ -18,8 +18,6 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

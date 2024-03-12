@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
-import java.lang.reflect.Modifier;
-
 /**
  * The EmbedManager class is responsible for managing embeds in the application.
  * It uses reflection to find fields annotated with @Embed and sets them to a new instance of TemplateEmbed created with the @Embed annotation.

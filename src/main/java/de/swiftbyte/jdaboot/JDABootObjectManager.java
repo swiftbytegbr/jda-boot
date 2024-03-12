@@ -30,7 +30,7 @@ public class JDABootObjectManager {
         try {
             Constructor<?> constructor = clazz.getDeclaredConstructor();
 
-            if(constructor.getParameterCount() != 0) {
+            if (constructor.getParameterCount() != 0) {
                 log.warn("Failed to initialise new object of class " + clazz.getName() + " because it does not have a no-args constructor! Arg constructors are supported in another version!");
                 return null;
             }
@@ -64,7 +64,7 @@ public class JDABootObjectManager {
      */
     public static Object getOrInitialiseObject(Class<?> clazz) {
         Object object = getObject(clazz);
-        if(object == null) {
+        if (object == null) {
             object = initialiseNewObject(clazz);
         }
         return object;
@@ -81,12 +81,12 @@ public class JDABootObjectManager {
     public static void injectField(Class<?> clazz, Field field, Object value) {
         try {
 
-            if(Modifier.isStatic(field.getModifiers())) {
-                if(!field.canAccess(null)) field.setAccessible(true);
+            if (Modifier.isStatic(field.getModifiers())) {
+                if (!field.canAccess(null)) field.setAccessible(true);
                 field.set(null, value);
             } else {
                 Object object = getOrInitialiseObject(clazz);
-                if(!field.canAccess(object)) field.setAccessible(true);
+                if (!field.canAccess(object)) field.setAccessible(true);
                 field.set(object, value);
             }
         } catch (Exception e) {
@@ -117,12 +117,12 @@ public class JDABootObjectManager {
      */
     public static Object runMethod(Class<?> clazz, Method method, Object... args) {
         try {
-            if(Modifier.isStatic(method.getModifiers())) {
-                if(!method.canAccess(null)) method.setAccessible(true);
+            if (Modifier.isStatic(method.getModifiers())) {
+                if (!method.canAccess(null)) method.setAccessible(true);
                 return method.invoke(null, args);
             } else {
                 Object object = getOrInitialiseObject(clazz);
-                if(!method.canAccess(object)) method.setAccessible(true);
+                if (!method.canAccess(object)) method.setAccessible(true);
                 return method.invoke(object, args);
             }
         } catch (Exception e) {

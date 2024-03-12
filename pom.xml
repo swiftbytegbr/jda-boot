@@ -10,7 +10,8 @@
     <packaging>jar</packaging>
 
     <name>JDA-Boot</name>
-    <description>JDA-Boot is an annotation-driven jda framework that lets you create discord bots insanely fast</description>
+    <description>JDA-Boot is an annotation-driven jda framework that lets you create discord bots insanely fast
+    </description>
     <url>https://github.com/swiftbytegbr/jda-boot</url>
 
     <licenses>

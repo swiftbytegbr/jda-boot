@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
-import java.lang.reflect.Modifier;
-
 /**
  * Manages configuration values for the JDABoot framework.
  * It uses reflection to find fields annotated with {@link SetValue} and sets their values based on the configuration.

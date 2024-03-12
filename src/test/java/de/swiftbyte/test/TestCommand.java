@@ -3,7 +3,6 @@ package de.swiftbyte.test;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
-import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
 import de.swiftbyte.jdaboot.interactions.commands.SlashCommandExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
