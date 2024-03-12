@@ -6,14 +6,53 @@ package de.swiftbyte.jdaboot.configuration;
  *
  * @since alpha.4
  */
-public interface ConfigProvider {
+public abstract class ConfigProvider {
+
+    /**
+     * The configuration profile to use.
+     * The profile is used to determine which configuration file to use.
+     *
+     * @since alpha.5
+     */
+    protected String configProfile = "default";
+
+    /**
+     * The next configuration provider in the chain.
+     *
+     * @since alpha.5
+     */
+    protected ConfigProvider nextInChain;
+
+    /**
+     * Adds a configuration provider to the chain.
+     * The provider is added to the end of the chain.
+     *
+     * @param nextInChain The next configuration provider in the chain.
+     * @since alpha.5
+     */
+    public void addConfigProviderToChain(ConfigProvider nextInChain) {
+        if(this.nextInChain == null) this.nextInChain = nextInChain;
+        else this.nextInChain.addConfigProviderToChain(nextInChain);
+    }
+
+    /**
+     * Sets the configuration profile.
+     * The profile is used to determine which configuration file to use.
+     *
+     * @param profile The configuration profile to use.
+     * @since alpha.5
+     */
+    public void setConfigProfile(String profile) {
+        this.configProfile = profile;
+        if(nextInChain != null) nextInChain.setConfigProfile(profile);
+    }
 
     /**
      * Reloads the configuration.
      *
      * @since alpha.4
      */
-    void reload();
+    public abstract void reload();
 
     /**
      * Retrieves the value associated with the specified key.
@@ -23,7 +62,7 @@ public interface ConfigProvider {
      * @return The configuration value or null if the key is not found.
      * @since alpha.4
      */
-    default Object get(String key) {
+    public Object get(String key) {
         return get(key, null);
     }
 
@@ -36,7 +75,7 @@ public interface ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    Object get(String key, Object defaultValue);
+    public abstract Object get(String key, Object defaultValue);
 
     /**
      * Retrieves the string value associated with the specified key.
@@ -46,7 +85,7 @@ public interface ConfigProvider {
      * @return The configuration value or null if the key is not found.
      * @since alpha.4
      */
-    default String getString(String key) {
+    public String getString(String key) {
         return getString(key, null);
     }
 
@@ -59,7 +98,7 @@ public interface ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    String getString(String key, String defaultValue);
+    public abstract String getString(String key, String defaultValue);
 
     /**
      * Retrieves the integer value associated with the specified key.
@@ -69,7 +108,7 @@ public interface ConfigProvider {
      * @return The configuration value or 0 if the key is not found.
      * @since alpha.4
      */
-    default int getInt(String key) {
+    public int getInt(String key) {
         return getInt(key, 0);
     }
 
@@ -82,7 +121,7 @@ public interface ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    int getInt(String key, int defaultValue);
+    public abstract int getInt(String key, int defaultValue);
 
     /**
      * Retrieves the boolean value associated with the specified key.
@@ -92,7 +131,7 @@ public interface ConfigProvider {
      * @return The configuration value or false if the key is not found.
      * @since alpha.4
      */
-    default boolean getBoolean(String key) {
+    public boolean getBoolean(String key) {
         return getBoolean(key, false);
     }
 
@@ -105,7 +144,7 @@ public interface ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    boolean getBoolean(String key, boolean defaultValue);
+    public abstract boolean getBoolean(String key, boolean defaultValue);
 
     /**
      * Checks if the configuration contains the specified key.
@@ -114,5 +153,5 @@ public interface ConfigProvider {
      * @return True if the configuration contains the key, false otherwise.
      * @since alpha.4
      */
-    boolean hasKey(String key);
+    public abstract boolean hasKey(String key);
 }

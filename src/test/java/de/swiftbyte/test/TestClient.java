@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 @JDABootConfiguration(
-        configProvider = YmlConfigProviderImpl.class,
         intents = {GatewayIntent.GUILD_MESSAGES},
         disabledCacheFlags = {CacheFlag.VOICE_STATE},
         memberCachePolicy = MemberCachePolicyConfiguration.DEFAULT

@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.annotation;
 
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
+import de.swiftbyte.jdaboot.configuration.EnvConfigProviderImpl;
 import de.swiftbyte.jdaboot.configuration.PropertiesConfigProviderImpl;
 import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import de.swiftbyte.jdaboot.variables.ResourceBundleTranslationProviderImpl;
@@ -13,6 +14,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
 /**
  * Specifies the configuration for the JDABoot framework.
@@ -24,15 +26,14 @@ import java.lang.annotation.Target;
 public @interface JDABootConfiguration {
 
     /**
-     * Specifies the configuration provider class to be used.
-     * By default, it is set to {@link PropertiesConfigProviderImpl}.
-     * Another available configuration provider is {@link YmlConfigProviderImpl},
-     * which can be used to read configuration from YAML files.
+     * The configuration provider chain is used to retrieve configuration values.
+     * The first provider in the chain is used to retrieve the values.
+     * If the value is not found, the next provider in the chain is used.
      *
-     * @return The configuration provider class.
-     * @since alpha.4
+     * @return The configuration provider chain.
+     * @since alpha.5
      */
-    Class<? extends ConfigProvider> configProvider() default PropertiesConfigProviderImpl.class;
+    Class<? extends ConfigProvider>[] configProviderChain() default {EnvConfigProviderImpl.class, PropertiesConfigProviderImpl.class, YmlConfigProviderImpl.class};
 
     /**
      * Specifies the translation provider class to be used.
@@ -87,5 +88,14 @@ public @interface JDABootConfiguration {
      * @since alpha.4
      */
     boolean enableConsoleCommands() default true;
+
+    /**
+     * Specifies the profile to use for the configuration.
+     * By default, the profile is set to "default".
+     *
+     * @return The profile to use for the configuration.
+     * @since alpha.5
+     */
+    String configProfile() default "default";
 
 }

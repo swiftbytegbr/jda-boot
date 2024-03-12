@@ -8,17 +8,15 @@ import java.util.Properties;
 
 /**
  * Implements the ConfigProvider interface using a properties file for configuration.
- * The properties file is named "config.properties" and is expected to be in the classpath.
+ * The properties file is named "config[-configProfile].properties" and is expected to be in the classpath.
  *
  * @see ConfigProvider
  * @since alpha.4
  */
 @Slf4j
-public class PropertiesConfigProviderImpl implements ConfigProvider {
+public class PropertiesConfigProviderImpl extends ConfigProvider {
 
     private Properties properties;
-
-    private static final String CONFIG_FILE_NAME = "config.properties";
 
     /**
      * Constructs a new PropertiesConfigProviderImpl and reloads the configuration.
@@ -57,7 +55,11 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        if(properties.getProperty(key) == null) {
+            if(nextInChain != null) return nextInChain.getString(key, defaultValue);
+            else return defaultValue;
+        }
+        return properties.getProperty(key);
     }
 
     /**
@@ -95,7 +97,11 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        return properties.containsKey(key);
+        if(properties.containsKey(key)) return true;
+        else {
+            if(nextInChain != null) return nextInChain.hasKey(key);
+            else return false;
+        }
     }
 
     /**
@@ -109,15 +115,17 @@ public class PropertiesConfigProviderImpl implements ConfigProvider {
 
         properties = new Properties();
 
-        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
-            if (resourceStream == null) {
-                log.error("Config file not found, please create a config file with the name \"" + CONFIG_FILE_NAME + "\" in your resources.");
-                System.exit(1);
-            } else {
+        String configFileName;
+        if(configProfile.equals("default")) configFileName = "config.properties";
+        else configFileName = "config-" + configProfile + ".properties";
+
+        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+            if (resourceStream != null) {
                 properties.load(resourceStream);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(nextInChain != null) nextInChain.reload();
     }
 }

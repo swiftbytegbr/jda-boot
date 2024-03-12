@@ -105,13 +105,16 @@ public class JDABootConfigurationManager {
      * @since alpha.4
      */
     private static void applyConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
-        try {
-            configProvider = jdaBootConfiguration.configProvider().getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("Failed to instantiate config provider", e);
-            System.exit(1);
+
+        configProvider = (ConfigProvider) JDABootObjectManager.getOrInitialiseObject(jdaBootConfiguration.configProviderChain()[0]);
+        for (int i = 1; i < jdaBootConfiguration.configProviderChain().length; i++) {
+            configProvider.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(jdaBootConfiguration.configProviderChain()[i]));
         }
+
+        String configProfile = configProvider.getString("profile", jdaBootConfiguration.configProfile());
+        log.info("Using configuration profile: '" + configProfile + "'");
+        configProvider.setConfigProfile(configProfile);
+        configProvider.reload();
 
         try {
             translationProvider = jdaBootConfiguration.translationProvider().getConstructor().newInstance();
