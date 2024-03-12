@@ -5,7 +5,6 @@ import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.annotation.Scheduler;
 import de.swiftbyte.jdaboot.annotation.SetValue;
-import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;

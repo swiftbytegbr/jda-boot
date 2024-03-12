@@ -16,6 +16,7 @@ jda-boot version.
 ### Maven
 
 ```xml
+
 <dependency>
     <groupId>de.swiftbyte</groupId>
     <artifactId>jda-boot</artifactId>
@@ -74,6 +75,7 @@ Commands can be created by creating a class that implements the SlashCommandExec
 the SlashCommand annotation.
 
 ```java
+
 @SlashCommand(
         name = "test",
         description = "test",

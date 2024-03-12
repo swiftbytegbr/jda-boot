@@ -15,7 +15,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public void reload() {
-        if(nextInChain != null) nextInChain.reload();
+        if (nextInChain != null) nextInChain.reload();
     }
 
     /**
@@ -43,9 +43,9 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if(System.getenv(key) != null) return System.getenv(key);
-        else if(System.getProperty(key) != null) return System.getProperty(key);
-        else if(nextInChain != null) return nextInChain.getString(key, defaultValue);
+        if (System.getenv(key) != null) return System.getenv(key);
+        else if (System.getProperty(key) != null) return System.getProperty(key);
+        else if (nextInChain != null) return nextInChain.getString(key, defaultValue);
         else return defaultValue;
     }
 
@@ -84,9 +84,9 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        if(System.getenv(key) != null) return true;
-        else if(System.getProperty(key) != null) return true;
-        else if(nextInChain != null) return nextInChain.hasKey(key);
+        if (System.getenv(key) != null) return true;
+        else if (System.getProperty(key) != null) return true;
+        else if (nextInChain != null) return nextInChain.hasKey(key);
         else return false;
     }
 }

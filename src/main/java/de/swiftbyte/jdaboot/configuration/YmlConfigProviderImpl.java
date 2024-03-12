@@ -39,7 +39,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     public void reload() {
 
         String configFileName;
-        if(configProfile.equals("default")) configFileName = "config.yml";
+        if (configProfile.equals("default")) configFileName = "config.yml";
         else configFileName = "config-" + configProfile + ".yml";
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
@@ -49,7 +49,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(nextInChain != null) nextInChain.reload();
+        if (nextInChain != null) nextInChain.reload();
     }
 
     /**
@@ -65,10 +65,10 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     public Object get(String key, Object defaultValue) {
         if (hasKey(key)) {
             if (key.contains(".")) {
-                if(getFromPath(ymlConfig, key) != null) return getFromPath(ymlConfig, key);
+                if (getFromPath(ymlConfig, key) != null) return getFromPath(ymlConfig, key);
                 else return nextInChain.get(key, defaultValue);
             } else {
-                if(ymlConfig.get(key) != null) return ymlConfig.get(key);
+                if (ymlConfig.get(key) != null) return ymlConfig.get(key);
                 else return nextInChain.get(key, defaultValue);
             }
         } else {
@@ -165,9 +165,9 @@ public class YmlConfigProviderImpl extends ConfigProvider {
                 else return false;
             }
         } else {
-            if(ymlConfig.containsKey(key)) return true;
+            if (ymlConfig.containsKey(key)) return true;
             else {
-                if(nextInChain != null) return nextInChain.hasKey(key);
+                if (nextInChain != null) return nextInChain.hasKey(key);
                 else return false;
             }
         }

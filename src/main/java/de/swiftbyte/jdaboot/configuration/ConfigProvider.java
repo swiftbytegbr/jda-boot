@@ -31,7 +31,7 @@ public abstract class ConfigProvider {
      * @since alpha.5
      */
     public void addConfigProviderToChain(ConfigProvider nextInChain) {
-        if(this.nextInChain == null) this.nextInChain = nextInChain;
+        if (this.nextInChain == null) this.nextInChain = nextInChain;
         else this.nextInChain.addConfigProviderToChain(nextInChain);
     }
 
@@ -44,7 +44,7 @@ public abstract class ConfigProvider {
      */
     public void setConfigProfile(String profile) {
         this.configProfile = profile;
-        if(nextInChain != null) nextInChain.setConfigProfile(profile);
+        if (nextInChain != null) nextInChain.setConfigProfile(profile);
     }
 
     /**

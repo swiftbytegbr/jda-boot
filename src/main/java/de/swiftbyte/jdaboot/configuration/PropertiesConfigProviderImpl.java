@@ -55,8 +55,8 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if(properties.getProperty(key) == null) {
-            if(nextInChain != null) return nextInChain.getString(key, defaultValue);
+        if (properties.getProperty(key) == null) {
+            if (nextInChain != null) return nextInChain.getString(key, defaultValue);
             else return defaultValue;
         }
         return properties.getProperty(key);
@@ -97,9 +97,9 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        if(properties.containsKey(key)) return true;
+        if (properties.containsKey(key)) return true;
         else {
-            if(nextInChain != null) return nextInChain.hasKey(key);
+            if (nextInChain != null) return nextInChain.hasKey(key);
             else return false;
         }
     }
@@ -116,7 +116,7 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
         properties = new Properties();
 
         String configFileName;
-        if(configProfile.equals("default")) configFileName = "config.properties";
+        if (configProfile.equals("default")) configFileName = "config.properties";
         else configFileName = "config-" + configProfile + ".properties";
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
@@ -126,6 +126,6 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(nextInChain != null) nextInChain.reload();
+        if (nextInChain != null) nextInChain.reload();
     }
 }
