@@ -8,11 +8,24 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+/**
+ * The JDABootObjectManager class is responsible for managing objects and their fields and methods.
+ * It includes methods to initialize new objects, get objects, inject fields, and run methods.
+ *
+ * @since alpha.5
+ */
 @Slf4j
 public class JDABootObjectManager {
 
     private static HashMap<Class<?>, Object> objectMap = new HashMap<>();
 
+    /**
+     * Initializes a new object of the specified class and adds it to the object map.
+     *
+     * @param clazz The class of the object to initialize.
+     * @return The initialized object, or null if the object could not be initialized.
+     * @since alpha.5
+     */
     public static Object initialiseNewObject(Class<?> clazz) {
         try {
             Constructor<?> constructor = clazz.getDeclaredConstructor();
@@ -31,10 +44,24 @@ public class JDABootObjectManager {
         }
     }
 
+    /**
+     * Gets the object of the specified class from the object map.
+     *
+     * @param clazz The class of the object to get.
+     * @return The object, or null if the object is not in the map.
+     * @since alpha.5
+     */
     public static Object getObject(Class<?> clazz) {
         return objectMap.get(clazz);
     }
 
+    /**
+     * Gets the object of the specified class from the object map, or initializes a new object if it is not in the map.
+     *
+     * @param clazz The class of the object to get or initialize.
+     * @return The object, or null if the object could not be initialized.
+     * @since alpha.5
+     */
     public static Object getOrInitialiseObject(Class<?> clazz) {
         Object object = getObject(clazz);
         if(object == null) {
@@ -43,6 +70,14 @@ public class JDABootObjectManager {
         return object;
     }
 
+    /**
+     * Injects the specified value into the specified field of the specified class.
+     *
+     * @param clazz The class of the object to inject the field into.
+     * @param field The field to inject the value into.
+     * @param value The value to inject into the field.
+     * @since alpha.5
+     */
     public static void injectField(Class<?> clazz, Field field, Object value) {
         try {
 
@@ -59,10 +94,27 @@ public class JDABootObjectManager {
         }
     }
 
+    /**
+     * Runs the specified method of the specified class with the specified arguments.
+     *
+     * @param clazz  The class of the object to run the method on.
+     * @param method The method to run.
+     * @return The return value of the method, or null if the method could not be run.
+     * @since alpha.5
+     */
     public static Object runMethod(Class<?> clazz, Method method) {
         return runMethod(clazz, method, (Object[]) null);
     }
 
+    /**
+     * Runs the specified method of the specified class with the specified arguments.
+     *
+     * @param clazz  The class of the object to run the method on.
+     * @param method The method to run.
+     * @param args   The arguments to pass to the method.
+     * @return The return value of the method, or null if the method could not be run.
+     * @since alpha.5
+     */
     public static Object runMethod(Class<?> clazz, Method method, Object... args) {
         try {
             if(Modifier.isStatic(method.getModifiers())) {
