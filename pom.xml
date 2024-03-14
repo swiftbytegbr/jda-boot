@@ -6,7 +6,7 @@
 
     <groupId>de.swiftbyte</groupId>
     <artifactId>jda-boot</artifactId>
-    <version>1.0.0-alpha5</version>
+    <version>1.0.0-alpha.5</version>
     <packaging>jar</packaging>
 
     <name>JDA-Boot</name>
