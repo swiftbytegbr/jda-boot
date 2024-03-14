@@ -4,14 +4,14 @@ package de.swiftbyte.jdaboot.configuration;
  * Implements the ConfigProvider interface using env variables for configuration.
  *
  * @see ConfigProvider
- * @since alpha.5
+ * @since 1.0.0-alpha.5
  */
 public class EnvConfigProviderImpl extends ConfigProvider {
 
     /**
      * Constructs a new EnvConfigProviderImpl and reloads the configuration.
      *
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public void reload() {
@@ -25,7 +25,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public Object get(String key, Object defaultValue) {
@@ -39,7 +39,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public String getString(String key, String defaultValue) {
@@ -55,7 +55,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key of the configuration value.
      * @return The configuration value or 0 if the key is not found.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public int getInt(String key, int defaultValue) {
@@ -68,7 +68,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key of the configuration value.
      * @return The configuration value or false if the key is not found.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public boolean getBoolean(String key, boolean defaultValue) {
@@ -80,7 +80,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key to check.
      * @return True if the configuration contains the key, false otherwise.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     @Override
     public boolean hasKey(String key) {

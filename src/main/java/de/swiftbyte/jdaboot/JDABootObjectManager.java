@@ -12,7 +12,7 @@ import java.util.HashMap;
  * The JDABootObjectManager class is responsible for managing objects and their fields and methods.
  * It includes methods to initialize new objects, get objects, inject fields, and run methods.
  *
- * @since alpha.5
+ * @since 1.0.0-alpha.5
  */
 @Slf4j
 public class JDABootObjectManager {
@@ -24,7 +24,7 @@ public class JDABootObjectManager {
      *
      * @param clazz The class of the object to initialize.
      * @return The initialized object, or null if the object could not be initialized.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static Object initialiseNewObject(Class<?> clazz) {
         try {
@@ -49,7 +49,7 @@ public class JDABootObjectManager {
      *
      * @param clazz The class of the object to get.
      * @return The object, or null if the object is not in the map.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static Object getObject(Class<?> clazz) {
         return objectMap.get(clazz);
@@ -60,7 +60,7 @@ public class JDABootObjectManager {
      *
      * @param clazz The class of the object to get or initialize.
      * @return The object, or null if the object could not be initialized.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static Object getOrInitialiseObject(Class<?> clazz) {
         Object object = getObject(clazz);
@@ -76,7 +76,7 @@ public class JDABootObjectManager {
      * @param clazz The class of the object to inject the field into.
      * @param field The field to inject the value into.
      * @param value The value to inject into the field.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static void injectField(Class<?> clazz, Field field, Object value) {
         try {
@@ -100,7 +100,7 @@ public class JDABootObjectManager {
      * @param clazz  The class of the object to run the method on.
      * @param method The method to run.
      * @return The return value of the method, or null if the method could not be run.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static Object runMethod(Class<?> clazz, Method method) {
         return runMethod(clazz, method, (Object[]) null);
@@ -113,7 +113,7 @@ public class JDABootObjectManager {
      * @param method The method to run.
      * @param args   The arguments to pass to the method.
      * @return The return value of the method, or null if the method could not be run.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public static Object runMethod(Class<?> clazz, Method method, Object... args) {
         try {

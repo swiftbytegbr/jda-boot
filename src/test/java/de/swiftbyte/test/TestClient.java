@@ -21,7 +21,7 @@ public class TestClient {
     private String version;
 
     public static void main(String[] args) {
-        JDABoot.run(TestClient.class);
+        JDABoot.run(TestClient.class, args);
         JDABoot.getInstance().updateCommands("774993548579045386");
     }
 

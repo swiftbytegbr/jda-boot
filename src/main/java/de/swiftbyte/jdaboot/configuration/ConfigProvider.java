@@ -12,14 +12,14 @@ public abstract class ConfigProvider {
      * The configuration profile to use.
      * The profile is used to determine which configuration file to use.
      *
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     protected String configProfile = "default";
 
     /**
      * The next configuration provider in the chain.
      *
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     protected ConfigProvider nextInChain;
 
@@ -28,7 +28,7 @@ public abstract class ConfigProvider {
      * The provider is added to the end of the chain.
      *
      * @param nextInChain The next configuration provider in the chain.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public void addConfigProviderToChain(ConfigProvider nextInChain) {
         if (this.nextInChain == null) this.nextInChain = nextInChain;
@@ -40,7 +40,7 @@ public abstract class ConfigProvider {
      * The profile is used to determine which configuration file to use.
      *
      * @param profile The configuration profile to use.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     public void setConfigProfile(String profile) {
         this.configProfile = profile;

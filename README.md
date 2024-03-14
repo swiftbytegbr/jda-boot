@@ -64,7 +64,7 @@ The JDABoot.run() method must then be executed in the main class of the project.
 public class ExampleBot {
 
     public static void main(String[] args) {
-        JDABoot.run(ExampleBot.class);
+        JDABoot.run(ExampleBot.class, args);
     }
 }
 ```

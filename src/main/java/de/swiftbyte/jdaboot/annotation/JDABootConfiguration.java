@@ -30,7 +30,7 @@ public @interface JDABootConfiguration {
      * If the value is not found, the next provider in the chain is used.
      *
      * @return The configuration provider chain.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     Class<? extends ConfigProvider>[] configProviderChain() default {EnvConfigProviderImpl.class, PropertiesConfigProviderImpl.class, YmlConfigProviderImpl.class};
 
@@ -93,7 +93,7 @@ public @interface JDABootConfiguration {
      * By default, the profile is set to "default".
      *
      * @return The profile to use for the configuration.
-     * @since alpha.5
+     * @since 1.0.0-alpha.5
      */
     String configProfile() default "default";
 
