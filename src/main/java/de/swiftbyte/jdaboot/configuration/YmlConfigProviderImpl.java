@@ -21,15 +21,6 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     private static HashMap<String, Object> ymlConfig = new HashMap<>();
 
     /**
-     * Constructs a new YmlConfigProviderImpl and reloads the configuration.
-     *
-     * @since alpha.4
-     */
-    public YmlConfigProviderImpl() {
-        reload();
-    }
-
-    /**
      * Reloads the configuration from the YAML file.
      * If the YAML file is not found, it logs an error and exits the application.
      *
@@ -49,7 +40,6 @@ public class YmlConfigProviderImpl extends ConfigProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (nextInChain != null) nextInChain.reload();
     }
 
     /**
@@ -65,11 +55,9 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     public Object get(String key, Object defaultValue) {
         if (hasKey(key)) {
             if (key.contains(".")) {
-                if (getFromPath(ymlConfig, key) != null) return getFromPath(ymlConfig, key);
-                else return nextInChain.get(key, defaultValue);
+                return getFromPath(ymlConfig, key);
             } else {
-                if (ymlConfig.get(key) != null) return ymlConfig.get(key);
-                else return nextInChain.get(key, defaultValue);
+                return ymlConfig.get(key);
             }
         } else {
             return defaultValue;
@@ -159,17 +147,9 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     @Override
     public boolean hasKey(String key) {
         if (key.contains(".")) {
-            if (getFromPath(ymlConfig, key) != null) return true;
-            else {
-                if (nextInChain != null) return nextInChain.hasKey(key);
-                else return false;
-            }
+            return getFromPath(ymlConfig, key) != null;
         } else {
-            if (ymlConfig.containsKey(key)) return true;
-            else {
-                if (nextInChain != null) return nextInChain.hasKey(key);
-                else return false;
-            }
+            return ymlConfig.containsKey(key);
         }
     }
 }

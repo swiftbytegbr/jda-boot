@@ -66,8 +66,8 @@ public class VariableProcessor {
         Matcher m = p.matcher(newText);
 
         while (m.find()) {
-            if (JDABootConfigurationManager.getConfigProvider().hasKey(m.group().replace("?{", "").replace("}", "")))
-                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProvider().getString(m.group().replace("?{", "").replace("}", "")));
+            if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", "")))
+                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
         }
 
         return newText;

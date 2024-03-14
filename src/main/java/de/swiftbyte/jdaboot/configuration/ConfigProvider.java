@@ -1,11 +1,14 @@
 package de.swiftbyte.jdaboot.configuration;
 
+import lombok.Setter;
+
 /**
  * Defines the contract for configuration providers.
  * Provides methods to retrieve configuration values of various types, check for the existence of a key, and reload the configuration.
  *
  * @since alpha.4
  */
+@Setter
 public abstract class ConfigProvider {
 
     /**
@@ -15,37 +18,6 @@ public abstract class ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     protected String configProfile = "default";
-
-    /**
-     * The next configuration provider in the chain.
-     *
-     * @since 1.0.0-alpha.5
-     */
-    protected ConfigProvider nextInChain;
-
-    /**
-     * Adds a configuration provider to the chain.
-     * The provider is added to the end of the chain.
-     *
-     * @param nextInChain The next configuration provider in the chain.
-     * @since 1.0.0-alpha.5
-     */
-    public void addConfigProviderToChain(ConfigProvider nextInChain) {
-        if (this.nextInChain == null) this.nextInChain = nextInChain;
-        else this.nextInChain.addConfigProviderToChain(nextInChain);
-    }
-
-    /**
-     * Sets the configuration profile.
-     * The profile is used to determine which configuration file to use.
-     *
-     * @param profile The configuration profile to use.
-     * @since 1.0.0-alpha.5
-     */
-    public void setConfigProfile(String profile) {
-        this.configProfile = profile;
-        if (nextInChain != null) nextInChain.setConfigProfile(profile);
-    }
 
     /**
      * Reloads the configuration.

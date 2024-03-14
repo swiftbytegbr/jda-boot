@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.cli.ConsoleCommandManager;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
+import de.swiftbyte.jdaboot.configuration.ConfigProviderChain;
 import de.swiftbyte.jdaboot.configuration.ConfigValueManager;
 import de.swiftbyte.jdaboot.embeds.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
@@ -56,13 +57,13 @@ public class JDABootConfigurationManager {
 
 
     /**
-     * The configuration provider used to retrieve configuration values.
+     * The configuration provider chain used to retrieve configuration values.
      *
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Getter
     @Setter
-    private static ConfigProvider configProvider;
+    private static ConfigProviderChain configProviderChain;
 
     /**
      * The translation provider used to retrieve translations.
@@ -106,15 +107,14 @@ public class JDABootConfigurationManager {
      */
     private static void applyConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
 
-        configProvider = (ConfigProvider) JDABootObjectManager.getOrInitialiseObject(jdaBootConfiguration.configProviderChain()[0]);
-        for (int i = 1; i < jdaBootConfiguration.configProviderChain().length; i++) {
-            configProvider.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(jdaBootConfiguration.configProviderChain()[i]));
+        configProviderChain = (ConfigProviderChain) JDABootObjectManager.getOrInitialiseObject(ConfigProviderChain.class);
+        for (Class<? extends ConfigProvider> configProvider : jdaBootConfiguration.additionalConfigProviders()) {
+            configProviderChain.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(configProvider));
         }
 
-        String configProfile = JDABoot.getStartupArgs().containsKey("profile") ? JDABoot.getStartupArgs().get("profile") : configProvider.getString("profile", jdaBootConfiguration.configProfile());
+        String configProfile = JDABoot.getStartupArgs().containsKey("profile") ? JDABoot.getStartupArgs().get("profile") : configProviderChain.getString("profile", jdaBootConfiguration.configProfile());
         log.info("Using configuration profile: '" + configProfile + "'");
-        configProvider.setConfigProfile(configProfile);
-        configProvider.reload();
+        configProviderChain.setConfigProfile(configProfile);
 
         try {
             translationProvider = jdaBootConfiguration.translationProvider().getConstructor().newInstance();

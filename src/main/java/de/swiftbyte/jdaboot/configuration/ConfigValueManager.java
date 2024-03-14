@@ -29,7 +29,7 @@ public class ConfigValueManager {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
         reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> JDABootObjectManager.injectField(field.getDeclaringClass(),
-                field, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value())));
+                field, JDABootConfigurationManager.getConfigProviderChain().get(field.getAnnotation(SetValue.class).value())));
     }
 
 }

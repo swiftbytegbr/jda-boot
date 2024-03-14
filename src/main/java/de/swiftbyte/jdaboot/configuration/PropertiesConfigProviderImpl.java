@@ -19,15 +19,6 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
     private Properties properties;
 
     /**
-     * Constructs a new PropertiesConfigProviderImpl and reloads the configuration.
-     *
-     * @since alpha.4
-     */
-    public PropertiesConfigProviderImpl() {
-        reload();
-    }
-
-    /**
      * Retrieves the value associated with the specified key.
      * If the key is not found, it returns the provided default value.
      *
@@ -55,10 +46,7 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if (properties.getProperty(key) == null) {
-            if (nextInChain != null) return nextInChain.getString(key, defaultValue);
-            else return defaultValue;
-        }
+        if (properties.getProperty(key) == null) return defaultValue;
         return properties.getProperty(key);
     }
 
@@ -97,11 +85,7 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        if (properties.containsKey(key)) return true;
-        else {
-            if (nextInChain != null) return nextInChain.hasKey(key);
-            else return false;
-        }
+        return properties.containsKey(key);
     }
 
     /**
@@ -126,6 +110,5 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (nextInChain != null) nextInChain.reload();
     }
 }

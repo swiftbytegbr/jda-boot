@@ -14,9 +14,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public void reload() {
-        if (nextInChain != null) nextInChain.reload();
-    }
+    public void reload() {}
 
     /**
      * Retrieves the value associated with the specified key.
@@ -45,7 +43,6 @@ public class EnvConfigProviderImpl extends ConfigProvider {
     public String getString(String key, String defaultValue) {
         if (System.getenv(key) != null) return System.getenv(key);
         else if (System.getProperty(key) != null) return System.getProperty(key);
-        else if (nextInChain != null) return nextInChain.getString(key, defaultValue);
         else return defaultValue;
     }
 
@@ -85,8 +82,6 @@ public class EnvConfigProviderImpl extends ConfigProvider {
     @Override
     public boolean hasKey(String key) {
         if (System.getenv(key) != null) return true;
-        else if (System.getProperty(key) != null) return true;
-        else if (nextInChain != null) return nextInChain.hasKey(key);
-        else return false;
+        else return System.getProperty(key) != null;
     }
 }

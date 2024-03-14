@@ -119,7 +119,7 @@ public class JDABoot {
 
         JDABootConfigurationManager.configure(mainClass);
 
-        configProvider = JDABootConfigurationManager.getConfigProvider();
+        configProvider = JDABootConfigurationManager.getConfigProviderChain();
 
         try {
             discordLogin();

@@ -28,11 +28,12 @@ public @interface JDABootConfiguration {
      * The configuration provider chain is used to retrieve configuration values.
      * The first provider in the chain is used to retrieve the values.
      * If the value is not found, the next provider in the chain is used.
+     * You can specify additional providers by setting this value.
      *
      * @return The configuration provider chain.
      * @since 1.0.0-alpha.5
      */
-    Class<? extends ConfigProvider>[] configProviderChain() default {EnvConfigProviderImpl.class, PropertiesConfigProviderImpl.class, YmlConfigProviderImpl.class};
+    Class<? extends ConfigProvider>[] additionalConfigProviders() default {};
 
     /**
      * Specifies the translation provider class to be used.
