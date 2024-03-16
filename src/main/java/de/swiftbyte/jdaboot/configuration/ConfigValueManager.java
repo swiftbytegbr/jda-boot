@@ -1,12 +1,11 @@
 package de.swiftbyte.jdaboot.configuration;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.SetValue;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
-
-import java.lang.reflect.Modifier;
 
 /**
  * Manages configuration values for the JDABoot framework.
@@ -29,25 +28,8 @@ public class ConfigValueManager {
 
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
-        reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> {
-
-            if (Modifier.isStatic(field.getModifiers())) {
-                try {
-                    if(field.canAccess(null)) {
-                        field.set(null, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value()));
-                    } else {
-                        field.setAccessible(true);
-                        field.set(null, JDABootConfigurationManager.getConfigProvider().get(field.getAnnotation(SetValue.class).value()));
-                        field.setAccessible(false);
-                    }
-
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                log.warn("A Set Value must be a static field. Skipping field " + field + "...");
-            }
-        });
+        reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> JDABootObjectManager.injectField(field.getDeclaringClass(),
+                field, JDABootConfigurationManager.getConfigProviderChain().get(field.getAnnotation(SetValue.class).value())));
     }
 
 }

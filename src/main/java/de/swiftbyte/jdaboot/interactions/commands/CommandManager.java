@@ -1,13 +1,15 @@
 package de.swiftbyte.jdaboot.interactions.commands;
 
-import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -17,8 +19,6 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,69 +53,57 @@ public class CommandManager extends ListenerAdapter {
 
         reflections.getTypesAnnotatedWith(SlashCommand.class).forEach(clazz -> {
 
-            try {
-                SlashCommand annotation = clazz.getAnnotation(SlashCommand.class);
+            SlashCommand annotation = clazz.getAnnotation(SlashCommand.class);
 
-                String name = annotation.name();
+            String name = annotation.name();
 
-                if (SlashCommandExecutor.class.isAssignableFrom(clazz)) {
-                    Constructor<?> constructor = clazz.getConstructor();
-                    SlashCommandExecutor cmd = (SlashCommandExecutor) constructor.newInstance();
+            if (SlashCommandExecutor.class.isAssignableFrom(clazz)) {
+                SlashCommandExecutor cmd = (SlashCommandExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
 
-                    CommandData data = buildCommand(annotation);
-                    if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.SLASH)) {
-                        log.warn("Command " + name + " is not a slash command but is a child of SlashCommand! Skipping...");
-                        return;
-                    }
-                    commandData.put(data.getName(), data);
-                    commands.put(data.getName(), cmd);
-                    if (!annotation.isGlobal()) return;
-                    log.info("Registered command: " + data.getName());
-                    jda.upsertCommand(data).queue();
-                    cmd.onEnable((SlashCommandData) data);
-
-                } else if (UserContextCommandExecutor.class.isAssignableFrom(clazz)) {
-
-                    Constructor<?> constructor = clazz.getConstructor();
-                    ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) constructor.newInstance();
-
-                    CommandData data = buildCommand(annotation);
-                    if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.USER)) {
-                        log.warn("Command " + name + " is not a user context command but is a child of UserContextCommand! Skipping...");
-                        return;
-                    }
-                    commandData.put(data.getName(), data);
-                    contextCommands.put(data.getName(), cmd);
-                    log.info("Registered command: " + data.getName());
-                    if (!annotation.isGlobal()) return;
-                    jda.upsertCommand(data).queue();
-                    cmd.onEnable(data);
-                } else if (MessageContextCommandExecutor.class.isAssignableFrom(clazz)) {
-
-                    Constructor<?> constructor = clazz.getConstructor();
-                    ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) constructor.newInstance();
-
-                    CommandData data = buildCommand(annotation);
-                    if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE)) {
-                        log.warn("Command " + name + " is not a message context command but is a child of MessageContextCommand! Skipping...");
-                        return;
-                    }
-                    commandData.put(data.getName(), data);
-                    contextCommands.put(data.getName(), cmd);
-                    if (!annotation.isGlobal()) return;
-                    log.info("Registered command: " + data.getName());
-                    jda.upsertCommand(data).queue();
-                    cmd.onEnable(data);
-                } else {
-                    log.warn("Command " + name + " is not a child of SlashCommand or ContextCommand! Skipping...");
+                CommandData data = buildCommand(annotation);
+                if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.SLASH)) {
+                    log.warn("Command " + name + " is not a slash command but is a child of SlashCommand! Skipping...");
+                    return;
                 }
+                commandData.put(data.getName(), data);
+                commands.put(data.getName(), cmd);
+                if (!annotation.isGlobal()) return;
+                jda.upsertCommand(data).queue();
+                cmd.onEnable((SlashCommandData) data);
+                log.info("Registered slash command " + clazz.getName());
+            } else if (UserContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
+                ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) JDABootObjectManager.getOrInitialiseObject(clazz);
 
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                     InvocationTargetException e) {
-                log.error("Error while registering command " + clazz.getSimpleName() + "!", e);
+                CommandData data = buildCommand(annotation);
+                if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.USER)) {
+                    log.warn("Command " + name + " is not a user context command but is a child of UserContextCommand! Skipping...");
+                    return;
+                }
+                commandData.put(data.getName(), data);
+                contextCommands.put(data.getName(), cmd);
+                if (!annotation.isGlobal()) return;
+                jda.upsertCommand(data).queue();
+                cmd.onEnable(data);
+                log.info("Registered user context command " + clazz.getName());
+            } else if (MessageContextCommandExecutor.class.isAssignableFrom(clazz)) {
+
+                ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) JDABootObjectManager.getOrInitialiseObject(clazz);
+
+                CommandData data = buildCommand(annotation);
+                if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE)) {
+                    log.warn("Command " + name + " is not a message context command but is a child of MessageContextCommand! Skipping...");
+                    return;
+                }
+                commandData.put(data.getName(), data);
+                contextCommands.put(data.getName(), cmd);
+                if (!annotation.isGlobal()) return;
+                jda.upsertCommand(data).queue();
+                cmd.onEnable(data);
+                log.info("Registered message context command " + clazz.getName());
+            } else {
+                log.warn("Command " + name + " is not a child of SlashCommand or ContextCommand! Skipping...");
             }
-
         });
 
         jda.addEventListener(this);
@@ -133,7 +121,7 @@ public class CommandManager extends ListenerAdapter {
         String name = event.getName();
         SlashCommandExecutor executor = commands.get(name);
         if (executor != null) {
-            executor.onCommand(event);
+            executor.call(event);
         }
 
     }
@@ -232,7 +220,8 @@ public class CommandManager extends ListenerAdapter {
         SlashCommandData data = Commands.slash(id, description);
 
         //Command
-        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if (command.enabledFor() != Permission.UNKNOWN)
+            data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
         data.setDescriptionLocalizations(generateDiscordLocalised(command.description()));
@@ -275,7 +264,8 @@ public class CommandManager extends ListenerAdapter {
             data = Commands.message(id);
         }
 
-        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if (command.enabledFor() != Permission.UNKNOWN)
+            data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
 

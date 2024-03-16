@@ -25,7 +25,8 @@ public enum EmbedColor {
     PINK(Color.pink),
     RED(Color.red),
     WHITE(Color.white),
-    YELLOW(Color.yellow);
+    YELLOW(Color.yellow),
+    NOT_DEFINED(null);
 
     /**
      * The java.awt.Color instance associated with the enum constant.

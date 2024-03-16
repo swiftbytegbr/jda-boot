@@ -38,6 +38,10 @@ public class VariableProcessor {
         newText = TranslationProcessor.processTranslation(locale, newText);
         newText = processVariable(newText, variables, defaultVariable);
 
+        if (isIncompletelyProcessed(newText, true)) {
+            newText = processVariable(locale, newText, variables, defaultVariable);
+        }
+
         return newText;
     }
 
@@ -66,10 +70,29 @@ public class VariableProcessor {
         Matcher m = p.matcher(newText);
 
         while (m.find()) {
-            if (JDABootConfigurationManager.getConfigProvider().hasKey(m.group().replace("?{", "").replace("}", "")))
-                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProvider().getString(m.group().replace("?{", "").replace("}", "")));
+            if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", "")))
+                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
+        }
+
+        if (isIncompletelyProcessed(newText, false)) {
+            newText = processVariable(newText, variables, defaultVariable);
         }
 
         return newText;
+    }
+
+    private static boolean isIncompletelyProcessed(String newText, boolean withLanguage) {
+        Pattern languagePattern = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
+        Matcher languageMatcher = languagePattern.matcher(newText);
+        Pattern configPattern = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
+        Matcher configMatcher = configPattern.matcher(newText);
+        Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
+        Matcher variableMatcher = variablePattern.matcher(newText);
+
+        if (withLanguage && languageMatcher.find()) {
+            return true;
+        }
+
+        return configMatcher.find() || variableMatcher.find();
     }
 }

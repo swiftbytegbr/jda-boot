@@ -19,6 +19,22 @@ import java.lang.annotation.Target;
 public @interface Embed {
 
     /**
+     * The ID of the embed.
+     *
+     * @return The ID of the embed.
+     * @since 1.0.0.alpha.5
+     */
+    String id() default "";
+
+    /**
+     * The ID of the embed that this embed is based on.
+     *
+     * @return The ID of the embed that this embed is based on.
+     * @since 1.0.0.alpha.5
+     */
+    String basedOn() default "";
+
+    /**
      * The URL of the embed.
      *
      * @return The URL of the embed.
@@ -48,7 +64,7 @@ public @interface Embed {
      * @return The color of the embed.
      * @since alpha.4
      */
-    EmbedColor color() default EmbedColor.BLACK;
+    EmbedColor color() default EmbedColor.NOT_DEFINED;
 
     /**
      * The hex color of the embed.

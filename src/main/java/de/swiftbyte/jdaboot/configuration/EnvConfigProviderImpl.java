@@ -1,22 +1,21 @@
 package de.swiftbyte.jdaboot.configuration;
 
-import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 /**
- * Implements the ConfigProvider interface using a properties file for configuration.
- * The properties file is named "config[-configProfile].properties" and is expected to be in the classpath.
+ * Implements the ConfigProvider interface using env variables for configuration.
  *
  * @see ConfigProvider
- * @since alpha.4
+ * @since 1.0.0-alpha.5
  */
-@Slf4j
-public class PropertiesConfigProviderImpl extends ConfigProvider {
+public class EnvConfigProviderImpl extends ConfigProvider {
 
-    private Properties properties;
+    /**
+     * Constructs a new EnvConfigProviderImpl and reloads the configuration.
+     *
+     * @since 1.0.0-alpha.5
+     */
+    @Override
+    public void reload() {
+    }
 
     /**
      * Retrieves the value associated with the specified key.
@@ -25,14 +24,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Override
     public Object get(String key, Object defaultValue) {
-        if (!hasKey(key)) {
-            return defaultValue;
-        }
-        return getString(key, null);
+        return getString(key, (String) defaultValue);
     }
 
     /**
@@ -42,12 +38,13 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @param key          The key of the configuration value.
      * @param defaultValue The default value to return if the key is not found.
      * @return The configuration value.
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if (properties.getProperty(key) == null) return defaultValue;
-        return properties.getProperty(key);
+        if (System.getenv(key) != null) return System.getenv(key);
+        else if (System.getProperty(key) != null) return System.getProperty(key);
+        else return defaultValue;
     }
 
     /**
@@ -56,11 +53,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key of the configuration value.
      * @return The configuration value or 0 if the key is not found.
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Override
     public int getInt(String key, int defaultValue) {
-        return Integer.parseInt(properties.getProperty(key));
+        return Integer.parseInt(getString(key, String.valueOf(defaultValue)));
     }
 
     /**
@@ -69,11 +66,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key of the configuration value.
      * @return The configuration value or false if the key is not found.
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Override
     public boolean getBoolean(String key, boolean defaultValue) {
-        return Boolean.parseBoolean(properties.getProperty(key));
+        return Boolean.parseBoolean(getString(key, String.valueOf(defaultValue)));
     }
 
     /**
@@ -81,34 +78,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      *
      * @param key The key to check.
      * @return True if the configuration contains the key, false otherwise.
-     * @since alpha.4
+     * @since 1.0.0-alpha.5
      */
     @Override
     public boolean hasKey(String key) {
-        return properties.containsKey(key);
-    }
-
-    /**
-     * Reloads the configuration from the properties file.
-     * If the properties file is not found, it logs an error and exits the application.
-     *
-     * @since alpha.4
-     */
-    @Override
-    public void reload() {
-
-        properties = new Properties();
-
-        String configFileName;
-        if (configProfile.equals("default")) configFileName = "config.properties";
-        else configFileName = "config-" + configProfile + ".properties";
-
-        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
-            if (resourceStream != null) {
-                properties.load(resourceStream);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        if (System.getenv(key) != null) return true;
+        else return System.getProperty(key) != null;
     }
 }

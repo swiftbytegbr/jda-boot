@@ -11,13 +11,14 @@ import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
 public class EmbedClass {
 
     @Embed(
-            title = "${test}Test",
-            description = "Version: ?{app.version}",
+            basedOn = "baseEmbed",
+            id = "testEmbed",
+            title = "${test}Test2",
+            description = "Versin: ?{app.version}",
             author = @EmbedAuthor(
                     name = "Hufeisen",
                     iconUrl = "https://cdn.discordapp.com/avatars/424271496245149698/6a205d13086c2bf5caf3b1c71f1c3ab3.png"
             ),
-            color = EmbedColor.BLACK,
             footer = @EmbedFooter(
                     text = "Test"
             ),
@@ -39,5 +40,11 @@ public class EmbedClass {
             }
     )
     public static TemplateEmbed embed;
+
+    @Embed(
+            id = "baseEmbed",
+            color = EmbedColor.GREEN
+    )
+    public static TemplateEmbed baseEmbed;
 
 }

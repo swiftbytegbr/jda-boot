@@ -10,26 +10,15 @@ import java.util.Map;
 
 /**
  * Implements the ConfigProvider interface using a YAML file for configuration.
- * The YAML file is named "config.yml" and is expected to be in the classpath.
+ * The YAML file is named "config[-configProfile].yml" and is expected to be in the classpath.
  *
  * @see ConfigProvider
  * @since alpha.4
  */
 @Slf4j
-public class YmlConfigProviderImpl implements ConfigProvider {
+public class YmlConfigProviderImpl extends ConfigProvider {
 
     private static HashMap<String, Object> ymlConfig = new HashMap<>();
-
-    private static final String CONFIG_FILE_NAME = "config.yml";
-
-    /**
-     * Constructs a new YmlConfigProviderImpl and reloads the configuration.
-     *
-     * @since alpha.4
-     */
-    public YmlConfigProviderImpl() {
-        reload();
-    }
 
     /**
      * Reloads the configuration from the YAML file.
@@ -39,11 +28,13 @@ public class YmlConfigProviderImpl implements ConfigProvider {
      */
     @Override
     public void reload() {
-        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
-            if (resourceStream == null) {
-                log.error("Config file not found, please create a config file with the name \"" + CONFIG_FILE_NAME + "\" in your resources.");
-                System.exit(1);
-            } else {
+
+        String configFileName;
+        if (configProfile.equals("default")) configFileName = "config.yml";
+        else configFileName = "config-" + configProfile + ".yml";
+
+        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+            if (resourceStream != null) {
                 ymlConfig = new Yaml().load(resourceStream);
             }
         } catch (IOException e) {
@@ -63,11 +54,11 @@ public class YmlConfigProviderImpl implements ConfigProvider {
     @Override
     public Object get(String key, Object defaultValue) {
         if (hasKey(key)) {
-
             if (key.contains(".")) {
                 return getFromPath(ymlConfig, key);
-            } else return ymlConfig.get(key);
-
+            } else {
+                return ymlConfig.get(key);
+            }
         } else {
             return defaultValue;
         }
@@ -157,6 +148,8 @@ public class YmlConfigProviderImpl implements ConfigProvider {
     public boolean hasKey(String key) {
         if (key.contains(".")) {
             return getFromPath(ymlConfig, key) != null;
-        } else return ymlConfig.containsKey(key);
+        } else {
+            return ymlConfig.containsKey(key);
+        }
     }
 }

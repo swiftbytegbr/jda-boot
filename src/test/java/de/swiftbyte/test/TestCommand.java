@@ -1,11 +1,11 @@
 package de.swiftbyte.test;
 
+import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
-import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
+import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
 import de.swiftbyte.jdaboot.interactions.commands.SlashCommandExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -26,16 +26,19 @@ import java.util.List;
                         required = true)
         }
 )
-public class TestCommand implements SlashCommandExecutor {
+public class TestCommand extends SlashCommandExecutor {
+
+    @Embed(
+            basedOn = "testEmbed",
+            title = "${test}Test",
+            description = "Version: ?{app.version}"
+    )
+    private TemplateEmbed embed;
 
     @Override
-    public void onCommand(SlashCommandInteractionEvent event) {
+    public void onCommand() {
 
-        if (event.getSubcommandName().equals("subcommand")) {
-            event.replyEmbeds(EmbedClass.embed.generateAdvancedEmbed().generateEmbed()).queue();
-        } else {
-            event.replyEmbeds(EmbedClass.embed.generateAdvancedEmbed().generateEmbed()).queue();
-        }
+        event.replyEmbeds(embed.generateAdvancedEmbed().generateEmbed()).queue();
 
     }
 

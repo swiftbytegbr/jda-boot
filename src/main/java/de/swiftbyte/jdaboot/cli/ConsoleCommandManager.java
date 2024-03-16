@@ -1,12 +1,12 @@
 package de.swiftbyte.jdaboot.cli;
 
+import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommand;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 /**
@@ -35,22 +35,17 @@ public class ConsoleCommandManager {
 
         reflections.getTypesAnnotatedWith(ConsoleCommand.class).forEach(clazz -> {
 
-            try {
-                ConsoleCommand annotation = clazz.getAnnotation(ConsoleCommand.class);
+            ConsoleCommand annotation = clazz.getAnnotation(ConsoleCommand.class);
 
-                String name = annotation.name();
+            String name = annotation.name();
 
-                for (String alias : annotation.aliases()) {
-                    aliases.put(alias, name);
-                }
-
-                ConsoleCommandExecutor executor = (ConsoleCommandExecutor) clazz.getConstructor().newInstance();
-                commands.put(name, executor);
-
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                     InvocationTargetException e) {
-                log.error("Error while registering command " + clazz.getSimpleName() + "!", e);
+            for (String alias : annotation.aliases()) {
+                aliases.put(alias, name);
             }
+
+            ConsoleCommandExecutor executor = (ConsoleCommandExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
+            commands.put(name, executor);
+            log.info("Registered console command " + clazz.getName());
         });
 
         ConsoleThread consoleThread = new ConsoleThread(this);
@@ -63,19 +58,27 @@ public class ConsoleCommandManager {
      * If the command is still not found, it logs a warning.
      *
      * @param command The command to execute.
-     * @param args    The arguments to pass to the command.
      * @since alpha.4
      */
-    protected void runCommand(String command, String[] args) {
-        if (commands.containsKey(command)) {
+    protected void runCommand(String command) {
+
+        String cmd = command.split(" ")[0];
+        String[] args;
+        if (command.trim().equals(cmd)) {
+            args = new String[0];
+        } else {
+            args = command.replace(cmd, "").trim().split(" ");
+        }
+
+        if (commands.containsKey(cmd)) {
             new Thread(() -> {
-                Thread.currentThread().setName("ConsoleThread-" + command);
-                commands.get(command).onCommand(args);
+                Thread.currentThread().setName("ConsoleThread-" + cmd);
+                commands.get(cmd).onCommand(args);
             }).start();
-        } else if (aliases.containsKey(command)) {
+        } else if (aliases.containsKey(cmd)) {
             new Thread(() -> {
-                Thread.currentThread().setName("ConsoleThread-" + command);
-                commands.get(aliases.get(command)).onCommand(args);
+                Thread.currentThread().setName("ConsoleThread-" + cmd);
+                commands.get(aliases.get(cmd)).onCommand(args);
             }).start();
         } else {
             log.warn("Command not found!");

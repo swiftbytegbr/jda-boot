@@ -2,8 +2,6 @@ package de.swiftbyte.jdaboot.annotation;
 
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
-import de.swiftbyte.jdaboot.configuration.PropertiesConfigProviderImpl;
-import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import de.swiftbyte.jdaboot.variables.ResourceBundleTranslationProviderImpl;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -24,15 +22,15 @@ import java.lang.annotation.Target;
 public @interface JDABootConfiguration {
 
     /**
-     * Specifies the configuration provider class to be used.
-     * By default, it is set to {@link PropertiesConfigProviderImpl}.
-     * Another available configuration provider is {@link YmlConfigProviderImpl},
-     * which can be used to read configuration from YAML files.
+     * The configuration provider chain is used to retrieve configuration values.
+     * The first provider in the chain is used to retrieve the values.
+     * If the value is not found, the next provider in the chain is used.
+     * You can specify additional providers by setting this value.
      *
-     * @return The configuration provider class.
-     * @since alpha.4
+     * @return The configuration provider chain.
+     * @since 1.0.0-alpha.5
      */
-    Class<? extends ConfigProvider> configProvider() default PropertiesConfigProviderImpl.class;
+    Class<? extends ConfigProvider>[] additionalConfigProviders() default {};
 
     /**
      * Specifies the translation provider class to be used.
@@ -87,5 +85,14 @@ public @interface JDABootConfiguration {
      * @since alpha.4
      */
     boolean enableConsoleCommands() default true;
+
+    /**
+     * Specifies the profile to use for the configuration.
+     * By default, the profile is set to "default".
+     *
+     * @return The profile to use for the configuration.
+     * @since 1.0.0-alpha.5
+     */
+    String configProfile() default "default";
 
 }
