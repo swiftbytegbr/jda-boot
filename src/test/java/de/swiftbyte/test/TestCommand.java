@@ -30,6 +30,7 @@ import java.util.List;
 public class TestCommand implements SlashCommandExecutor {
 
     @Embed(
+            basedOn = "testEmbed",
             title = "${test}Test",
             description = "Version: ?{app.version}"
     )

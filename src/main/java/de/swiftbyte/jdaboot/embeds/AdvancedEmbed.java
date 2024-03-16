@@ -2,9 +2,11 @@ package de.swiftbyte.jdaboot.embeds;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
+import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -20,6 +22,7 @@ import java.util.HashMap;
  * @since alpha.4
  */
 @Getter
+@Slf4j
 public class AdvancedEmbed {
 
     private TemplateEmbed template;
@@ -92,20 +95,27 @@ public class AdvancedEmbed {
      * @since alpha.4
      */
     public MessageEmbed generateEmbed(Instant timestamp) {
-
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
+
+        if(StringUtils.isNotBlank(embed.basedOn())) {
+            TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
+            if(basedOn != null) {
+                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).generateAdvancedEmbed(locale).generateEmbed(timestamp));
+            } else {
+                log.error("Embed with ID " + embed.id() + " is based on an unknown embed with ID " + embed.basedOn() + "!");
+            }
+        }
 
         if (!embed.title().isEmpty())
             builder.setTitle(processVar(embed.title()), !embed.url().isEmpty() ? processVar(embed.url()) : null);
         if (!embed.thumbnailUrl().isEmpty()) builder.setThumbnail(processVar(embed.thumbnailUrl()));
         if (!embed.imageUrl().isEmpty()) builder.setImage(processVar(embed.imageUrl()));
 
-        builder
-                .setDescription(processVar(embed.description()))
-                .setColor(!embed.hexColor().isEmpty() ? Color.decode(embed.hexColor()) : embed.color().getColor())
-                .setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null)
-                .setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
+        if(StringUtils.isNotBlank(embed.description())) builder.setDescription(processVar(embed.description()));
+        if(StringUtils.isNotBlank(embed.hexColor()) || embed.color().getColor() != null) builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(embed.hexColor()) : embed.color().getColor());
+        if(StringUtils.isNotBlank(embed.author().name())) builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null);
+        if(StringUtils.isNotBlank(embed.footer().text())) builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
 
         for (EmbedField embedField : embed.fields()) {
 
