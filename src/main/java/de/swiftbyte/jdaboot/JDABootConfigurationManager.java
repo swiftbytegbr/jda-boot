@@ -144,10 +144,10 @@ public class JDABootConfigurationManager {
         buttonManager = new ButtonManager(jda, mainClass);
 
         new EventManager(jda, mainClass);
-        new ConfigValueManager(mainClass);
         new EmbedManager(mainClass);
         new SchedulerManager(mainClass);
 
         if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
+        new ConfigValueManager(mainClass);
     }
 }

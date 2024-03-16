@@ -15,9 +15,14 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The JDABoot class is responsible for initializing and starting the Discord bot.
@@ -177,5 +182,11 @@ public class JDABoot {
         this.jda = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, jda);
         jda.awaitReady();
+
+        for (Method declaredMethod : mainClass.getDeclaredMethods()) {
+            if(declaredMethod.getName().equalsIgnoreCase("onReady")) {
+                JDABootObjectManager.runMethod(mainClass, declaredMethod);
+            }
+        }
     }
 }
