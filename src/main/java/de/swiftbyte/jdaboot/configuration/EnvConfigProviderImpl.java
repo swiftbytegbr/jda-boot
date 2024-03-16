@@ -14,7 +14,8 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public void reload() {}
+    public void reload() {
+    }
 
     /**
      * Retrieves the value associated with the specified key.

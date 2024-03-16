@@ -98,9 +98,9 @@ public class AdvancedEmbed {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
 
-        if(StringUtils.isNotBlank(embed.basedOn())) {
+        if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
-            if(basedOn != null) {
+            if (basedOn != null) {
                 builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).generateAdvancedEmbed(locale).generateEmbed(timestamp));
             } else {
                 log.error("Embed with ID " + embed.id() + " is based on an unknown embed with ID " + embed.basedOn() + "!");
@@ -112,10 +112,13 @@ public class AdvancedEmbed {
         if (!embed.thumbnailUrl().isEmpty()) builder.setThumbnail(processVar(embed.thumbnailUrl()));
         if (!embed.imageUrl().isEmpty()) builder.setImage(processVar(embed.imageUrl()));
 
-        if(StringUtils.isNotBlank(embed.description())) builder.setDescription(processVar(embed.description()));
-        if(StringUtils.isNotBlank(embed.hexColor()) || embed.color().getColor() != null) builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(processVar(embed.hexColor())) : embed.color().getColor());
-        if(StringUtils.isNotBlank(embed.author().name())) builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null);
-        if(StringUtils.isNotBlank(embed.footer().text())) builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
+        if (StringUtils.isNotBlank(embed.description())) builder.setDescription(processVar(embed.description()));
+        if (StringUtils.isNotBlank(embed.hexColor()) || embed.color().getColor() != null)
+            builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(processVar(embed.hexColor())) : embed.color().getColor());
+        if (StringUtils.isNotBlank(embed.author().name()))
+            builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null);
+        if (StringUtils.isNotBlank(embed.footer().text()))
+            builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
 
         for (EmbedField embedField : embed.fields()) {
 

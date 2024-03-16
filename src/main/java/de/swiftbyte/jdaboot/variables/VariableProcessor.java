@@ -38,7 +38,7 @@ public class VariableProcessor {
         newText = TranslationProcessor.processTranslation(locale, newText);
         newText = processVariable(newText, variables, defaultVariable);
 
-        if(isIncompletelyProcessed(newText, true)) {
+        if (isIncompletelyProcessed(newText, true)) {
             newText = processVariable(locale, newText, variables, defaultVariable);
         }
 
@@ -74,7 +74,7 @@ public class VariableProcessor {
                 newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
         }
 
-        if(isIncompletelyProcessed(newText, false)) {
+        if (isIncompletelyProcessed(newText, false)) {
             newText = processVariable(newText, variables, defaultVariable);
         }
 
@@ -89,7 +89,7 @@ public class VariableProcessor {
         Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher variableMatcher = variablePattern.matcher(newText);
 
-        if(withLanguage && languageMatcher.find()) {
+        if (withLanguage && languageMatcher.find()) {
             return true;
         }
 

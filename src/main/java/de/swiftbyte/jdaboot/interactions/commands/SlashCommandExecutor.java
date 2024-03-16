@@ -28,7 +28,8 @@ public abstract class SlashCommandExecutor {
      * @param data The data of the slash command.
      * @since alpha.4
      */
-    public void onEnable(SlashCommandData data) {}
+    public void onEnable(SlashCommandData data) {
+    }
 
     /**
      * Called when the slash command is invoked.
@@ -42,7 +43,8 @@ public abstract class SlashCommandExecutor {
      *
      * @since alpha.4
      */
-    public void onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event) {}
+    public void onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event) {
+    }
 
     protected void reply(TemplateEmbed embed) {
         reply(embed, event.getUserLocale());

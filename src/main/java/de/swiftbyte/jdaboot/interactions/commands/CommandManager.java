@@ -220,7 +220,8 @@ public class CommandManager extends ListenerAdapter {
         SlashCommandData data = Commands.slash(id, description);
 
         //Command
-        if(command.enabledFor() != Permission.UNKNOWN) data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if (command.enabledFor() != Permission.UNKNOWN)
+            data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
         data.setDescriptionLocalizations(generateDiscordLocalised(command.description()));
@@ -263,7 +264,8 @@ public class CommandManager extends ListenerAdapter {
             data = Commands.message(id);
         }
 
-        if(command.enabledFor() != Permission.UNKNOWN) data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if (command.enabledFor() != Permission.UNKNOWN)
+            data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
 

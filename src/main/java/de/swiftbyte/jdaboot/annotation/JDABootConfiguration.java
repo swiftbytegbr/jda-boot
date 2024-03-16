@@ -2,9 +2,6 @@ package de.swiftbyte.jdaboot.annotation;
 
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
-import de.swiftbyte.jdaboot.configuration.EnvConfigProviderImpl;
-import de.swiftbyte.jdaboot.configuration.PropertiesConfigProviderImpl;
-import de.swiftbyte.jdaboot.configuration.YmlConfigProviderImpl;
 import de.swiftbyte.jdaboot.variables.ResourceBundleTranslationProviderImpl;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import net.dv8tion.jda.api.requests.GatewayIntent;

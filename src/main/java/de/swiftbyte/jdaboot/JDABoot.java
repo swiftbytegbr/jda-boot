@@ -4,7 +4,6 @@ package de.swiftbyte.jdaboot;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -13,16 +12,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The JDABoot class is responsible for initializing and starting the Discord bot.
@@ -184,7 +178,7 @@ public class JDABoot {
         jda.awaitReady();
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {
-            if(declaredMethod.getName().equalsIgnoreCase("onReady")) {
+            if (declaredMethod.getName().equalsIgnoreCase("onReady")) {
                 JDABootObjectManager.runMethod(mainClass, declaredMethod);
             }
         }

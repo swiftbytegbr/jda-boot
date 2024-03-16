@@ -4,7 +4,6 @@ package de.swiftbyte.jdaboot.utils;
  * The StringUtils class provides utility methods for working with strings.
  *
  * @since 1.0.0.alpha.5
-
  */
 public class StringUtils {
 
