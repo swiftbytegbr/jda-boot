@@ -27,7 +27,7 @@ import java.util.List;
                         required = true)
         }
 )
-public class TestCommand implements SlashCommandExecutor {
+public class TestCommand extends SlashCommandExecutor {
 
     @Embed(
             basedOn = "testEmbed",
@@ -37,7 +37,7 @@ public class TestCommand implements SlashCommandExecutor {
     private TemplateEmbed embed;
 
     @Override
-    public void onCommand(SlashCommandInteractionEvent event) {
+    public void onCommand() {
 
         event.replyEmbeds(embed.generateAdvancedEmbed().generateEmbed()).queue();
 

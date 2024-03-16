@@ -120,7 +120,7 @@ public class CommandManager extends ListenerAdapter {
         String name = event.getName();
         SlashCommandExecutor executor = commands.get(name);
         if (executor != null) {
-            executor.onCommand(event);
+            executor.call(event);
         }
 
     }
