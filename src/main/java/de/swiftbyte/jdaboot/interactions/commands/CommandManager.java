@@ -9,6 +9,7 @@ import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -219,7 +220,7 @@ public class CommandManager extends ListenerAdapter {
         SlashCommandData data = Commands.slash(id, description);
 
         //Command
-        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if(command.enabledFor() != Permission.UNKNOWN) data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
         data.setDescriptionLocalizations(generateDiscordLocalised(command.description()));
@@ -262,7 +263,7 @@ public class CommandManager extends ListenerAdapter {
             data = Commands.message(id);
         }
 
-        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        if(command.enabledFor() != Permission.UNKNOWN) data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         data.setGuildOnly(command.guildOnly());
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
 
