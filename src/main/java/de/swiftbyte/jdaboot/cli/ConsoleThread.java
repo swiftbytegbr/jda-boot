@@ -45,7 +45,7 @@ public class ConsoleThread extends Thread {
         String line;
         try {
             while ((line = br.readLine()) != null) {
-                consoleCommandManager.runCommand(line, line.split(" "));
+                consoleCommandManager.runCommand(line);
             }
         } catch (IOException e) {
             log.error("Error while reading console input!", e);

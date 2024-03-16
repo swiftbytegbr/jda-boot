@@ -58,19 +58,27 @@ public class ConsoleCommandManager {
      * If the command is still not found, it logs a warning.
      *
      * @param command The command to execute.
-     * @param args    The arguments to pass to the command.
      * @since alpha.4
      */
-    protected void runCommand(String command, String[] args) {
-        if (commands.containsKey(command)) {
+    protected void runCommand(String command) {
+
+        String cmd = command.split(" ")[0];
+        String[] args;
+        if (command.trim().equals(cmd)) {
+            args = new String[0];
+        } else {
+            args = command.replace(cmd, "").trim().split(" ");
+        }
+
+        if (commands.containsKey(cmd)) {
             new Thread(() -> {
-                Thread.currentThread().setName("ConsoleThread-" + command);
-                commands.get(command).onCommand(args);
+                Thread.currentThread().setName("ConsoleThread-" + cmd);
+                commands.get(cmd).onCommand(args);
             }).start();
-        } else if (aliases.containsKey(command)) {
+        } else if (aliases.containsKey(cmd)) {
             new Thread(() -> {
-                Thread.currentThread().setName("ConsoleThread-" + command);
-                commands.get(aliases.get(command)).onCommand(args);
+                Thread.currentThread().setName("ConsoleThread-" + cmd);
+                commands.get(aliases.get(cmd)).onCommand(args);
             }).start();
         } else {
             log.warn("Command not found!");
