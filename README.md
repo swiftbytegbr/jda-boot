@@ -196,7 +196,7 @@ the properties file.
 - ✅ Variable System
 - ✅ internationalization (i18n)
 - ✅ Config System
-- 🚧 Other Interactions (✅ Buttons, ⛔ Select Menus, ⛔ Modals)
+- 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ⛔ Modals)
 - ⛔ Database ORM System
 - ✅ Scheduler System
 - ✅ Functionality to set a voice dispatch interceptor
