@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.interactions.commands;
+package de.swiftbyte.jdaboot.interactions.command;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;

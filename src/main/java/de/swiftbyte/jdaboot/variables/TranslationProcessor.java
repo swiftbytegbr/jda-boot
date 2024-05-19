@@ -51,7 +51,9 @@ public class TranslationProcessor {
     public static String getTranslatedString(DiscordLocale locale, String key) {
         Locale.setDefault(Locale.ENGLISH);
         TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
-        return translationProvider.getTranslation(key, new Locale(locale.getLocale()));
+        String translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
+        if(translation == null) translation = "N/A";
+        return translation;
     }
 
 }

@@ -1,10 +1,14 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
+import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommandDefinition;
+import de.swiftbyte.jdaboot.embeds.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
-import de.swiftbyte.jdaboot.interactions.commands.SlashCommandExecutor;
+import de.swiftbyte.jdaboot.interactions.button.AdvancedButton;
+import de.swiftbyte.jdaboot.interactions.button.TemplateButton;
+import de.swiftbyte.jdaboot.interactions.command.SlashCommandExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -35,12 +39,16 @@ public class TestCommand extends SlashCommandExecutor {
     )
     private TemplateEmbed embed;
 
-
+    @ButtonByClass(TestButton.class)
+    public static TemplateButton button;
 
     @Override
     public void onCommand() {
 
-        event.replyEmbeds(embed.generateAdvancedEmbed().generateEmbed()).queue();
+        AdvancedEmbed advancedEmbed = embed.generateAdvancedEmbed();
+        advancedEmbed.setVariable("test", "Test");
+
+        event.replyEmbeds(advancedEmbed.generateEmbed()).setActionRow(button.generateAdvancedButton().build()).queue();
 
     }
 

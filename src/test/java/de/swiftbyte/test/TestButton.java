@@ -1,20 +1,20 @@
 package de.swiftbyte.test;
 
-import de.swiftbyte.jdaboot.annotation.interactions.ButtonDefinition;
-import de.swiftbyte.jdaboot.interactions.buttons.ButtonExecutor;
+import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonDefinition;
+import de.swiftbyte.jdaboot.interactions.button.ButtonExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 @ButtonDefinition(
-        label = "Test",
+        label = "${name}",
+        id = "test_button",
         emoji = "\uD83D\uDC4D",
-        url = "https://hufeisen-games.de",
-        type = ButtonDefinition.Type.LINK
+        type = ButtonDefinition.Type.PRIMARY
 )
 public class TestButton implements ButtonExecutor {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        System.out.println("Button clicked!");
+        event.reply("Button clicked!").queue();
     }
 
 }

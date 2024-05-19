@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.interactions.buttons;
+package de.swiftbyte.jdaboot.interactions.button;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 

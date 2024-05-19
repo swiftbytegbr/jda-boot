@@ -59,15 +59,17 @@ public class VariableProcessor {
 
         String newText = old;
 
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            if (entry.getKey() == null) log.error("Can not use null as variable key on variable " + entry.getValue());
-            newText = newText.replace("${" + entry.getKey() + "}", entry.getValue());
-        }
         for (DefaultVariable variable : defaultVariable)
             newText = newText.replace("${" + variable.variable() + "}", variable.value());
 
-        Pattern p = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
+        Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher m = p.matcher(newText);
+        while (m.find()) {
+            newText = newText.replace(m.group(), variables.get(m.group().replace("${", "").replace("}", "")));
+        }
+
+        p = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
+        m = p.matcher(newText);
 
         while (m.find()) {
             if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", "")))

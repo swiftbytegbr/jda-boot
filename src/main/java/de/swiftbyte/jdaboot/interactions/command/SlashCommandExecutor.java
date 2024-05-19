@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.interactions.commands;
+package de.swiftbyte.jdaboot.interactions.command;
 
 import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;

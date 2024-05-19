@@ -1,4 +1,6 @@
-package de.swiftbyte.jdaboot.annotation.interactions;
+package de.swiftbyte.jdaboot.annotation.interactions.button;
+
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -54,6 +56,14 @@ public @interface ButtonDefinition {
      * @since alpha.4
      */
     String url() default "";
+
+    /**
+     * The default variables of the button.
+     *
+     * @return The default variables of the embed.
+     * @since 1.0.0-alpha.6
+     */
+    DefaultVariable[] defaultVars() default {};
 
     /**
      * The Type enum defines the types of buttons that can be created.
