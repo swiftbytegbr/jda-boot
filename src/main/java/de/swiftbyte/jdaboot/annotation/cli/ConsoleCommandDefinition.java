@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ConsoleCommand {
+public @interface ConsoleCommandDefinition {
 
     /**
      * The name of the console command.

@@ -2,7 +2,7 @@ package de.swiftbyte.jdaboot.interactions.commands;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
-import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommandDefinition;
 import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
@@ -51,9 +51,9 @@ public class CommandManager extends ListenerAdapter {
     public CommandManager(JDA jda, Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
-        reflections.getTypesAnnotatedWith(SlashCommand.class).forEach(clazz -> {
+        reflections.getTypesAnnotatedWith(SlashCommandDefinition.class).forEach(clazz -> {
 
-            SlashCommand annotation = clazz.getAnnotation(SlashCommand.class);
+            SlashCommandDefinition annotation = clazz.getAnnotation(SlashCommandDefinition.class);
 
             String name = annotation.name();
 
@@ -196,7 +196,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildCommand(SlashCommand command) {
+    private CommandData buildCommand(SlashCommandDefinition command) {
 
         String id = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.name());
 
@@ -214,7 +214,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built SlashCommandData.
      * @since alpha.4
      */
-    private SlashCommandData buildSlashCommand(String id, SlashCommand command) {
+    private SlashCommandData buildSlashCommand(String id, SlashCommandDefinition command) {
 
         String description = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.description());
         SlashCommandData data = Commands.slash(id, description);
@@ -254,13 +254,13 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildUserOrChatCommand(SlashCommand.Type type, String id, SlashCommand command) {
+    private CommandData buildUserOrChatCommand(SlashCommandDefinition.Type type, String id, SlashCommandDefinition command) {
 
         CommandData data = null;
 
-        if (type.equals(SlashCommand.Type.USER)) {
+        if (type.equals(SlashCommandDefinition.Type.USER)) {
             data = Commands.user(id);
-        } else if (type.equals(SlashCommand.Type.MESSAGE)) {
+        } else if (type.equals(SlashCommandDefinition.Type.MESSAGE)) {
             data = Commands.message(id);
         }
 
