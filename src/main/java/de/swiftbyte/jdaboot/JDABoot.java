@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -172,6 +173,13 @@ public class JDABoot {
 
         if (allow.isEmpty()) builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
         else builder.setEnabledIntents(allow);
+
+        for (Method declaredMethod : mainClass.getDeclaredMethods()) {
+            if (declaredMethod.getName().equalsIgnoreCase("getVoiceDispatchInterceptor")) {
+                if(VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType()))
+                    builder.setVoiceDispatchInterceptor((VoiceDispatchInterceptor) JDABootObjectManager.runMethod(mainClass, declaredMethod));
+            }
+        }
 
         this.jda = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, jda);
