@@ -16,8 +16,8 @@ import java.lang.annotation.Target;
  * events to the associated logic, based on the button's ID. This mechanism supports a clean
  * and straightforward way to manage button interactions within the application.
  *
- *  @see ButtonExecutor
- *  @since 1.0.0-alpha.6
+ * @see ButtonExecutor
+ * @since 1.0.0-alpha.6
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

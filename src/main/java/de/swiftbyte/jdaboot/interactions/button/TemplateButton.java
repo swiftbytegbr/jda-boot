@@ -1,8 +1,6 @@
 package de.swiftbyte.jdaboot.interactions.button;
 
-import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonDefinition;
-import de.swiftbyte.jdaboot.embeds.AdvancedEmbed;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -33,7 +31,7 @@ public class TemplateButton {
      * @return The generated AdvancedButton.
      * @since 1.0.0-alpha.6
      */
-    public AdvancedButton generateAdvancedButton(DiscordLocale locale) {
+    public AdvancedButton advancedButton(DiscordLocale locale) {
         return new AdvancedButton(this, locale);
     }
 
@@ -43,7 +41,7 @@ public class TemplateButton {
      * @return The generated AdvancedButton.
      * @since 1.0.0-alpha.6
      */
-    public AdvancedButton generateAdvancedButton() {
+    public AdvancedButton advancedButton() {
         return new AdvancedButton(this, DiscordLocale.ENGLISH_US);
     }
 }

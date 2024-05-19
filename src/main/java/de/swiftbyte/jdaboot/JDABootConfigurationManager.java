@@ -113,7 +113,7 @@ public class JDABootConfigurationManager {
         }
 
         String configProfile = JDABoot.getStartupArgs().containsKey("profile") ? JDABoot.getStartupArgs().get("profile") : configProviderChain.getString("profile", jdaBootConfiguration.configProfile());
-        log.info("Using configuration profile: '" + configProfile + "'");
+        log.info("Using configuration profile: '{}'", configProfile);
         configProviderChain.setConfigProfile(configProfile);
 
         try {

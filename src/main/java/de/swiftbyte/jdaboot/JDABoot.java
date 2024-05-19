@@ -176,7 +176,7 @@ public class JDABoot {
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {
             if (declaredMethod.getName().equalsIgnoreCase("getVoiceDispatchInterceptor")) {
-                if(VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType()))
+                if (VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType()))
                     builder.setVoiceDispatchInterceptor((VoiceDispatchInterceptor) JDABootObjectManager.runMethod(mainClass, declaredMethod));
             }
         }

@@ -45,7 +45,7 @@ public class ConsoleCommandManager {
 
             ConsoleCommandExecutor executor = (ConsoleCommandExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
             commands.put(name, executor);
-            log.info("Registered console command " + clazz.getName());
+            log.info("Registered console command {}", clazz.getName());
         });
 
         ConsoleThread consoleThread = new ConsoleThread(this);

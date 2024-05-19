@@ -1,19 +1,13 @@
 package de.swiftbyte.jdaboot.interactions.button;
 
-import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonById;
 import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonDefinition;
-import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
-import de.swiftbyte.jdaboot.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -63,7 +57,7 @@ public class ButtonManager extends ListenerAdapter {
                 buttonExecutableList.put(id, cmd);
                 classList.put(clazz, id);
 
-                log.info("Registered button " + clazz.getName());
+                log.info("Registered button {}", clazz.getName());
             }
         });
 
@@ -73,7 +67,7 @@ public class ButtonManager extends ListenerAdapter {
         });
         reflections.getFieldsAnnotatedWith(ButtonByClass.class).forEach(field -> {
             ButtonByClass annotation = field.getAnnotation(ButtonByClass.class);
-            log.info("Injecting button " + annotation.value() + " into " + field.getDeclaringClass().getName());
+            log.info("Injecting button {} into {}", annotation.value(), field.getDeclaringClass().getName());
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, getButton(annotation.value()));
         });
 

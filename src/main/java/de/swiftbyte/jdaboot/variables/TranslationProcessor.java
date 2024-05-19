@@ -52,7 +52,7 @@ public class TranslationProcessor {
         Locale.setDefault(Locale.ENGLISH);
         TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
         String translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
-        if(translation == null) translation = "N/A";
+        if (translation == null) translation = "N/A";
         return translation;
     }
 

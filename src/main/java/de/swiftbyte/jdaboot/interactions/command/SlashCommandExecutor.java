@@ -51,7 +51,7 @@ public abstract class SlashCommandExecutor {
     }
 
     protected void reply(TemplateEmbed embed, DiscordLocale locale) {
-        event.replyEmbeds(embed.generateAdvancedEmbed(locale).generateEmbed()).queue();
+        event.replyEmbeds(embed.advancedEmbed(locale).build()).queue();
     }
 
     protected void replyEphemeral(TemplateEmbed embed) {
@@ -59,6 +59,6 @@ public abstract class SlashCommandExecutor {
     }
 
     protected void replyEphemeral(TemplateEmbed embed, DiscordLocale locale) {
-        event.replyEmbeds(embed.generateAdvancedEmbed(locale).generateEmbed()).setEphemeral(true).queue();
+        event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 }

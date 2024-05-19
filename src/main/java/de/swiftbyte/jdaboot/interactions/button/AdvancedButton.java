@@ -29,8 +29,8 @@ public class AdvancedButton {
     /**
      * Constructor for AdvancedButton. Initializes the button with the specified template, variables, and locale.
      *
-     * @param template  The TemplateButton to use as a base for the advanced button.
-     * @param locale    The locale to use for the button.
+     * @param template The TemplateButton to use as a base for the advanced button.
+     * @param locale   The locale to use for the button.
      * @since 1.0.0-alpha.6
      */
     protected AdvancedButton(TemplateButton template, DiscordLocale locale) {
@@ -41,8 +41,8 @@ public class AdvancedButton {
     /**
      * Sets a variable to be used in the button.
      *
-     * @param key The name of the variable.
-     * @param value    The value of the variable.
+     * @param key   The name of the variable.
+     * @param value The value of the variable.
      * @return The AdvancedButton instance for chaining.
      * @throws NullPointerException If the variable key or value is null.
      * @since 1.0.0-alpha.6

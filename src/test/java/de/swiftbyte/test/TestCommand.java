@@ -6,7 +6,6 @@ import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommandDefinition;
 import de.swiftbyte.jdaboot.embeds.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
-import de.swiftbyte.jdaboot.interactions.button.AdvancedButton;
 import de.swiftbyte.jdaboot.interactions.button.TemplateButton;
 import de.swiftbyte.jdaboot.interactions.command.SlashCommandExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -45,10 +44,10 @@ public class TestCommand extends SlashCommandExecutor {
     @Override
     public void onCommand() {
 
-        AdvancedEmbed advancedEmbed = embed.generateAdvancedEmbed();
+        AdvancedEmbed advancedEmbed = embed.advancedEmbed();
         advancedEmbed.setVariable("test", "Test");
 
-        event.replyEmbeds(advancedEmbed.generateEmbed()).setActionRow(button.generateAdvancedButton().build()).queue();
+        event.replyEmbeds(advancedEmbed.build()).setActionRow(button.advancedButton().build()).queue();
 
     }
 
