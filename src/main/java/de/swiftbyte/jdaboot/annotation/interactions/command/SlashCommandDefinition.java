@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface SlashCommand {
+public @interface SlashCommandDefinition {
 
     /**
      * The name of the command in discord.

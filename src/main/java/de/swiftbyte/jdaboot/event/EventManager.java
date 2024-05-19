@@ -57,25 +57,25 @@ public class EventManager implements EventListener {
             try {
                 method.getDeclaringClass().getConstructor();
             } catch (NoSuchMethodException e) {
-                log.error("The class " + method.getDeclaringClass().getName() + " has no no args constructor, this is required for event handling. Ignoring the method " + method.getName());
+                log.error("The class {} has no no args constructor, this is required for event handling. Ignoring the method {}", method.getDeclaringClass().getName(), method.getName());
                 continue;
             }
 
             try {
                 method.getDeclaringClass().getConstructor();
             } catch (NoSuchMethodException e) {
-                log.warn("Found @EventHandler method " + method.getClass().getName() + "." + method.getName() + " in a class without a no args constructor! Skipping...");
+                log.warn("Found @EventHandler method {}.{} in a class without a no args constructor! Skipping...", method.getClass().getName(), method.getName());
             }
 
             if (params.length != 1) {
-                log.warn("Found @EventHandler method " + method.getClass().getName() + "." + method.getName() + " with more or less than 1 parameter! Skipping...");
+                log.warn("Found @EventHandler method {}.{} with more or less than 1 parameter! Skipping...", method.getClass().getName(), method.getName());
                 continue;
             }
 
             Class<?> firstParam = params[0];
 
             if (!Event.class.isAssignableFrom(firstParam)) {
-                log.warn("Found @EventHandler method " + method.getClass().getName() + "." + method.getName() + " with a parameter that is not a child of Event! Skipping...");
+                log.warn("Found @EventHandler method {}.{} with a parameter that is not a child of Event! Skipping...", method.getClass().getName(), method.getName());
                 continue;
             }
 
@@ -91,7 +91,7 @@ public class EventManager implements EventListener {
             } else {
                 handlers.put(eventClass, List.of(Map.entry(method, instance)));
             }
-            log.info("Registered event handler for " + eventClass.getName());
+            log.info("Registered event handler for {}", eventClass.getName());
         }
 
         jda.addEventListener(this);
@@ -116,7 +116,7 @@ public class EventManager implements EventListener {
                             try {
                                 method.invoke(instance, event);
                             } catch (IllegalAccessException | InvocationTargetException e) {
-                                log.error("Error while invoking event handler " + method.getName() + " in class " + method.getDeclaringClass().getName(), e);
+                                log.error("Error while invoking event handler {} in class {}", method.getName(), method.getDeclaringClass().getName(), e);
                             }
                         }).start();
                     } else {

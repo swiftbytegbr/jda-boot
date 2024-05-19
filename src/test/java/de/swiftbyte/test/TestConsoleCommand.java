@@ -1,9 +1,9 @@
 package de.swiftbyte.test;
 
-import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommand;
+import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommandDefinition;
 import de.swiftbyte.jdaboot.cli.ConsoleCommandExecutor;
 
-@ConsoleCommand(name = "test", aliases = {"t" })
+@ConsoleCommandDefinition(name = "test", aliases = {"t"})
 public class TestConsoleCommand implements ConsoleCommandExecutor {
 
     @Override

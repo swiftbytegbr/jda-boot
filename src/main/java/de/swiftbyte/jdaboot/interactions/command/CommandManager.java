@@ -1,8 +1,8 @@
-package de.swiftbyte.jdaboot.interactions.commands;
+package de.swiftbyte.jdaboot.interactions.command;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
-import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommand;
+import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommandDefinition;
 import de.swiftbyte.jdaboot.annotation.interactions.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interactions.command.SubcommandGroup;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
@@ -51,9 +51,9 @@ public class CommandManager extends ListenerAdapter {
     public CommandManager(JDA jda, Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
-        reflections.getTypesAnnotatedWith(SlashCommand.class).forEach(clazz -> {
+        reflections.getTypesAnnotatedWith(SlashCommandDefinition.class).forEach(clazz -> {
 
-            SlashCommand annotation = clazz.getAnnotation(SlashCommand.class);
+            SlashCommandDefinition annotation = clazz.getAnnotation(SlashCommandDefinition.class);
 
             String name = annotation.name();
 
@@ -62,7 +62,7 @@ public class CommandManager extends ListenerAdapter {
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.SLASH)) {
-                    log.warn("Command " + name + " is not a slash command but is a child of SlashCommand! Skipping...");
+                    log.warn("Command {} is not a slash command but is a child of SlashCommand! Skipping...", name);
                     return;
                 }
                 commandData.put(data.getName(), data);
@@ -70,14 +70,14 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) return;
                 jda.upsertCommand(data).queue();
                 cmd.onEnable((SlashCommandData) data);
-                log.info("Registered slash command " + clazz.getName());
+                log.info("Registered slash command {}", clazz.getName());
             } else if (UserContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
                 ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) JDABootObjectManager.getOrInitialiseObject(clazz);
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.USER)) {
-                    log.warn("Command " + name + " is not a user context command but is a child of UserContextCommand! Skipping...");
+                    log.warn("Command {} is not a user context command but is a child of UserContextCommand! Skipping...", name);
                     return;
                 }
                 commandData.put(data.getName(), data);
@@ -85,14 +85,14 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) return;
                 jda.upsertCommand(data).queue();
                 cmd.onEnable(data);
-                log.info("Registered user context command " + clazz.getName());
+                log.info("Registered user context command {}", clazz.getName());
             } else if (MessageContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
                 ContextCommandExecutor<?> cmd = (ContextCommandExecutor<?>) JDABootObjectManager.getOrInitialiseObject(clazz);
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE)) {
-                    log.warn("Command " + name + " is not a message context command but is a child of MessageContextCommand! Skipping...");
+                    log.warn("Command {} is not a message context command but is a child of MessageContextCommand! Skipping...", name);
                     return;
                 }
                 commandData.put(data.getName(), data);
@@ -100,9 +100,9 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) return;
                 jda.upsertCommand(data).queue();
                 cmd.onEnable(data);
-                log.info("Registered message context command " + clazz.getName());
+                log.info("Registered message context command {}", clazz.getName());
             } else {
-                log.warn("Command " + name + " is not a child of SlashCommand or ContextCommand! Skipping...");
+                log.warn("Command {} is not a child of SlashCommand or ContextCommand! Skipping...", name);
             }
         });
 
@@ -196,7 +196,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildCommand(SlashCommand command) {
+    private CommandData buildCommand(SlashCommandDefinition command) {
 
         String id = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.name());
 
@@ -214,7 +214,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built SlashCommandData.
      * @since alpha.4
      */
-    private SlashCommandData buildSlashCommand(String id, SlashCommand command) {
+    private SlashCommandData buildSlashCommand(String id, SlashCommandDefinition command) {
 
         String description = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.description());
         SlashCommandData data = Commands.slash(id, description);
@@ -254,13 +254,13 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildUserOrChatCommand(SlashCommand.Type type, String id, SlashCommand command) {
+    private CommandData buildUserOrChatCommand(SlashCommandDefinition.Type type, String id, SlashCommandDefinition command) {
 
         CommandData data = null;
 
-        if (type.equals(SlashCommand.Type.USER)) {
+        if (type.equals(SlashCommandDefinition.Type.USER)) {
             data = Commands.user(id);
-        } else if (type.equals(SlashCommand.Type.MESSAGE)) {
+        } else if (type.equals(SlashCommandDefinition.Type.MESSAGE)) {
             data = Commands.message(id);
         }
 

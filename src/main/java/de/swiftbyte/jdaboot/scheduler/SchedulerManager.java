@@ -41,11 +41,11 @@ public class SchedulerManager {
                     Scheduler scheduler = method.getAnnotation(Scheduler.class);
 
                     if (method.getParameterCount() != 0) {
-                        log.error("Method " + method.getName() + " in class " + clazz.getSimpleName() + " is annotated with @Scheduler but has parameters!");
+                        log.error("Method {} in class {} is annotated with @Scheduler but has parameters!", method.getName(), clazz.getSimpleName());
                         continue;
                     }
                     addScheduler(scheduler, method);
-                    log.info("Registered scheduler '" + method.getName() + "' in class " + clazz.getName());
+                    log.info("Registered scheduler '{}' in class {}", method.getName(), clazz.getName());
                 }
             }
         }

@@ -33,7 +33,7 @@ public class TemplateEmbed {
      * @return The generated AdvancedEmbed.
      * @since alpha.4
      */
-    public AdvancedEmbed generateAdvancedEmbed(DiscordLocale locale) {
+    public AdvancedEmbed advancedEmbed(DiscordLocale locale) {
         return new AdvancedEmbed(this, locale);
     }
 
@@ -43,7 +43,7 @@ public class TemplateEmbed {
      * @return The generated AdvancedEmbed.
      * @since alpha.4
      */
-    public AdvancedEmbed generateAdvancedEmbed() {
+    public AdvancedEmbed advancedEmbed() {
         return new AdvancedEmbed(this, DiscordLocale.ENGLISH_US);
     }
 }

@@ -6,6 +6,7 @@ import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.annotation.Scheduler;
 import de.swiftbyte.jdaboot.annotation.SetValue;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -23,6 +24,10 @@ public class TestClient {
     public static void main(String[] args) {
         JDABoot.run(TestClient.class, args);
         JDABoot.getInstance().updateCommands("774993548579045386");
+    }
+
+    private VoiceDispatchInterceptor getVoiceDispatchInterceptor() {
+        return new TestVoiceDispatchInterceptor();
     }
 
     public static int testValue = 0;

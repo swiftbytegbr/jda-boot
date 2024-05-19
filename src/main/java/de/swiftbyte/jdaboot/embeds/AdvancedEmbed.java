@@ -83,8 +83,8 @@ public class AdvancedEmbed {
      * @return The generated MessageEmbed.
      * @since alpha.4
      */
-    public MessageEmbed generateEmbed() {
-        return generateEmbed(null);
+    public MessageEmbed build() {
+        return build(null);
     }
 
     /**
@@ -94,16 +94,16 @@ public class AdvancedEmbed {
      * @return The generated MessageEmbed.
      * @since alpha.4
      */
-    public MessageEmbed generateEmbed(Instant timestamp) {
+    public MessageEmbed build(Instant timestamp) {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
 
         if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
             if (basedOn != null) {
-                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).generateAdvancedEmbed(locale).generateEmbed(timestamp));
+                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).build(timestamp));
             } else {
-                log.error("Embed with ID " + embed.id() + " is based on an unknown embed with ID " + embed.basedOn() + "!");
+                log.error("Embed with ID {} is based on an unknown embed with ID {}!", embed.id(), embed.basedOn());
             }
         }
 

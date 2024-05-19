@@ -7,8 +7,8 @@ import de.swiftbyte.jdaboot.configuration.ConfigProviderChain;
 import de.swiftbyte.jdaboot.configuration.ConfigValueManager;
 import de.swiftbyte.jdaboot.embeds.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
-import de.swiftbyte.jdaboot.interactions.buttons.ButtonManager;
-import de.swiftbyte.jdaboot.interactions.commands.CommandManager;
+import de.swiftbyte.jdaboot.interactions.button.ButtonManager;
+import de.swiftbyte.jdaboot.interactions.command.CommandManager;
 import de.swiftbyte.jdaboot.scheduler.SchedulerManager;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
@@ -113,7 +113,7 @@ public class JDABootConfigurationManager {
         }
 
         String configProfile = JDABoot.getStartupArgs().containsKey("profile") ? JDABoot.getStartupArgs().get("profile") : configProviderChain.getString("profile", jdaBootConfiguration.configProfile());
-        log.info("Using configuration profile: '" + configProfile + "'");
+        log.info("Using configuration profile: '{}'", configProfile);
         configProviderChain.setConfigProfile(configProfile);
 
         try {

@@ -76,7 +76,7 @@ the SlashCommand annotation.
 
 ```java
 
-@SlashCommand(
+@SlashCommandDefinition(
         name = "test",
         description = "test",
         type = SlashCommand.Type.SLASH,
@@ -100,6 +100,41 @@ public class TestCommand implements SlashCommandExecutor {
 To make this command available for all servers, the method `JDABoot.getInstance().updateCommands()` must be executed
 last. Please note that it can take up to an hour until the command is globally available. For testing purposes, the
 command should only be updated on one guild.
+
+### Buttons
+To create a button,
+a class must be created that implements the ButtonExecuter interface
+and is annotated with the ButtonDefinition annotation.
+
+```java
+@ButtonDefinition(
+        label = "Test",
+        emoji = "\uD83D\uDC4D",
+        type = ButtonDefinition.Type.PRIMARY
+)
+public class TestButton implements ButtonExecutor {
+
+    @Override
+    public void onButtonClick(ButtonInteractionEvent event) {
+        event.reply("Button clicked!").queue();
+    }
+
+}
+```
+
+To be able to use a button, a ButtonTemplate variable must be created,
+which is provided with either a ButtonById or ButtonByClass annotation.
+
+```java
+public class ButtonClass {
+
+    @ButtonByClass(TestButton.class)
+    public static ButtonTemplate button;
+
+}
+```
+
+To use the button, the button must be converted into a JDA button using `button.advancedButton().build()`.
 
 ### Create an Event
 
@@ -136,7 +171,7 @@ public class EmbedClass {
 ```
 
 To be able to use the template embed, it must be converted into a JDA embed
-using `embed.generateAdvancedEmbed().generateEmbed()`.
+using `embed.advancedEmbed().build()`.
 
 ### Variables and Translation
 
@@ -164,6 +199,6 @@ the properties file.
 - 🚧 Other Interactions (✅ Buttons, ⛔ Select Menus, ⛔ Modals)
 - ⛔ Database ORM System
 - ✅ Scheduler System
-- ⛔ Music Implementation (LavaPlayer)
+- ✅ Functionality to set a voice dispatch interceptor
 
 

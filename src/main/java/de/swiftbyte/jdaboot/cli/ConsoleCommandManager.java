@@ -1,7 +1,7 @@
 package de.swiftbyte.jdaboot.cli;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommand;
+import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommandDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +33,9 @@ public class ConsoleCommandManager {
     public ConsoleCommandManager(Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
-        reflections.getTypesAnnotatedWith(ConsoleCommand.class).forEach(clazz -> {
+        reflections.getTypesAnnotatedWith(ConsoleCommandDefinition.class).forEach(clazz -> {
 
-            ConsoleCommand annotation = clazz.getAnnotation(ConsoleCommand.class);
+            ConsoleCommandDefinition annotation = clazz.getAnnotation(ConsoleCommandDefinition.class);
 
             String name = annotation.name();
 
@@ -45,7 +45,7 @@ public class ConsoleCommandManager {
 
             ConsoleCommandExecutor executor = (ConsoleCommandExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
             commands.put(name, executor);
-            log.info("Registered console command " + clazz.getName());
+            log.info("Registered console command {}", clazz.getName());
         });
 
         ConsoleThread consoleThread = new ConsoleThread(this);

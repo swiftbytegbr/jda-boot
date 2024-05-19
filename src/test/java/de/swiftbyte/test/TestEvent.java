@@ -15,7 +15,7 @@ public class TestEvent {
 
     @EventHandler
     public void onReady(GuildMemberJoinEvent event) {
-        event.getGuild().getSystemChannel().sendMessageEmbeds(embed.generateAdvancedEmbed().generateEmbed()).queue();
+        event.getGuild().getSystemChannel().sendMessageEmbeds(embed.advancedEmbed().build()).queue();
     }
 
 }

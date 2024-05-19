@@ -31,7 +31,7 @@ public class JDABootObjectManager {
             Constructor<?> constructor = clazz.getDeclaredConstructor();
 
             if (constructor.getParameterCount() != 0) {
-                log.warn("Failed to initialise new object of class " + clazz.getName() + " because it does not have a no-args constructor! Arg constructors are supported in another version!");
+                log.warn("Failed to initialise new object of class {} because it does not have a no-args constructor! Arg constructors are supported in another version!", clazz.getName());
                 return null;
             }
 
@@ -39,7 +39,7 @@ public class JDABootObjectManager {
             objectMap.put(clazz, object);
             return object;
         } catch (Exception e) {
-            log.warn("Failed to initialise new object of class " + clazz.getName() + "!", e);
+            log.warn("Failed to initialise new object of class {}!", clazz.getName(), e);
             return null;
         }
     }
@@ -90,7 +90,7 @@ public class JDABootObjectManager {
                 field.set(object, value);
             }
         } catch (Exception e) {
-            log.warn("Failed to inject field " + field.getName() + " into class " + clazz.getName() + "!", e);
+            log.warn("Failed to inject field {} into class {}!", field.getName(), clazz.getName(), e);
         }
     }
 
@@ -126,7 +126,7 @@ public class JDABootObjectManager {
                 return method.invoke(object, args);
             }
         } catch (Exception e) {
-            log.warn("Failed to run method " + method.getName() + " in class " + clazz.getName() + "!", e);
+            log.warn("Failed to run method {} in class {}!", method.getName(), clazz.getName(), e);
             return null;
         }
     }
