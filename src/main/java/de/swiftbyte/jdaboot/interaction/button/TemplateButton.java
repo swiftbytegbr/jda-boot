@@ -5,6 +5,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
+/**
+ * The TemplateButton class is responsible for generating advanced buttons based on a provided template.
+ * It uses the ButtonTemplate annotation
+ * to define the template and the AdvancedButton class to generate the final button.
+ *
+ * @since 1.0.0-alpha.6
+ */
 public class TemplateButton {
 
     @Getter(AccessLevel.PACKAGE)
