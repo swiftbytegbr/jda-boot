@@ -53,9 +53,9 @@ public class AdvancedButton {
     }
 
     /**
-     * Generates a MessageEmbed based on the template and the set variables.
+     * Generates a Button based on the template and the set variables.
      *
-     * @return The generated MessageEmbed.
+     * @return The generated Button.
      * @since 1.0.0-alpha.6
      */
     public Button build() {

@@ -60,7 +60,7 @@ public @interface ButtonDefinition {
     /**
      * The default variables of the button.
      *
-     * @return The default variables of the embed.
+     * @return The default variables of the button.
      * @since 1.0.0-alpha.6
      */
     DefaultVariable[] defaultVars() default {};

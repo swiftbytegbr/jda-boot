@@ -16,7 +16,7 @@ import java.util.UUID;
 
 /**
  * The ButtonManager class extends ListenerAdapter and is responsible for managing bot buttons in the application.
- * It maintains a map of button IDs to BotButton instances, and handles button interaction events.
+ * It maintains a map of button IDs to ButtonExecutor instances, and handles button interaction events.
  *
  * @since alpha.4
  */
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class ButtonManager extends ListenerAdapter {
 
     /**
-     * The map of button IDs to BotButton instances.
+     * The map of button IDs to ButtonExecutor instances.
      */
     private HashMap<String, ButtonExecutor> buttonExecutableList = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class ButtonManager extends ListenerAdapter {
 
     /**
      * Constructor for ButtonManager. Initializes the manager with the specified JDA instance and main class.
-     * It uses reflection to find classes annotated with @Button and creates instances of those classes.
+     * It uses reflection to find classes annotated with @ButtonDefinition and creates instances of those classes.
      *
      * @param jda       The JDA instance to use for button handling.
      * @param mainClass The main class of your project.
