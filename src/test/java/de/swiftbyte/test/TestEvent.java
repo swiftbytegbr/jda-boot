@@ -2,7 +2,7 @@ package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.EventHandler;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
-import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
+import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 
 public class TestEvent {

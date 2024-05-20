@@ -1,9 +1,9 @@
-package de.swiftbyte.jdaboot.interactions.button;
+package de.swiftbyte.jdaboot.interaction.button;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonByClass;
-import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonById;
-import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonDefinition;
+import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonById;
+import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;

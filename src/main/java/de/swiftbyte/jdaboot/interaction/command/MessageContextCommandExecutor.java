@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.interactions.command;
+package de.swiftbyte.jdaboot.interaction.command;
 
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 

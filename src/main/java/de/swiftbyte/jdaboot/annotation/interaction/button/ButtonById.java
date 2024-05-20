@@ -1,6 +1,6 @@
-package de.swiftbyte.jdaboot.annotation.interactions.button;
+package de.swiftbyte.jdaboot.annotation.interaction.button;
 
-import de.swiftbyte.jdaboot.interactions.button.ButtonExecutor;
+import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

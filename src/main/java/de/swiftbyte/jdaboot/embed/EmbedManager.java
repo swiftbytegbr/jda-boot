@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.embeds;
+package de.swiftbyte.jdaboot.embed;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;

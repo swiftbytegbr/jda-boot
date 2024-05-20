@@ -1,7 +1,7 @@
 package de.swiftbyte.test;
 
-import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonDefinition;
-import de.swiftbyte.jdaboot.interactions.button.ButtonExecutor;
+import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
+import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 @ButtonDefinition(

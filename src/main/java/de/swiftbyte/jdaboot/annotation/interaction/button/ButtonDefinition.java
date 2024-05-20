@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.annotation.interactions.button;
+package de.swiftbyte.jdaboot.annotation.interaction.button;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 

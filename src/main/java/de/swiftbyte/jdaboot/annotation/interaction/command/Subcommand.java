@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.annotation.interactions.command;
+package de.swiftbyte.jdaboot.annotation.interaction.command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,13 +1,13 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
-import de.swiftbyte.jdaboot.annotation.interactions.button.ButtonByClass;
-import de.swiftbyte.jdaboot.annotation.interactions.command.CommandOption;
-import de.swiftbyte.jdaboot.annotation.interactions.command.SlashCommandDefinition;
-import de.swiftbyte.jdaboot.embeds.AdvancedEmbed;
-import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
-import de.swiftbyte.jdaboot.interactions.button.TemplateButton;
-import de.swiftbyte.jdaboot.interactions.command.SlashCommandExecutor;
+import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
+import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
+import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
+import de.swiftbyte.jdaboot.embed.TemplateEmbed;
+import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
+import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;

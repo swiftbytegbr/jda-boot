@@ -1,4 +1,4 @@
-package de.swiftbyte.jdaboot.annotation.interactions.command;
+package de.swiftbyte.jdaboot.annotation.interaction.command;
 
 import net.dv8tion.jda.api.Permission;
 
