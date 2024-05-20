@@ -9,6 +9,7 @@ import de.swiftbyte.jdaboot.embed.EmbedManager;
 import de.swiftbyte.jdaboot.event.EventManager;
 import de.swiftbyte.jdaboot.interaction.button.ButtonManager;
 import de.swiftbyte.jdaboot.interaction.command.CommandManager;
+import de.swiftbyte.jdaboot.interaction.modal.ModalManager;
 import de.swiftbyte.jdaboot.scheduler.SchedulerManager;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
@@ -81,6 +82,9 @@ public class JDABootConfigurationManager {
     @Getter(AccessLevel.PUBLIC)
     private static ButtonManager buttonManager;
 
+    @Getter(AccessLevel.PUBLIC)
+    private static ModalManager modalManager;
+
 
     private static boolean consoleCommandsEnabled;
 
@@ -142,6 +146,7 @@ public class JDABootConfigurationManager {
     protected static void initialiseManagers(Class<?> mainClass, JDA jda) {
         commandManager = new CommandManager(jda, mainClass);
         buttonManager = new ButtonManager(jda, mainClass);
+        modalManager = new ModalManager(jda, mainClass);
 
         new EventManager(jda, mainClass);
         new EmbedManager(mainClass);

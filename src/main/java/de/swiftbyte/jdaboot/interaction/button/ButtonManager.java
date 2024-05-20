@@ -67,7 +67,6 @@ public class ButtonManager extends ListenerAdapter {
         });
         reflections.getFieldsAnnotatedWith(ButtonByClass.class).forEach(field -> {
             ButtonByClass annotation = field.getAnnotation(ButtonByClass.class);
-            log.info("Injecting button {} into {}", annotation.value(), field.getDeclaringClass().getName());
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, getButton(annotation.value()));
         });
 
@@ -100,7 +99,7 @@ public class ButtonManager extends ListenerAdapter {
 
     /**
      * Handles button interaction events. When a button is clicked, this method finds the corresponding
-     * BotButton instance and delegates the event to it.
+     * ButtonExecutor instance and delegates the event to it.
      *
      * @param event The button interaction event.
      * @since alpha.4
