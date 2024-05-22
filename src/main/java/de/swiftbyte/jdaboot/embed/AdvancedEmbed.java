@@ -4,8 +4,11 @@ import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -13,7 +16,9 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The AdvancedEmbed class is responsible for generating advanced embeds based on a provided TemplateEmbed.
@@ -32,7 +37,7 @@ public class AdvancedEmbed {
     private DiscordLocale locale;
 
     private HashMap<String, String> variables = new HashMap<>();
-
+    private List<DynamicEmbedField> dynamicFields = new ArrayList<>();
     /**
      * Constructor for AdvancedEmbed. Initializes the embed with the specified template, variables, and locale.
      *
@@ -78,6 +83,57 @@ public class AdvancedEmbed {
     }
 
     /**
+     * Add a field to the embed at runtime. The field also supports variables.
+     *
+     * @param title       The title of the field.
+     * @param description The description of the field.
+     * @param inline      Whether the field should be inline.
+     * @return The AdvancedEmbed instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedEmbed addDynamicField(String title, String description, boolean inline) {
+        dynamicFields.add(new DynamicEmbedField(title, description, inline));
+        return this;
+    }
+
+    /**
+     * Add a field to the embed at runtime. The field also supports variables.
+     *
+     * @param dynamicField The field to add.
+     * @return The AdvancedEmbed instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedEmbed addDynamicField(DynamicEmbedField dynamicField) {
+        dynamicFields.add(dynamicField);
+        return this;
+    }
+
+    /**
+     * Add fields to the embed at runtime.
+     *
+     * @param dynamicFields The fields to add.
+     * @return The AdvancedEmbed instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedEmbed addDynamicFields(DynamicEmbedField...dynamicFields) {
+        this.dynamicFields.addAll(List.of(dynamicFields));
+        return this;
+    }
+
+    /**
+     * Add fields to the embed at runtime.
+     *
+     * @param dynamicFields The fields to add.
+     * @return The AdvancedEmbed instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedEmbed addDynamicFields(List<DynamicEmbedField> dynamicFields) {
+        this.dynamicFields.addAll(dynamicFields);
+        return this;
+    }
+
+
+    /**
      * Generates a MessageEmbed based on the template and the set variables.
      *
      * @return The generated MessageEmbed.
@@ -121,9 +177,11 @@ public class AdvancedEmbed {
             builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
 
         for (EmbedField embedField : embed.fields()) {
-
             builder.addField(processVar(embedField.title()), processVar(embedField.description()), embedField.inline());
+        }
 
+        for(DynamicEmbedField dynamicField : dynamicFields) {
+            builder.addField(processVar(dynamicField.title()), processVar(dynamicField.description()), dynamicField.inline());
         }
 
         if (timestamp != null) builder.setTimestamp(timestamp);
@@ -141,4 +199,11 @@ public class AdvancedEmbed {
     private String processVar(String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getEmbed().defaultVars());
     }
+
+    /**
+     * Used to store dynamic fields that are added at runtime.
+     *
+     * @since 1.0.0-alpha.7
+     */
+    public record DynamicEmbedField(String title, String description, boolean inline) {}
 }

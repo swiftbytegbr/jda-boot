@@ -5,8 +5,8 @@ import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class AdvancedModal {
     private DiscordLocale locale;
 
     private HashMap<String, String> variables = new HashMap<>();
+    private List<DynamicModalRow> dynamicRows = new ArrayList<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -57,6 +59,61 @@ public class AdvancedModal {
      */
     public AdvancedModal setVariable(String key, String value) {
         variables.put(key, value);
+        return this;
+    }
+
+    /**
+     * Add a row to the modal at runtime.
+     *
+     * @param dynamicModalRow The row to add.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedModal addDynamicRow(DynamicModalRow dynamicModalRow) {
+        dynamicRows.add(dynamicModalRow);
+        return this;
+    }
+
+    /**
+     * Add a row to the modal at runtime.
+     *
+     * @param id          The ID of the row.
+     * @param label       The label of the row.
+     * @param style       The style of the row.
+     * @param placeholder The placeholder of the row.
+     * @param required    Whether the row is required.
+     * @param maxLength   The maximum length of the row.
+     * @param minLength   The minimum length of the row.
+     * @param defaultValue The default value of the row.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedModal addDynamicModalRow(String id, String label, TextInputStyle style, String placeholder, boolean required, int maxLength, int minLength, String defaultValue) {
+        dynamicRows.add(new DynamicModalRow(id, label, style, placeholder, required, maxLength, minLength, defaultValue));
+        return this;
+    }
+
+    /**
+     * Add multiple rows to the modal at runtime.
+     *
+     * @param dynamicModalRow The rows to add.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedModal addDynamicRows(DynamicModalRow...dynamicModalRow) {
+        dynamicRows.addAll(List.of(dynamicModalRow));
+        return this;
+    }
+
+    /**
+     * Add multiple rows to the modal at runtime.
+     *
+     * @param dynamicModalRow The rows to add.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    public AdvancedModal addDynamicRows(Collection<DynamicModalRow> dynamicModalRow) {
+        dynamicRows.addAll(dynamicModalRow);
         return this;
     }
 
@@ -91,6 +148,25 @@ public class AdvancedModal {
             modal.addActionRow(input.build());
         }
 
+        for (DynamicModalRow inputDefinition : dynamicRows) {
+            String inputId = processVar(inputDefinition.id());
+            String placeholder = processVar(inputDefinition.placeholder());
+            String label = processVar(inputDefinition.label());
+            TextInputStyle style = switch (inputDefinition.style) {
+                case PARAGRAPH -> TextInputStyle.PARAGRAPH;
+                case UNKNOWN -> TextInputStyle.UNKNOWN;
+                case SHORT -> TextInputStyle.SHORT;
+            };
+
+            TextInput.Builder input = TextInput.create(inputId, label, style);
+            if(StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
+            input.setRequired(inputDefinition.required());
+            if(inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
+            if(inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
+            if(StringUtils.isNotBlank(inputDefinition.defaultValue())) input.setValue(processVar(inputDefinition.defaultValue()));
+            modal.addActionRow(input.build());
+        }
+
         return modal.build();
     }
 
@@ -103,6 +179,31 @@ public class AdvancedModal {
      */
     private String processVar(String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+    }
+
+    /**
+     * The DynamicModalRow class is used to store dynamic rows that are added at runtime.
+     *
+     * @since 1.0.0-alpha.7
+     */
+    @Accessors(fluent = true)
+    @AllArgsConstructor
+    @Data
+    public static class DynamicModalRow {
+        private String id;
+        private String label;
+        private TextInputStyle style;
+        private String placeholder = "";
+        private boolean required;
+        private int maxLength;
+        private int minLength;
+        private String defaultValue = "";
+
+        public DynamicModalRow(String id, String label, TextInputStyle style) {
+            this.id = id;
+            this.label = label;
+            this.style = style;
+        }
     }
 
 }
