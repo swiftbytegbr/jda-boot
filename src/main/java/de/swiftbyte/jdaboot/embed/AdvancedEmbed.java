@@ -83,6 +83,18 @@ public class AdvancedEmbed {
     }
 
     /**
+     * Sets the variables to be used in the embed.
+     *
+     * @param variables The variables to use in the embed.
+     * @return The AdvancedEmbed instance for chaining.
+     * @since 1.0.0-alpha.7
+     */
+    private AdvancedEmbed setVariables(HashMap<String, String> variables) {
+        this.variables = variables;
+        return this;
+    }
+
+    /**
      * Add a field to the embed at runtime. The field also supports variables.
      *
      * @param title       The title of the field.
@@ -157,7 +169,7 @@ public class AdvancedEmbed {
         if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
             if (basedOn != null) {
-                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).build(timestamp));
+                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).build(timestamp));
             } else {
                 log.error("Embed with ID {} is based on an unknown embed with ID {}!", embed.id(), embed.basedOn());
             }
