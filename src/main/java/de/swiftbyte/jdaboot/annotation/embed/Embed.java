@@ -1,7 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.embed;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
-import de.swiftbyte.jdaboot.embeds.EmbedColor;
+import de.swiftbyte.jdaboot.embed.EmbedColor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

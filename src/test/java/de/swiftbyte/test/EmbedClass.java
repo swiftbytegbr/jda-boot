@@ -5,8 +5,8 @@ import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedAuthor;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedFooter;
-import de.swiftbyte.jdaboot.embeds.EmbedColor;
-import de.swiftbyte.jdaboot.embeds.TemplateEmbed;
+import de.swiftbyte.jdaboot.embed.EmbedColor;
+import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 
 public class EmbedClass {
 
