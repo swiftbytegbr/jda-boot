@@ -64,15 +64,20 @@ public class VariableProcessor {
         Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher m = p.matcher(newText);
         while (m.find()) {
-            newText = newText.replace(m.group(), variables.get(m.group().replace("${", "").replace("}", "")));
+            String value = variables.get(m.group().replace("${", "").replace("}", ""));
+            if(value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
+            newText = newText.replace(m.group(), value);
         }
 
         p = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
         m = p.matcher(newText);
 
         while (m.find()) {
-            if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", "")))
+            if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", ""))) {
+                String value = JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", ""));
+                if(value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
                 newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
+            }
         }
 
         if (isIncompletelyProcessed(newText, false)) {
