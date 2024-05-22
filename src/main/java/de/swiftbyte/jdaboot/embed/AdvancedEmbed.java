@@ -173,7 +173,7 @@ public class AdvancedEmbed {
             builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(processVar(embed.hexColor())) : embed.color().getColor());
         if (StringUtils.isNotBlank(embed.author().name()))
             builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null);
-        if (StringUtils.isNotBlank(embed.footer().text()))
+        if (!embed.footer().text().isEmpty())
             builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
 
         for (EmbedField embedField : embed.fields()) {
