@@ -14,10 +14,7 @@ import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The AdvancedModal class is responsible for generating advanced modals based on a provided TemplateModal.
@@ -35,6 +32,7 @@ public class AdvancedModal {
 
     private HashMap<String, String> variables = new HashMap<>();
     private List<DynamicModalRow> dynamicRows = new ArrayList<>();
+    private static HashMap<String, HashMap<String, String>> variableTransfer = new HashMap<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -125,7 +123,10 @@ public class AdvancedModal {
      */
     public Modal build() {
 
-        String id = processVar(template.getId());
+        String variableId = UUID.randomUUID().toString();
+        variableTransfer.put(variableId, variables);
+
+        String id = template.getId() + ";" + variableId;
         String title = processVar(template.getDefinition().title());
 
         Modal.Builder modal = Modal.create(id, title);
@@ -206,4 +207,14 @@ public class AdvancedModal {
         }
     }
 
+    /**
+     * Get the variables from the given ID.
+     *
+     * @param id The ID to get the variables from.
+     * @return The variables from the given ID.
+     * @since 1.0.0-alpha.9
+     */
+    public static HashMap<String, String> getVariablesFromId(String id) {
+        return variableTransfer.get(id);
+    }
 }

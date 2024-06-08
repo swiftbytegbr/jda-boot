@@ -56,6 +56,16 @@ public class ModalManager extends ListenerAdapter {
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
+            if(id.contains(";")) {
+                log.error("Modal ID cannot contain semicolons on modal '{}'", clazz.getName());
+                return;
+            }
+
+            if(id.length() >= 60) {
+                log.error("Modal ID cannot be longer than 60 characters on modal '{}'", clazz.getName());
+                return;
+            }
+
             if (ModalExecutor.class.isAssignableFrom(clazz)) {
                 ModalExecutor cmd = (ModalExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
 
@@ -111,8 +121,11 @@ public class ModalManager extends ListenerAdapter {
      */
     @Override
     public void onModalInteraction(ModalInteractionEvent event) {
-        if (modalExecutableList.containsKey(event.getModalId())) {
-            modalExecutableList.get(event.getModalId()).onModalSubmit(event);
+
+        String[] idParts = event.getModalId().split(";");
+
+        if (modalExecutableList.containsKey(idParts[0])) {
+            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? AdvancedModal.getVariablesFromId(idParts[1]) : new HashMap<>());
         }
     }
 }

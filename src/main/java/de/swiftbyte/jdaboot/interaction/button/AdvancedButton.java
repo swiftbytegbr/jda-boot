@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * The AdvancedButton class is responsible for generating advanced buttons based on a provided TemplateButton.
@@ -25,6 +26,7 @@ public class AdvancedButton {
     private DiscordLocale locale;
 
     private HashMap<String, String> variables = new HashMap<>();
+    private static HashMap<String, HashMap<String, String>> variableTransfer = new HashMap<>();
 
     /**
      * Constructor for AdvancedButton. Initializes the button with the specified template, variables, and locale.
@@ -60,8 +62,11 @@ public class AdvancedButton {
      */
     public Button build() {
 
+        String variableId = UUID.randomUUID().toString();
+        variableTransfer.put(variableId, variables);
+
         ButtonDefinition definition = template.getDefinition();
-        String id = processVar(template.getId());
+        String id = template.getId() + ";" + variableId;
         String label = processVar(definition.label());
 
         Button btn = switch (definition.type()) {
@@ -86,6 +91,17 @@ public class AdvancedButton {
      */
     private String processVar(String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+    }
+
+    /**
+     * Retrieves the variables associated with the specified ID.
+     *
+     * @param id The ID of the button.
+     * @return The variables associated with the ID.
+     * @since 1.0.0-alpha.9
+     */
+    public static HashMap<String, String> getVariablesFromId(String id) {
+        return variableTransfer.get(id);
     }
 
 }
