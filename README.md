@@ -102,11 +102,13 @@ last. Please note that it can take up to an hour until the command is globally a
 command should only be updated on one guild.
 
 ### Buttons
+
 To create a button,
 a class must be created that implements the ButtonExecuter interface
 and is annotated with the ButtonDefinition annotation.
 
 ```java
+
 @ButtonDefinition(
         label = "Test",
         emoji = "\uD83D\uDC4D",
@@ -198,6 +200,8 @@ the properties file.
 - ✅ Config System
 - 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ⛔ Modals)
 - ⛔ Database ORM System
+- ⛔ Better error handling
+- ✅ Variable transfer between commands, buttons, and modals
 - ✅ Scheduler System
 - ✅ Functionality to set a voice dispatch interceptor
 

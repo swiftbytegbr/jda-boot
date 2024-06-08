@@ -1,17 +1,12 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
-import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
-import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -56,12 +51,12 @@ public class ModalManager extends ListenerAdapter {
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
-            if(id.contains(";")) {
+            if (id.contains(";")) {
                 log.error("Modal ID cannot contain semicolons on modal '{}'", clazz.getName());
                 return;
             }
 
-            if(id.length() >= 60) {
+            if (id.length() >= 60) {
                 log.error("Modal ID cannot be longer than 60 characters on modal '{}'", clazz.getName());
                 return;
             }

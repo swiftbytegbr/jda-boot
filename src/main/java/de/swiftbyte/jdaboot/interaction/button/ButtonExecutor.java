@@ -15,7 +15,7 @@ public interface ButtonExecutor {
     /**
      * Called when the button is clicked.
      *
-     * @param event The button interaction event.
+     * @param event     The button interaction event.
      * @param variables The variables set in the advanced button, empty when fix id is used and button was created before a restart.
      * @since alpha.4
      */

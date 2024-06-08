@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
-import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import de.swiftbyte.jdaboot.interaction.modal.ModalExecutor;
 
 import java.lang.annotation.ElementType;

@@ -65,7 +65,7 @@ public class VariableProcessor {
         Matcher m = p.matcher(newText);
         while (m.find()) {
             String value = variables.get(m.group().replace("${", "").replace("}", ""));
-            if(value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
+            if (value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
             newText = newText.replace(m.group(), value);
         }
 
@@ -75,7 +75,7 @@ public class VariableProcessor {
         while (m.find()) {
             if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", ""))) {
                 String value = JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", ""));
-                if(value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
+                if (value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
                 newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
             }
         }

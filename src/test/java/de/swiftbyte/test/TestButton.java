@@ -2,7 +2,6 @@ package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
-import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
 import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import de.swiftbyte.jdaboot.interaction.modal.AdvancedModal;
 import de.swiftbyte.jdaboot.interaction.modal.TemplateModal;

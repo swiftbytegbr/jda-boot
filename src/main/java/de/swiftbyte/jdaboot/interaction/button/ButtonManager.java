@@ -50,11 +50,11 @@ public class ButtonManager extends ListenerAdapter {
             ButtonDefinition annotation = clazz.getAnnotation(ButtonDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
-            if(id.contains(";")) {
+            if (id.contains(";")) {
                 log.error("Button ID cannot contain semicolons on button '{}'", clazz.getName());
                 return;
             }
-            if(id.length() >= 60) {
+            if (id.length() >= 60) {
                 log.error("Button ID cannot be longer than 60 characters on button '{}'", clazz.getName());
                 return;
             }
