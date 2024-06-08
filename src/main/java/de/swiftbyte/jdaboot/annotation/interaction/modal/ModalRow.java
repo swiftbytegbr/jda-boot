@@ -1,7 +1,5 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

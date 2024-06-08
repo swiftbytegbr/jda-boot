@@ -1,23 +1,19 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
-import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The AdvancedModal class is responsible for generating advanced modals based on a provided TemplateModal.
@@ -35,6 +31,7 @@ public class AdvancedModal {
 
     private HashMap<String, String> variables = new HashMap<>();
     private List<DynamicModalRow> dynamicRows = new ArrayList<>();
+    private static HashMap<String, HashMap<String, String>> variableTransfer = new HashMap<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -77,13 +74,13 @@ public class AdvancedModal {
     /**
      * Add a row to the modal at runtime.
      *
-     * @param id          The ID of the row.
-     * @param label       The label of the row.
-     * @param style       The style of the row.
-     * @param placeholder The placeholder of the row.
-     * @param required    Whether the row is required.
-     * @param maxLength   The maximum length of the row.
-     * @param minLength   The minimum length of the row.
+     * @param id           The ID of the row.
+     * @param label        The label of the row.
+     * @param style        The style of the row.
+     * @param placeholder  The placeholder of the row.
+     * @param required     Whether the row is required.
+     * @param maxLength    The maximum length of the row.
+     * @param minLength    The minimum length of the row.
      * @param defaultValue The default value of the row.
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
@@ -100,7 +97,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal addDynamicRows(DynamicModalRow...dynamicModalRow) {
+    public AdvancedModal addDynamicRows(DynamicModalRow... dynamicModalRow) {
         dynamicRows.addAll(List.of(dynamicModalRow));
         return this;
     }
@@ -125,7 +122,10 @@ public class AdvancedModal {
      */
     public Modal build() {
 
-        String id = processVar(template.getId());
+        String variableId = UUID.randomUUID().toString();
+        variableTransfer.put(variableId, variables);
+
+        String id = template.getId() + ";" + variableId;
         String title = processVar(template.getDefinition().title());
 
         Modal.Builder modal = Modal.create(id, title);
@@ -140,11 +140,12 @@ public class AdvancedModal {
             };
 
             TextInput.Builder input = TextInput.create(inputId, label, style);
-            if(StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
+            if (StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
             input.setRequired(inputDefinition.required());
-            if(inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
-            if(inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
-            if(StringUtils.isNotBlank(inputDefinition.defaultValue())) input.setValue(processVar(inputDefinition.defaultValue()));
+            if (inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
+            if (inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
+            if (StringUtils.isNotBlank(inputDefinition.defaultValue()))
+                input.setValue(processVar(inputDefinition.defaultValue()));
             modal.addActionRow(input.build());
         }
 
@@ -159,11 +160,12 @@ public class AdvancedModal {
             };
 
             TextInput.Builder input = TextInput.create(inputId, label, style);
-            if(StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
+            if (StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
             input.setRequired(inputDefinition.required());
-            if(inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
-            if(inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
-            if(StringUtils.isNotBlank(inputDefinition.defaultValue())) input.setValue(processVar(inputDefinition.defaultValue()));
+            if (inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
+            if (inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
+            if (StringUtils.isNotBlank(inputDefinition.defaultValue()))
+                input.setValue(processVar(inputDefinition.defaultValue()));
             modal.addActionRow(input.build());
         }
 
@@ -190,6 +192,7 @@ public class AdvancedModal {
     @AllArgsConstructor
     @Data
     public static class DynamicModalRow {
+
         private String id;
         private String label;
         private TextInputStyle style;
@@ -206,4 +209,14 @@ public class AdvancedModal {
         }
     }
 
+    /**
+     * Get the variables from the given ID.
+     *
+     * @param id The ID to get the variables from.
+     * @return The variables from the given ID.
+     * @since 1.0.0-alpha.9
+     */
+    public static HashMap<String, String> getVariablesFromId(String id) {
+        return variableTransfer.get(id);
+    }
 }

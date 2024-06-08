@@ -1,17 +1,12 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
-import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
-import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -55,6 +50,16 @@ public class ModalManager extends ListenerAdapter {
             ModalDefinition annotation = clazz.getAnnotation(ModalDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
+
+            if (id.contains(";")) {
+                log.error("Modal ID cannot contain semicolons on modal '{}'", clazz.getName());
+                return;
+            }
+
+            if (id.length() >= 60) {
+                log.error("Modal ID cannot be longer than 60 characters on modal '{}'", clazz.getName());
+                return;
+            }
 
             if (ModalExecutor.class.isAssignableFrom(clazz)) {
                 ModalExecutor cmd = (ModalExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
@@ -111,8 +116,11 @@ public class ModalManager extends ListenerAdapter {
      */
     @Override
     public void onModalInteraction(ModalInteractionEvent event) {
-        if (modalExecutableList.containsKey(event.getModalId())) {
-            modalExecutableList.get(event.getModalId()).onModalSubmit(event);
+
+        String[] idParts = event.getModalId().split(";");
+
+        if (modalExecutableList.containsKey(idParts[0])) {
+            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? AdvancedModal.getVariablesFromId(idParts[1]) : new HashMap<>());
         }
     }
 }

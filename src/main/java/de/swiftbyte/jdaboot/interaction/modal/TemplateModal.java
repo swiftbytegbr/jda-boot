@@ -1,8 +1,6 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
-import de.swiftbyte.jdaboot.interaction.button.AdvancedButton;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;

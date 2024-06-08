@@ -50,6 +50,14 @@ public class ButtonManager extends ListenerAdapter {
             ButtonDefinition annotation = clazz.getAnnotation(ButtonDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
+            if (id.contains(";")) {
+                log.error("Button ID cannot contain semicolons on button '{}'", clazz.getName());
+                return;
+            }
+            if (id.length() >= 60) {
+                log.error("Button ID cannot be longer than 60 characters on button '{}'", clazz.getName());
+                return;
+            }
 
             if (ButtonExecutor.class.isAssignableFrom(clazz)) {
                 ButtonExecutor cmd = (ButtonExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
@@ -106,8 +114,11 @@ public class ButtonManager extends ListenerAdapter {
      */
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (buttonExecutableList.containsKey(event.getComponentId())) {
-            buttonExecutableList.get(event.getComponentId()).onButtonClick(event);
+
+        String[] idParts = event.getComponentId().split(";");
+
+        if (buttonExecutableList.containsKey(idParts[0])) {
+            buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? AdvancedButton.getVariablesFromId(idParts[1]) : new HashMap<>());
         }
     }
 }

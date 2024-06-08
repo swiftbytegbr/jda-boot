@@ -48,7 +48,7 @@ public class TestCommand extends SlashCommandExecutor {
         advancedEmbed.setVariable("test", "Test");
         advancedEmbed.addDynamicField("Dynamisches Feld", "${test}", false);
 
-        event.replyEmbeds(advancedEmbed.build()).setActionRow(button.advancedButton().build()).queue();
+        event.replyEmbeds(advancedEmbed.build()).setActionRow(button.advancedButton().setVariable("test", "Transferred Variable").setVariable("user", event.getUser().getName()).build()).queue();
 
     }
 

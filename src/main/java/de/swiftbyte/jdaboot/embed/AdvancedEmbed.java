@@ -4,11 +4,8 @@ import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -38,6 +35,7 @@ public class AdvancedEmbed {
 
     private HashMap<String, String> variables = new HashMap<>();
     private List<DynamicEmbedField> dynamicFields = new ArrayList<>();
+
     /**
      * Constructor for AdvancedEmbed. Initializes the embed with the specified template, variables, and locale.
      *
@@ -127,7 +125,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedEmbed addDynamicFields(DynamicEmbedField...dynamicFields) {
+    public AdvancedEmbed addDynamicFields(DynamicEmbedField... dynamicFields) {
         this.dynamicFields.addAll(List.of(dynamicFields));
         return this;
     }
@@ -192,7 +190,7 @@ public class AdvancedEmbed {
             builder.addField(processVar(embedField.title()), processVar(embedField.description()), embedField.inline());
         }
 
-        for(DynamicEmbedField dynamicField : dynamicFields) {
+        for (DynamicEmbedField dynamicField : dynamicFields) {
             builder.addField(processVar(dynamicField.title()), processVar(dynamicField.description()), dynamicField.inline());
         }
 
@@ -217,5 +215,7 @@ public class AdvancedEmbed {
      *
      * @since 1.0.0-alpha.7
      */
-    public record DynamicEmbedField(String title, String description, boolean inline) {}
+    public record DynamicEmbedField(String title, String description, boolean inline) {
+
+    }
 }
