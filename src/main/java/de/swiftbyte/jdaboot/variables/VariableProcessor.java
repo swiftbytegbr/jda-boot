@@ -5,7 +5,9 @@ import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,12 +34,13 @@ public class VariableProcessor {
      */
     public static String processVariable(DiscordLocale locale, String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
 
+        List<String> unknownVariables = new ArrayList<>();
         String newText = old;
 
         newText = TranslationProcessor.processTranslation(locale, newText);
-        newText = processVariable(newText, variables, defaultVariable);
+        newText = processVariable(newText, variables, defaultVariable, unknownVariables);
 
-        if (isIncompletelyProcessed(newText, true)) {
+        if (isIncompletelyProcessed(newText, true, unknownVariables)) {
             newText = processVariable(locale, newText, variables, defaultVariable);
         }
 
@@ -51,10 +54,11 @@ public class VariableProcessor {
      * @param old             The original string with placeholders.
      * @param variables       The map of variables to replace in the string.
      * @param defaultVariable The array of default variables to replace in the string.
+     * @param unknownVariables The list of already unknown variables.
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
+    public static String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable, List<String> unknownVariables) {
 
         String newText = old;
 
@@ -65,7 +69,10 @@ public class VariableProcessor {
         Matcher m = p.matcher(newText);
         while (m.find()) {
             String value = variables.get(m.group().replace("${", "").replace("}", ""));
-            if (value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
+            if (value == null) {
+                unknownVariables.add(m.group());
+                break;
+            }
             newText = newText.replace(m.group(), value);
         }
 
@@ -75,19 +82,22 @@ public class VariableProcessor {
         while (m.find()) {
             if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", ""))) {
                 String value = JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", ""));
-                if (value == null) throw new RuntimeException("Variable " + m.group() + " not found in variables map.");
+                if (value == null) {
+                    unknownVariables.add(m.group());
+                    break;
+                }
                 newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
             }
         }
 
-        if (isIncompletelyProcessed(newText, false)) {
-            newText = processVariable(newText, variables, defaultVariable);
+        if (isIncompletelyProcessed(newText, false, unknownVariables)) {
+            newText = processVariable(newText, variables, defaultVariable, unknownVariables);
         }
 
         return newText;
     }
 
-    private static boolean isIncompletelyProcessed(String newText, boolean withLanguage) {
+    private static boolean isIncompletelyProcessed(String newText, boolean withLanguage, List<String> ignoredVariables) {
         Pattern languagePattern = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
         Matcher languageMatcher = languagePattern.matcher(newText);
         Pattern configPattern = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
@@ -95,10 +105,9 @@ public class VariableProcessor {
         Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher variableMatcher = variablePattern.matcher(newText);
 
-        if (withLanguage && languageMatcher.find()) {
-            return true;
-        }
-
-        return configMatcher.find() || variableMatcher.find();
+        while (withLanguage && languageMatcher.find()) if (!ignoredVariables.contains(languageMatcher.group())) return true;
+        while (configMatcher.find()) if (!ignoredVariables.contains(configMatcher.group())) return true;
+        while (variableMatcher.find()) if (!ignoredVariables.contains(variableMatcher.group())) return true;
+        return false;
     }
 }
