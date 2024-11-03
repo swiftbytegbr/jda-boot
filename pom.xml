@@ -6,7 +6,7 @@
 
     <groupId>de.swiftbyte</groupId>
     <artifactId>jda-boot</artifactId>
-    <version>1.0.0-alpha.10</version>
+    <version>1.0.0-alpha.11</version>
     <packaging>jar</packaging>
 
     <name>JDA-Boot</name>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.7</version>
+            <version>1.5.12</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -106,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.10.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -120,7 +120,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.2.7</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -135,7 +135,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.5.0</version>
+                <version>0.6.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>maven-central</publishingServerId>
