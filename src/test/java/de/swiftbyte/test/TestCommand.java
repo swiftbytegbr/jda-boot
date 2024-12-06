@@ -1,6 +1,8 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedAuthor;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
@@ -34,7 +36,11 @@ public class TestCommand extends SlashCommandExecutor {
     @Embed(
             basedOn = "testEmbed",
             title = "${test}Test",
-            description = "Version: ?{app.version}"
+            author = @EmbedAuthor(name = "${name}${test}"),
+            fields = {
+                    @EmbedField(description = "#{test2}#{nested}")
+            },
+            description = "Version: ?{app.version}?{app.test}"
     )
     private TemplateEmbed embed;
 
@@ -46,6 +52,8 @@ public class TestCommand extends SlashCommandExecutor {
 
         AdvancedEmbed advancedEmbed = embed.advancedEmbed();
         advancedEmbed.setVariable("test", "Test");
+        advancedEmbed.setVariable("credits", "1");
+        advancedEmbed.setVariable("test4", "test4");
         advancedEmbed.addDynamicField("Dynamisches Feld", "${test}", false);
 
         event.replyEmbeds(advancedEmbed.build()).setActionRow(button.advancedButton().setVariable("test", "Transferred Variable").setVariable("user", event.getUser().getName()).build()).queue();

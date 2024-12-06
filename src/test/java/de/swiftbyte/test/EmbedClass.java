@@ -13,14 +13,14 @@ public class EmbedClass {
     @Embed(
             basedOn = "baseEmbed",
             id = "testEmbed",
-            title = "${test}Test2",
-            description = "Versin: ?{app.version}",
+            title = "${test3}",
+            //description = "Versin: ?{app.version}",
             author = @EmbedAuthor(
                     name = "Hufeisen",
                     iconUrl = "https://cdn.discordapp.com/avatars/424271496245149698/6a205d13086c2bf5caf3b1c71f1c3ab3.png"
             ),
             footer = @EmbedFooter(
-                    text = "Test"
+                    text = "${test4}"
             ),
             fields = {
                     @EmbedField(
