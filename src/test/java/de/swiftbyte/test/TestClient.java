@@ -7,6 +7,9 @@ import de.swiftbyte.jdaboot.annotation.Scheduler;
 import de.swiftbyte.jdaboot.annotation.SetValue;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
+import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
