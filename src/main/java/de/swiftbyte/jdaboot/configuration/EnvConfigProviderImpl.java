@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.configuration;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 /**
  * Implements the ConfigProvider interface using env variables for configuration.
  *
@@ -8,6 +10,8 @@ package de.swiftbyte.jdaboot.configuration;
  */
 public class EnvConfigProviderImpl extends ConfigProvider {
 
+    private Dotenv dotenv;
+
     /**
      * Constructs a new EnvConfigProviderImpl and reloads the configuration.
      *
@@ -15,6 +19,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public void reload() {
+        dotenv = Dotenv.load();
     }
 
     /**
@@ -42,7 +47,8 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if (System.getenv(key) != null) return System.getenv(key);
+        key = "JDA_BOOT_"+key.toUpperCase().replace(".", "_");
+        if (dotenv.get(key) != null) return dotenv.get(key);
         else if (System.getProperty(key) != null) return System.getProperty(key);
         else return defaultValue;
     }
@@ -82,7 +88,8 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        if (System.getenv(key) != null) return true;
+        key = "JDA_BOOT_"+key.toUpperCase().replace(".", "_");
+        if (dotenv.get(key) != null) return true;
         else return System.getProperty(key) != null;
     }
 }
