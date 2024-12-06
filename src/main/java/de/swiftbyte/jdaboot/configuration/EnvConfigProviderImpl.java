@@ -47,7 +47,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        key = "JDA_BOOT_"+key.toUpperCase().replace(".", "_");
+        key = "JDA_BOOT_" + key.toUpperCase().replace(".", "_");
         if (dotenv.get(key) != null) return dotenv.get(key);
         else if (System.getProperty(key) != null) return System.getProperty(key);
         else return defaultValue;
@@ -88,7 +88,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public boolean hasKey(String key) {
-        key = "JDA_BOOT_"+key.toUpperCase().replace(".", "_");
+        key = "JDA_BOOT_" + key.toUpperCase().replace(".", "_");
         if (dotenv.get(key) != null) return true;
         else return System.getProperty(key) != null;
     }
