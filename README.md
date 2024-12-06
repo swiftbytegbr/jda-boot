@@ -199,9 +199,13 @@ the properties file.
 - ✅ internationalization (i18n)
 - ✅ Config System
 - 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ✅ Modals)
+- ⛔ Updated and improved docs
+- ⛔ .env configuration support
+- ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
 - ⛔ Better error handling
 - ✅ Variable transfer between commands, buttons, and modals
+  - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Scheduler System
 - ✅ Functionality to set a voice dispatch interceptor
 
