@@ -51,9 +51,9 @@ public class VariableProcessor {
      * Processes the variables in the given string using the provided variables map, and default variables.
      * Replaces placeholders in the string with the corresponding values.
      *
-     * @param old             The original string with placeholders.
-     * @param variables       The map of variables to replace in the string.
-     * @param defaultVariable The array of default variables to replace in the string.
+     * @param old              The original string with placeholders.
+     * @param variables        The map of variables to replace in the string.
+     * @param defaultVariable  The array of default variables to replace in the string.
      * @param unknownVariables The list of already unknown variables.
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
@@ -71,7 +71,7 @@ public class VariableProcessor {
             String value = variables.get(m.group().replace("${", "").replace("}", ""));
             if (value == null) {
                 unknownVariables.add(m.group());
-                break;
+                continue;
             }
             newText = newText.replace(m.group(), value);
         }
@@ -84,9 +84,11 @@ public class VariableProcessor {
                 String value = JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", ""));
                 if (value == null) {
                     unknownVariables.add(m.group());
-                    break;
+                    continue;
                 }
                 newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
+            } else {
+                unknownVariables.add(m.group());
             }
         }
 
@@ -105,7 +107,8 @@ public class VariableProcessor {
         Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher variableMatcher = variablePattern.matcher(newText);
 
-        while (withLanguage && languageMatcher.find()) if (!ignoredVariables.contains(languageMatcher.group())) return true;
+        while (withLanguage && languageMatcher.find())
+            if (!ignoredVariables.contains(languageMatcher.group())) return true;
         while (configMatcher.find()) if (!ignoredVariables.contains(configMatcher.group())) return true;
         while (variableMatcher.find()) if (!ignoredVariables.contains(variableMatcher.group())) return true;
         return false;
