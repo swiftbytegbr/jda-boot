@@ -198,7 +198,7 @@ the properties file.
 - ✅ Variable System
 - ✅ internationalization (i18n)
 - ✅ Config System
-- 🚧 Other Interactions (✅ Buttons, 🚧 Select Menus, ✅ Modals)
+- 🚧 Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
 - ⛔ Updated and improved docs
 - ⛔ .env configuration support
 - ⛔ Improved Kotlin friendliness
