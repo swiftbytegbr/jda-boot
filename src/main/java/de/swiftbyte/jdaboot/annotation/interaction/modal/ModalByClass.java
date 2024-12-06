@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  * @since 1.0.0-alpha.6
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface ModalByClass {
 
     /**

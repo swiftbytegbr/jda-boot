@@ -1,13 +1,18 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedAuthor;
+import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
 import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
+import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -34,21 +39,43 @@ public class TestCommand extends SlashCommandExecutor {
     @Embed(
             basedOn = "testEmbed",
             title = "${test}Test",
-            description = "Version: ?{app.version}"
+            author = @EmbedAuthor(name = "${name}${test}"),
+            fields = {
+                    @EmbedField(description = "#{test2}#{nested}")
+            },
+            description = "Version: ?{app.version}?{app.test}"
     )
     private TemplateEmbed embed;
 
     @ButtonByClass(TestButton.class)
     public static TemplateButton button;
 
+    @StringSelectMenuByClass(TestStringSelectMenu.class)
+    private TemplateSelectMenu menu;
+
+    @EntitySelectMenuByClass(TestEntitySelectMenu.class)
+    private TemplateSelectMenu menu2;
+
     @Override
     public void onCommand() {
 
         AdvancedEmbed advancedEmbed = embed.advancedEmbed();
         advancedEmbed.setVariable("test", "Test");
+        advancedEmbed.setVariable("credits", "1");
+        advancedEmbed.setVariable("test4", "test4");
         advancedEmbed.addDynamicField("Dynamisches Feld", "${test}", false);
 
-        event.replyEmbeds(advancedEmbed.build()).setActionRow(button.advancedButton().setVariable("test", "Transferred Variable").setVariable("user", event.getUser().getName()).build()).queue();
+        event.replyEmbeds(advancedEmbed.build())
+                .addActionRow(button.advancedButton()
+                        .setVariable("test", "Transferred Variable")
+                        .setVariable("user", event.getUser().getName())
+                        .build())
+                .addActionRow(menu.advancedSelectMenu()
+                        .setVariable("test", "Test Variable")
+                        .addDynamicOption("Dynamic Option", "Dynamic Option")
+                        .build())
+                .addActionRow(menu2.advancedSelectMenu().build())
+                .queue();
 
     }
 

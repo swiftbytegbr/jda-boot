@@ -5,8 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The ModalRow annotation is used to define a modal row and provide metadata about the input.
+ *
+ * @since 1.0.0-alpha.7
+ */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.TYPE_PARAMETER)
 public @interface ModalRow {
 
     /**

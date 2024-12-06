@@ -175,14 +175,16 @@ public class AdvancedEmbed {
 
         if (!embed.title().isEmpty())
             builder.setTitle(processVar(embed.title()), !embed.url().isEmpty() ? processVar(embed.url()) : null);
-        if (!embed.thumbnailUrl().isEmpty()) builder.setThumbnail(processVar(embed.thumbnailUrl()));
-        if (!embed.imageUrl().isEmpty()) builder.setImage(processVar(embed.imageUrl()));
+        if (!embed.thumbnailUrl().isEmpty() && !processVar(embed.thumbnailUrl()).isEmpty())
+            builder.setThumbnail(processVar(embed.thumbnailUrl()));
+        if (!embed.imageUrl().isEmpty() && !processVar(embed.imageUrl()).isEmpty())
+            builder.setImage(processVar(embed.imageUrl()));
 
         if (StringUtils.isNotBlank(embed.description())) builder.setDescription(processVar(embed.description()));
         if (StringUtils.isNotBlank(embed.hexColor()) || embed.color().getColor() != null)
             builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(processVar(embed.hexColor())) : embed.color().getColor());
         if (StringUtils.isNotBlank(embed.author().name()))
-            builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() ? processVar(embed.author().iconUrl()) : null);
+            builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() && !processVar(embed.author().iconUrl()).isEmpty() ? processVar(embed.author().iconUrl()) : null);
         if (!embed.footer().text().isEmpty())
             builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
 

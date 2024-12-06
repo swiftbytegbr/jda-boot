@@ -1,9 +1,11 @@
 package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
  *
  * @since alpha.4
  */
+@Slf4j
 public class TranslationProcessor {
 
     /**
@@ -51,8 +54,12 @@ public class TranslationProcessor {
     public static String getTranslatedString(DiscordLocale locale, String key) {
         Locale.setDefault(Locale.ENGLISH);
         TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
-        String translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
-        if (translation == null) translation = "N/A";
+        String translation = "MISSING TRANSLATION";
+        try {
+            translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
+        } catch (MissingResourceException e) {
+            log.warn("Translation key not found in resources {} at:", key, e);
+        }
         return translation;
     }
 
