@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.interaction.selection;
 
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.util.HashMap;

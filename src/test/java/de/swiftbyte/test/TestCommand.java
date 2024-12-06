@@ -7,7 +7,6 @@ import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
-import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
 import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
@@ -18,7 +17,6 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu;
 
 import java.util.ArrayList;
 import java.util.List;

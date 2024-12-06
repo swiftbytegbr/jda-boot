@@ -1,18 +1,14 @@
 package de.swiftbyte.jdaboot.interaction.selection;
 
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectOption;
-import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
-import net.dv8tion.jda.api.audit.TargetType;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -82,11 +78,11 @@ public class AdvancedSelectMenu {
     /**
      * Add an option to the string select menu at runtime. The option also supports variables.
      *
-     * @param label The label of the option.
-     * @param value The value of the option.
+     * @param label       The label of the option.
+     * @param value       The value of the option.
      * @param description The description of the option.
-     * @param emoji The emoji of the option.
-     * @param isDefault true if the option is selected by default.
+     * @param emoji       The emoji of the option.
+     * @param isDefault   true if the option is selected by default.
      * @return The AdvancedSelectMenu instance for chaining.
      * @since 1.0.0-alpha.11
      */
@@ -127,7 +123,7 @@ public class AdvancedSelectMenu {
      * @return The AdvancedSelectMenu instance for chaining.
      * @since 1.0.0-alpha.11
      */
-    public AdvancedSelectMenu addDynamicOption(DynamicStringSelectMenuOption...dynamicOptions) {
+    public AdvancedSelectMenu addDynamicOption(DynamicStringSelectMenuOption... dynamicOptions) {
         this.dynamicOptions.addAll(List.of(dynamicOptions));
         return this;
     }
@@ -152,9 +148,9 @@ public class AdvancedSelectMenu {
      */
     public SelectMenu build() {
 
-        if(template.getStringDefinition() != null) {
+        if (template.getStringDefinition() != null) {
             return buildStringSelectMenu();
-        } else if(template.getEntityDefinition() != null) {
+        } else if (template.getEntityDefinition() != null) {
             return buildEntitySelectMenu();
         }
         return null;
@@ -168,7 +164,7 @@ public class AdvancedSelectMenu {
      */
     public EntitySelectMenu buildEntitySelectMenu() {
 
-        if(template.getEntityDefinition() == null) {
+        if (template.getEntityDefinition() == null) {
             return null;
         }
 
@@ -185,7 +181,7 @@ public class AdvancedSelectMenu {
                 .setChannelTypes(definition.channelTypes())
                 .setDefaultValues(defaultValues);
 
-        if(StringUtils.isNotBlank(definition.placeholder())) {
+        if (StringUtils.isNotBlank(definition.placeholder())) {
             menuBuilder.setPlaceholder(processVar(definition.placeholder()));
         }
 
@@ -204,11 +200,11 @@ public class AdvancedSelectMenu {
 
         List<EntitySelectMenu.SelectTarget> selectTargets = new ArrayList<>();
 
-        if(definition.enableChannel()) {
+        if (definition.enableChannel()) {
             selectTargets.add(EntitySelectMenu.SelectTarget.CHANNEL);
         }
 
-        if(definition.enableRoles()) {
+        if (definition.enableRoles()) {
             selectTargets.add(EntitySelectMenu.SelectTarget.ROLE);
         }
 
@@ -227,7 +223,7 @@ public class AdvancedSelectMenu {
      */
     public StringSelectMenu buildStringSelectMenu() {
 
-        if(template.getStringDefinition() == null) {
+        if (template.getStringDefinition() == null) {
             return null;
         }
 
@@ -243,7 +239,7 @@ public class AdvancedSelectMenu {
                 .setMaxValues(definition.maxOptions())
                 .setMinValues(definition.minOptions());
 
-        if(StringUtils.isNotBlank(definition.placeholder())) {
+        if (StringUtils.isNotBlank(definition.placeholder())) {
             menuBuilder.setPlaceholder(processVar(definition.placeholder()));
         }
 
@@ -264,15 +260,15 @@ public class AdvancedSelectMenu {
 
         for (StringSelectOption optionDefinition : definition.options()) {
             SelectOption option = SelectOption.of(processVar(optionDefinition.label()), processVar(optionDefinition.value()));
-            if(StringUtils.isNotBlank(optionDefinition.description())) {
+            if (StringUtils.isNotBlank(optionDefinition.description())) {
                 option = option.withDescription(processVar(optionDefinition.description()));
             }
 
-            if(StringUtils.isNotBlank(optionDefinition.emoji())) {
+            if (StringUtils.isNotBlank(optionDefinition.emoji())) {
                 option = option.withEmoji(Emoji.fromUnicode(processVar(optionDefinition.emoji())));
             }
 
-            if(optionDefinition.isDefault()) {
+            if (optionDefinition.isDefault()) {
                 option = option.withDefault(optionDefinition.isDefault());
             }
             selectOptions.add(option);
@@ -280,15 +276,15 @@ public class AdvancedSelectMenu {
 
         for (DynamicStringSelectMenuOption optionDefinition : dynamicOptions) {
             SelectOption option = SelectOption.of(processVar(optionDefinition.label()), processVar(optionDefinition.value()));
-            if(StringUtils.isNotBlank(optionDefinition.description())) {
+            if (StringUtils.isNotBlank(optionDefinition.description())) {
                 option = option.withDescription(processVar(optionDefinition.description()));
             }
 
-            if(StringUtils.isNotBlank(optionDefinition.emoji())) {
+            if (StringUtils.isNotBlank(optionDefinition.emoji())) {
                 option = option.withEmoji(Emoji.fromUnicode(processVar(optionDefinition.emoji())));
             }
 
-            if(optionDefinition.isDefault()) {
+            if (optionDefinition.isDefault()) {
                 option = option.withDefault(optionDefinition.isDefault());
             }
             selectOptions.add(option);
@@ -305,7 +301,7 @@ public class AdvancedSelectMenu {
      * @since 1.0.0-alpha.11
      */
     private String processVar(String old) {
-        if(template.getStringDefinition() != null) {
+        if (template.getStringDefinition() != null) {
             return VariableProcessor.processVariable(locale, old, variables, template.getStringDefinition().defaultVars());
         }
 
@@ -328,7 +324,8 @@ public class AdvancedSelectMenu {
      *
      * @since 1.0.0-alpha.11
      */
-    public record DynamicStringSelectMenuOption(String label, String value, String description, String emoji, boolean isDefault) {
+    public record DynamicStringSelectMenuOption(String label, String value, String description, String emoji,
+                                                boolean isDefault) {
 
     }
 }

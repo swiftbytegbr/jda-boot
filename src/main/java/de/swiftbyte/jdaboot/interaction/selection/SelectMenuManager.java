@@ -1,8 +1,6 @@
 package de.swiftbyte.jdaboot.interaction.selection;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
-import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonById;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.*;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -56,7 +54,7 @@ public class SelectMenuManager extends ListenerAdapter {
             StringSelectMenuDefinition annotation = clazz.getAnnotation(StringSelectMenuDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
-            if(checkId(id, clazz)) {
+            if (checkId(id, clazz)) {
                 return;
             }
 
@@ -75,7 +73,7 @@ public class SelectMenuManager extends ListenerAdapter {
             EntitySelectMenuDefinition annotation = clazz.getAnnotation(EntitySelectMenuDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
-            if(checkId(id, clazz)) {
+            if (checkId(id, clazz)) {
                 return;
             }
 
@@ -126,10 +124,10 @@ public class SelectMenuManager extends ListenerAdapter {
      */
     public TemplateSelectMenu getSelectMenu(String id) {
 
-        if(stringSelectMenuExecutableList.containsKey(id)) {
+        if (stringSelectMenuExecutableList.containsKey(id)) {
             StringSelectMenuDefinition definition = stringSelectMenuExecutableList.get(id).getClass().getAnnotation(StringSelectMenuDefinition.class);
             return new TemplateSelectMenu(definition, id);
-        } else if(entitySelectMenuExecutableList.containsKey(id)) {
+        } else if (entitySelectMenuExecutableList.containsKey(id)) {
             EntitySelectMenuDefinition definition = entitySelectMenuExecutableList.get(id).getClass().getAnnotation(EntitySelectMenuDefinition.class);
             return new TemplateSelectMenu(definition, id);
         } else {

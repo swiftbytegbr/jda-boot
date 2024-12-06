@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
-import de.swiftbyte.jdaboot.interaction.modal.ModalExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.StringSelectMenuExecutor;
 
 import java.lang.annotation.ElementType;

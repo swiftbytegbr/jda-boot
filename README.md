@@ -205,7 +205,7 @@ the properties file.
 - ⛔ Database ORM System
 - ⛔ Better error handling
 - ✅ Variable transfer between commands, buttons, and modals
-  - ⛔ Options to save variables and random command ids between bot restarts
+    - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Scheduler System
 - ✅ Functionality to set a voice dispatch interceptor
 

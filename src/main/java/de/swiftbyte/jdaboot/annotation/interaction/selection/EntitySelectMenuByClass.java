@@ -1,7 +1,6 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.interaction.selection.EntitySelectMenuExecutor;
-import de.swiftbyte.jdaboot.interaction.selection.StringSelectMenuExecutor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
