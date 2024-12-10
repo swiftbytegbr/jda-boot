@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvException;
 
 /**
  * Implements the ConfigProvider interface using env variables for configuration.
@@ -19,7 +20,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public void reload() {
-        dotenv = Dotenv.load();
+        dotenv = Dotenv.configure().ignoreIfMissing().load();
     }
 
     /**
@@ -48,7 +49,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
     @Override
     public String getString(String key, String defaultValue) {
         key = "JDA_BOOT_" + key.toUpperCase().replace(".", "_");
-        if (dotenv.get(key) != null) return dotenv.get(key);
+        if (dotenv != null && dotenv.get(key) != null) return dotenv.get(key);
         else if (System.getProperty(key) != null) return System.getProperty(key);
         else return defaultValue;
     }
