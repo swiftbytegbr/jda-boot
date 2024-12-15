@@ -41,7 +41,7 @@ dependencies {
 Development builds can be added via JitPack. Further instructions are available directly from
 JitPack: https://jitpack.io/#swiftbytegbr/jda-boot
 
-## How to use
+## Getting Started
 
 A detailed description of all functions will be added soon.
 
@@ -52,6 +52,8 @@ The token of the Discord bot is specified via a file with the name 'config.prope
 ```properties
 discord.token=TOKEN
 ```
+
+In a more advanced configuration it is possible to use config profiles and more config types like .env files.
 
 The JDABoot.run() method must then be executed in the main class of the project.
 
@@ -66,8 +68,14 @@ public class ExampleBot {
     public static void main(String[] args) {
         JDABoot.run(ExampleBot.class, args);
     }
+
+    public void onReady() {
+        System.out.println("Ready");
+    }
 }
 ```
+
+If there is a method available in your main class called `onReady()`, the method gets executed after jda-boot is initialized.
 
 ### Create a Command
 
@@ -79,16 +87,17 @@ the SlashCommand annotation.
 @SlashCommandDefinition(
         name = "test",
         description = "test",
-        type = SlashCommand.Type.SLASH,
+        type = SlashCommandDefinition.Type.SLASH,
         options = {
                 @CommandOption(
                         name = "test",
                         description = "test",
                         type = OptionType.STRING,
+                        autoComplete = true,
                         required = true)
         }
 )
-public class TestCommand implements SlashCommandExecutor {
+public class TestCommand extends SlashCommandExecutor {
 
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
@@ -99,18 +108,19 @@ public class TestCommand implements SlashCommandExecutor {
 
 To make this command available for all servers, the method `JDABoot.getInstance().updateCommands()` must be executed
 last. Please note that it can take up to an hour until the command is globally available. For testing purposes, the
-command should only be updated on one guild.
+command should only be updated on one guild. You can use console commands for this purpose.
 
 ### Buttons
 
 To create a button,
-a class must be created that implements the ButtonExecuter interface
+a class must be created that implements the ButtonExecutor interface
 and is annotated with the ButtonDefinition annotation.
 
 ```java
 
 @ButtonDefinition(
         label = "Test",
+        id = "test_button",
         emoji = "\uD83D\uDC4D",
         type = ButtonDefinition.Type.PRIMARY
 )
@@ -131,7 +141,7 @@ which is provided with either a ButtonById or ButtonByClass annotation.
 public class ButtonClass {
 
     @ButtonByClass(TestButton.class)
-    public static ButtonTemplate button;
+    private ButtonTemplate button;
 
 }
 ```
@@ -167,25 +177,38 @@ public class EmbedClass {
             description = "Description",
             color = EmbedColor.BLACK
     )
-    public static TemplateEmbed embed;
+    private TemplateEmbed embed;
 
 }
 ```
 
 To be able to use the template embed, it must be converted into a JDA embed
-using `embed.advancedEmbed().build()`.
+using `embed.advancedEmbed().build()`. You can define an id to an embed and creat another embed based on this id. The new
+embed then copies all values from the base embed.
 
 ### Variables and Translation
 
-It is also possible to use variables in embeds. The syntax for this is as follows: `${VARIABLE_NAME}`. 'VARIABLE_NAME'
-is a freely selectable name. It is also possible for variables to appear in a translation texts. They are set in the
-embed annotation via the defaultVars setting or via the `setVariable()` method in the Advanced Embed. To be able to use
+It is also possible to use variables in jda-boot objects like buttons, select menus, embeds, etc. The syntax for this is 
+as follows: `${VARIABLE_NAME}`. 'VARIABLE_NAME' is a freely selectable name. It is also possible for variables to appear in a translation texts. They are set in the
+annotation via the defaultVars setting or via the `setVariable()` method in the Advanced Object. To be able to use
 values from the Config, a ? must be used instead of the $. The Java resources bundles are used as the translation system
 by default. The `messages.properties` file must therefore be added to the resources for the "default language". All
 others must append a language code to the file name. The file name for German would therefore
 be `messages_de.properties`. Translated content can be used in embeds as well as in most other areas of jda-boot where a
 string is required. A usage looks like this: `#{TRANSLATION_KEY}`. The translation key is the key of the translation in
-the properties file.
+the properties file. To use values from the config in you code you can create a variable annotated with setValue("SETTING_KEY"):
+
+```java
+import de.swiftbyte.jdaboot.annotation.SetValue;
+
+public class ConfigClass() {
+
+  @SetValue("discord.token")
+  private String token;
+
+}
+
+```
 
 ## Roadmap
 
@@ -200,7 +223,7 @@ the properties file.
 - ✅ Config System
 - ✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
 - ✅ .env configuration support
-- ⛔ Updated and improved docs
+- 🚧 Updated and improved docs
 - ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
 - ⛔ Better error handling
