@@ -173,20 +173,48 @@ public class AdvancedEmbed {
             }
         }
 
-        if (!embed.title().isEmpty())
-            builder.setTitle(processVar(embed.title()), !embed.url().isEmpty() ? processVar(embed.url()) : null);
-        if (!embed.thumbnailUrl().isEmpty() && !processVar(embed.thumbnailUrl()).isEmpty())
-            builder.setThumbnail(processVar(embed.thumbnailUrl()));
-        if (!embed.imageUrl().isEmpty() && !processVar(embed.imageUrl()).isEmpty())
-            builder.setImage(processVar(embed.imageUrl()));
+        if(StringUtils.isNotBlank(embed.title())) {
+            String title = processVar(embed.title());
+            String url = processVar(embed.url());
+            if (StringUtils.isNotBlank(title))
+                builder.setTitle(title, StringUtils.isNotBlank(url) ? url : null);
+        }
 
-        if (StringUtils.isNotBlank(embed.description())) builder.setDescription(processVar(embed.description()));
-        if (StringUtils.isNotBlank(embed.hexColor()) || embed.color().getColor() != null)
-            builder.setColor(!embed.hexColor().isEmpty() ? Color.decode(processVar(embed.hexColor())) : embed.color().getColor());
-        if (StringUtils.isNotBlank(embed.author().name()))
-            builder.setAuthor(processVar(embed.author().name()), !embed.author().url().isEmpty() ? processVar(embed.author().url()) : null, !embed.author().iconUrl().isEmpty() && !processVar(embed.author().iconUrl()).isEmpty() ? processVar(embed.author().iconUrl()) : null);
-        if (!embed.footer().text().isEmpty())
-            builder.setFooter(processVar(embed.footer().text()), !embed.footer().iconUrl().isEmpty() ? processVar(embed.footer().iconUrl()) : null);
+        if(StringUtils.isNotBlank(embed.thumbnailUrl())) {
+            String thumbnailUrl = processVar(embed.thumbnailUrl());
+            if (StringUtils.isNotBlank(thumbnailUrl))
+                builder.setThumbnail(thumbnailUrl);
+        }
+
+        if(StringUtils.isNotBlank(embed.imageUrl())) {
+            String imageUrl = processVar(embed.imageUrl());
+            if (StringUtils.isNotBlank(imageUrl))
+                builder.setImage(imageUrl);
+        }
+
+        if(StringUtils.isNotBlank(embed.description())) {
+            String description = processVar(embed.description());
+            if (StringUtils.isNotBlank(description)) builder.setDescription(description);
+        }
+
+        String hexColor = processVar(embed.hexColor());
+        if (StringUtils.isNotBlank(hexColor) || embed.color().getColor() != null)
+            builder.setColor(StringUtils.isNotBlank(hexColor) ? Color.decode(hexColor) : embed.color().getColor());
+
+        if(StringUtils.isNotBlank(embed.author().name())) {
+            String authorName = processVar(embed.author().name());
+            String authorUrl = processVar(embed.author().url());
+            String authorIconUrl = processVar(embed.author().iconUrl());
+            if (StringUtils.isNotBlank(authorName))
+                builder.setAuthor(authorName, StringUtils.isNotBlank(authorUrl) ? authorUrl : null, StringUtils.isNotBlank(authorIconUrl) ? authorIconUrl : null);
+        }
+
+        if(StringUtils.isNotBlank(embed.footer().text())) {
+            String footerText = processVar(embed.footer().text());
+            String footerIconUrl = processVar(embed.footer().iconUrl());
+            if (StringUtils.isNotBlank(footerText))
+                builder.setFooter(footerText, StringUtils.isNotBlank(footerIconUrl) ? footerIconUrl : null);
+        }
 
         for (EmbedField embedField : embed.fields()) {
             builder.addField(processVar(embedField.title()), processVar(embedField.description()), embedField.inline());

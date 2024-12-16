@@ -48,7 +48,7 @@ public class TestCommand extends SlashCommandExecutor {
     private TemplateEmbed embed;
 
     @ButtonByClass(TestButton.class)
-    public static TemplateButton button;
+    public TemplateButton button;
 
     @StringSelectMenuByClass(TestStringSelectMenu.class)
     private TemplateSelectMenu menu;

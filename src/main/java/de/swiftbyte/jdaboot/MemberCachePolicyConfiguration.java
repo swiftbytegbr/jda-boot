@@ -3,7 +3,7 @@ package de.swiftbyte.jdaboot;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 /**
- * The MemberCachePolicyAutoConfiguration enum is used to map the JDA's MemberCachePolicy options to enum constants.
+ * The MemberCachePolicyConfiguration enum is used to map the JDA's MemberCachePolicy options to enum constants.
  * This makes it easier to use and manage the MemberCachePolicy options in the application.
  */
 public enum MemberCachePolicyConfiguration {

@@ -2,10 +2,7 @@ package de.swiftbyte.jdaboot;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.HashMap;
 
 /**
@@ -83,15 +80,42 @@ public class JDABootObjectManager {
 
             if (Modifier.isStatic(field.getModifiers())) {
                 if (!field.canAccess(null)) field.setAccessible(true);
-                field.set(null, value);
+                field.set(null, autoCast(field.getType(), value));
             } else {
                 Object object = getOrInitialiseObject(clazz);
                 if (!field.canAccess(object)) field.setAccessible(true);
-                field.set(object, value);
+                field.set(object, autoCast(field.getType(), value));
             }
         } catch (Exception e) {
             log.warn("Failed to inject field {} into class {}!", field.getName(), clazz.getName(), e);
         }
+    }
+
+    private static Object autoCast(Class<?> type, Object object) {
+        if (object instanceof String str) {
+            return switch (type.getName()) {
+                case "int" -> Integer.valueOf(str);
+                case "long" -> Long.valueOf(str);
+                case "short" -> Short.valueOf(str);
+                case "double" -> Double.valueOf(str);
+                case "float" -> Float.valueOf(str);
+                case "byte" -> Byte.valueOf(str);
+                case "boolean" -> Boolean.parseBoolean(str);
+                case "char" -> str.charAt(0);
+                default -> object;
+            };
+        } else if (object instanceof Number num) {
+            return switch (type.getName()) {
+                case "int" -> num.intValue();
+                case "long" -> num.longValue();
+                case "short" -> num.shortValue();
+                case "double" -> num.doubleValue();
+                case "float" -> num.floatValue();
+                case "byte" -> num.byteValue();
+                default -> object;
+            };
+        }
+        return type.cast(object);
     }
 
     /**
