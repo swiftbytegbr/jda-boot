@@ -1,4 +1,4 @@
-# JDA-Boot
+# JDA-Boot [![javadoc](https://javadoc.io/badge2/de.swiftbyte/jda-boot/javadoc.svg)](https://javadoc.io/doc/de.swiftbyte/jda-boot)
 
 ### jda-boot is an annotation-driven jda framework that lets you create bots insanely fast
 
