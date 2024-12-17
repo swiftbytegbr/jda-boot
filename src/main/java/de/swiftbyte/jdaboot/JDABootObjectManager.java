@@ -91,6 +91,16 @@ public class JDABootObjectManager {
         }
     }
 
+    /**
+     * Tries to cast a value to a given type. Currently, this only works for primitive types and strings. In future releases
+     * we may add an interface to define a custom cast option for custom data types. This method is used to convert a setting
+     * value to the needed data type.
+     *
+     * @param type The type the given object should be castet to
+     * @param object The object to cast
+     * @return The castet object
+     * @since 1.0.0-alpha.12
+     */
     private static Object autoCast(Class<?> type, Object object) {
         if (object instanceof String str) {
             return switch (type.getName()) {
