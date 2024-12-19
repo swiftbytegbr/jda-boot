@@ -201,7 +201,7 @@ the properties file. To use values from the config in you code you can create a 
 ```java
 import de.swiftbyte.jdaboot.annotation.SetValue;
 
-public class ConfigClass() {
+public class ConfigClass {
 
   @SetValue("discord.token")
   private String token;
