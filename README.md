@@ -223,13 +223,13 @@ public class ConfigClass {
 - ✅ Config System
 - ✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
 - ✅ .env configuration support
+- ✅ Scheduler System
+- ✅ Functionality to set a voice dispatch interceptor
+- ✅ Variable transfer between commands, buttons, and modals
+    - ⛔ Options to save variables and random command ids between bot restarts
 - 🚧 Updated and improved docs
 - ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
 - ⛔ Better error handling
-- ✅ Variable transfer between commands, buttons, and modals
-    - ⛔ Options to save variables and random command ids between bot restarts
-- ✅ Scheduler System
-- ✅ Functionality to set a voice dispatch interceptor
 
 
