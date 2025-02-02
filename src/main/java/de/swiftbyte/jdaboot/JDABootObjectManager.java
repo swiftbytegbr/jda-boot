@@ -124,7 +124,12 @@ public class JDABootObjectManager {
                 case "byte" -> num.byteValue();
                 default -> object;
             };
+        } else if(object instanceof Boolean bool) {
+            return bool;
+        } else if(object instanceof Character ch) {
+            return ch;
         }
+
         return type.cast(object);
     }
 
