@@ -13,15 +13,15 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.IntegrationType;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The CommandManager class is responsible for managing commands in the application.
@@ -222,12 +222,18 @@ public class CommandManager extends ListenerAdapter {
         //Command
         if (command.enabledFor() != Permission.UNKNOWN)
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
-        data.setGuildOnly(command.guildOnly());
+
+        if(command.guildOnly()) {
+            data.setContexts(InteractionContextType.GUILD);
+        } else {
+            data.setContexts(command.contexts());
+        }
+        data.setIntegrationTypes(command.integrationTypes());
+
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
         data.setDescriptionLocalizations(generateDiscordLocalised(command.description()));
         data.addOptions(buildOptions(command.options()));
         data.addSubcommands(buildSubcommands(command.subcommands()));
-
         //SubCommandGroups
         for (SubcommandGroup subcommandGroup : command.subcommandGroups()) {
 
@@ -266,7 +272,14 @@ public class CommandManager extends ListenerAdapter {
 
         if (command.enabledFor() != Permission.UNKNOWN)
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
-        data.setGuildOnly(command.guildOnly());
+
+        if(command.guildOnly()) {
+            data.setContexts(InteractionContextType.GUILD);
+        } else {
+            data.setContexts(command.contexts());
+        }
+        data.setIntegrationTypes(command.integrationTypes());
+
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
 
         return data;
