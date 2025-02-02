@@ -9,17 +9,18 @@ The `@SlashCommandDefinition` annotation has many customization options for the 
 #### @SlashCommandDefinition
 The fields `name` and `type` are required. It also makes sense to set `description`.
 
-| Annotation Field   | Description                                                                              | Data Type                             |
-|--------------------|------------------------------------------------------------------------------------------|---------------------------------------|
-| `name`             | The name of the command in discord                                                       | String                                |
-| `description`      | The description of the command in discord                                                | String                                |
-| `type`             | The type of the command, must be Type.SLASH                                              | SlashCommandDefinition.Type           |
-| `enabledFor`       | The default needed Permission of the command                                             | Permission                            |
-| `guildOnly`        | Specifies whether the command should only be used on servers and not in private messages | Boolean                               |
-| `isGlobal`         | Specifies whether the command should be globaly available                                | Boolean                               |
-| `options`          | The options that the command should have                                                 | [CommandOption[]](#commandoption)     |
-| `subcommandGroups` | The subcommand groups that the command should have                                       | [SubcommandGroup[]](#subcommandgroup) |
-| `subcommands`      | The subcommands that the command should have                                             | [Subcommand[]](#subcommand)           |
+| Annotation Field   | Description                                                                                   | Data Type                             |
+|--------------------|-----------------------------------------------------------------------------------------------|---------------------------------------|
+| `name`             | The name of the command in discord                                                            | String                                |
+| `description`      | The description of the command in discord                                                     | String                                |
+| `type`             | The type of the command, must be Type.SLASH                                                   | SlashCommandDefinition.Type           |
+| `enabledFor`       | The default needed Permission of the command                                                  | Permission                            |
+| `contexts`         | Specifies whether the command should only be used on servers, bot dms or in private channels. | InteractionContextType[]              |
+| `integrationTypes` | Specifies whether the command can be installed on guilds or users                             | IntegrationType[]                     |
+| `isGlobal`         | Specifies whether the command should be globaly available                                     | Boolean                               |
+| `options`          | The options that the command should have                                                      | [CommandOption[]](#commandoption)     |
+| `subcommandGroups` | The subcommand groups that the command should have                                            | [SubcommandGroup[]](#subcommandgroup) |
+| `subcommands`      | The subcommands that the command should have                                                  | [Subcommand[]](#subcommand)           |
 
 #### @CommandOption
 The fields `type`, `name` and `description` are required.
