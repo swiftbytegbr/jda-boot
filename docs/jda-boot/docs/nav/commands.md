@@ -9,52 +9,53 @@ The `@SlashCommandDefinition` annotation has many customization options for the 
 #### @SlashCommandDefinition
 The fields `name` and `type` are required. It also makes sense to set `description`.
 
-| Annotation Field   | Description                                                                               | Data Type                             |
-| ------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------- |
-| `name`             | The name of the command in discord                                                        | String                                |
-| `description`      | The description of the command in discord                                                 | String                                |
-| `type`             | The type of the command, must be Type.SLASH                                               | SlashCommandDefinition.Type           |
-| `enabledFor`       | The default needed Permission of the command                                              | Permission                            |
-| `guildOnly`        | Specifies whether the command should only be used on servers and not in private messages  | Boolean                               |
-| `isGlobal`         | Specifies whether the command should be globaly available                                 | Boolean                               |
-| `options`          | The options that the command should have                                                  | [CommandOption[]](#commandoption)     |
-| `subcommandGroups` | The subcommand groups that the command should have                                        | [SubcommandGroup[]](#subcommandgroup) |
-| `subcommands`      | The subcommands that the command should have                                              | [Subcommand[]](#subcommand)           |
+| Annotation Field   | Description                                                                                   | Data Type                             |
+|--------------------|-----------------------------------------------------------------------------------------------|---------------------------------------|
+| `name`             | The name of the command in discord                                                            | String                                |
+| `description`      | The description of the command in discord                                                     | String                                |
+| `type`             | The type of the command, must be Type.SLASH                                                   | SlashCommandDefinition.Type           |
+| `enabledFor`       | The default needed Permission of the command                                                  | Permission                            |
+| `contexts`         | Specifies whether the command should only be used on servers, bot dms or in private channels. | InteractionContextType[]              |
+| `integrationTypes` | Specifies whether the command can be installed on guilds or users                             | IntegrationType[]                     |
+| `isGlobal`         | Specifies whether the command should be globaly available                                     | Boolean                               |
+| `options`          | The options that the command should have                                                      | [CommandOption[]](#commandoption)     |
+| `subcommandGroups` | The subcommand groups that the command should have                                            | [SubcommandGroup[]](#subcommandgroup) |
+| `subcommands`      | The subcommands that the command should have                                                  | [Subcommand[]](#subcommand)           |
 
 #### @CommandOption
 The fields `type`, `name` and `description` are required.
 
-| Annotation Field   | Description                                                                               | Data Type                             |
-| ------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------- |
-| `type`             | The type of the option                                                                    | OptionType                            |
-| `name`             | The name of the option                                                                    | String                                |
-| `description`      | The description of the option                                                             | String                                |
-| `minLength`        | The minimum length of the option                                                          | Integer                               |
-| `maxLength`        | The maximum length of the option                                                          | Integer                               |
-| `minValue`         | The minimum value of the option                                                           | Integer                               |
-| `maxValue`         | The maximum value of the option                                                           | Integer                               |
-| `required`         | Specifies whether the option is required                                                  | Boolean                               |
-| `autoComplete`     | Specifies whether the option supports auto-complete                                       | Boolean                               |
-| `channelTypes`     | The channel types for the option                                                          | ChannelType[]                         |
-| `optionChoices`    | The choices for the option                                                                | CommandOption.Choice[]                |
+| Annotation Field | Description                                         | Data Type              |
+|------------------|-----------------------------------------------------|------------------------|
+| `type`           | The type of the option                              | OptionType             |
+| `name`           | The name of the option                              | String                 |
+| `description`    | The description of the option                       | String                 |
+| `minLength`      | The minimum length of the option                    | Integer                |
+| `maxLength`      | The maximum length of the option                    | Integer                |
+| `minValue`       | The minimum value of the option                     | Integer                |
+| `maxValue`       | The maximum value of the option                     | Integer                |
+| `required`       | Specifies whether the option is required            | Boolean                |
+| `autoComplete`   | Specifies whether the option supports auto-complete | Boolean                |
+| `channelTypes`   | The channel types for the option                    | ChannelType[]          |
+| `optionChoices`  | The choices for the option                          | CommandOption.Choice[] |
 
 #### @Subcommand
 The fields `name` and `description` are required.
 
-| Annotation Field   | Description                                                                               | Data Type                             |
-| ------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------- |
-| `name`             | The name of the subcommand                                                                | String                                |
-| `description`      | The description of the subcommand                                                         | String                                |
-| `options`          | The options of the subcommand                                                             | [CommandOption[]](#commandoption)     |
+| Annotation Field | Description                       | Data Type                         |
+|------------------|-----------------------------------|-----------------------------------|
+| `name`           | The name of the subcommand        | String                            |
+| `description`    | The description of the subcommand | String                            |
+| `options`        | The options of the subcommand     | [CommandOption[]](#commandoption) |
 
 #### @SubcommandGroup
 The fields `name` and `description` are required.
 
-| Annotation Field   | Description                                                                               | Data Type                             |
-| ------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------- |
-| `name`             | The name of the subcommand group                                                          | String                                |
-| `description`      | The description of the subcommand group                                                   | String                                |
-| `subcommands`      | The subcommands in the subcommand group                                                   | [Subcommand[]](#subcommand)           |
+| Annotation Field | Description                             | Data Type                   |
+|------------------|-----------------------------------------|-----------------------------|
+| `name`           | The name of the subcommand group        | String                      |
+| `description`    | The description of the subcommand group | String                      |
+| `subcommands`    | The subcommands in the subcommand group | [Subcommand[]](#subcommand) |
 
 ### Command Execution
 If the Command class is extended with SlashCommandExecutor, the `onCommand` method must be implemented. This is executed every time the command is used on Discord. The `SlashCommandInteractionEvent` is a field of the superclass with the name `event`. Optionally, the method `onEnable(SlashCommandData data)` can also be implemented. As the name suggests, this is executed when the command is initialized by JDA-Boot. In addition, the method `onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event)` can be overwritten. This is only necessary if `autoComplete = true` in a command option. The functionality is the same as with JDA. In addition to these methods, there are also other utility methods that simplify the use of [Embed Systems](embeds.md).

@@ -1,4 +1,4 @@
-# JDA-Boot
+# JDA-Boot [![javadoc](https://javadoc.io/badge2/de.swiftbyte/jda-boot/javadoc.svg)](https://javadoc.io/doc/de.swiftbyte/jda-boot)
 
 ### jda-boot is an annotation-driven jda framework that lets you create bots insanely fast
 
@@ -227,7 +227,7 @@ public class ConfigClass {
 - ✅ Functionality to set a voice dispatch interceptor
 - ✅ Variable transfer between commands, buttons, and modals
     - ⛔ Options to save variables and random command ids between bot restarts
-- 🚧 Support for JDA 5.3.0 (User-Installable Apps)
+- ✅ Support for JDA 5.3.0 (User-Installable Apps)
 - 🚧 Updated and improved docs
 - ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
