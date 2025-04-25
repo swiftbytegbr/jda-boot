@@ -1,0 +1,1032 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="JDA-Boot is an annotation-driven JDA framework that lets you create bots insanely fast">
+      
+      
+      
+        <link rel="canonical" href="https://jda-boot.swiftbyte.de/nav/embeds/">
+      
+      
+        <link rel="prev" href="../modals/">
+      
+      
+        <link rel="next" href="../events/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Embeds - JDA-Boot Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.49ea35f2.css">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#embeds" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="JDA-Boot Documentation" class="md-header__button md-logo" aria-label="JDA-Boot Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JDA-Boot Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Embeds
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/swiftbytegbr/jda-boot/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JDA-Boot
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="JDA-Boot Documentation" class="md-nav__button md-logo" aria-label="JDA-Boot Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    JDA-Boot Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/swiftbytegbr/jda-boot/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JDA-Boot
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Interactions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Interactions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../buttons/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Buttons
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../select-menus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Select Menus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modals
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Embeds
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embeds
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#embed-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Embed Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Embed Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#embed" class="md-nav__link">
+    <span class="md-ellipsis">
+      @Embed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#embedauthor" class="md-nav__link">
+    <span class="md-ellipsis">
+      @EmbedAuthor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#embedfooter" class="md-nav__link">
+    <span class="md-ellipsis">
+      @EmbedFooter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#embedfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      @EmbedField
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultvariable" class="md-nav__link">
+    <span class="md-ellipsis">
+      @DefaultVariable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-embeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Embeds
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheriting-embeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inheriting Embeds
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Variables
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Events
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../translation-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Translation and Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Scheduler
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="embeds">Embeds<a class="headerlink" href="#embeds" title="Permanent link">&para;</a></h1>
+<p>Embeds in JDA-Boot allow you to create rich, styled messages for Discord. They can be configured using annotations and support dynamic variables, making them highly customizable. This page explains how to configure and use embeds in your bot.</p>
+<h2 id="embed-configuration">Embed Configuration<a class="headerlink" href="#embed-configuration" title="Permanent link">&para;</a></h2>
+<p>Embeds are defined using the <code>@Embed</code> annotation. This annotation allows you to configure various aspects of the embed, such as its title, description, author, footer, fields, and more. You can also define default variables that can be replaced dynamically at runtime.</p>
+<h3 id="embed">@Embed<a class="headerlink" href="#embed" title="Permanent link">&para;</a></h3>
+<p>The <code>@Embed</code> annotation has several fields for customization. The <code>id</code> field is required, and it is recommended to set a <code>title</code> and <code>description</code> for the embed.</p>
+<table>
+<thead>
+<tr>
+<th>Annotation Field</th>
+<th>Description</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>The unique identifier for the embed</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>basedOn</code></td>
+<td>The ID of another embed to inherit properties from</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>The title of the embed, supports variables</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>The description of the embed, supports variables</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>The color of the embed</td>
+<td>EmbedColor</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>The author of the embed, configured with <code>@EmbedAuthor</code></td>
+<td>EmbedAuthor</td>
+</tr>
+<tr>
+<td><code>footer</code></td>
+<td>The footer of the embed, configured with <code>@EmbedFooter</code></td>
+<td>EmbedFooter</td>
+</tr>
+<tr>
+<td><code>fields</code></td>
+<td>The fields of the embed, configured with <code>@EmbedField</code></td>
+<td>EmbedField[]</td>
+</tr>
+<tr>
+<td><code>defaultVars</code></td>
+<td>Default variables for the embed, configured with <code>@DefaultVariable</code></td>
+<td>DefaultVariable[]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="embedauthor">@EmbedAuthor<a class="headerlink" href="#embedauthor" title="Permanent link">&para;</a></h3>
+<p>The <code>@EmbedAuthor</code> annotation is used to configure the author section of the embed.</p>
+<table>
+<thead>
+<tr>
+<th>Annotation Field</th>
+<th>Description</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>The name of the author</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>The URL of the author</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>iconUrl</code></td>
+<td>The icon URL of the author</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<h3 id="embedfooter">@EmbedFooter<a class="headerlink" href="#embedfooter" title="Permanent link">&para;</a></h3>
+<p>The <code>@EmbedFooter</code> annotation is used to configure the footer section of the embed.</p>
+<table>
+<thead>
+<tr>
+<th>Annotation Field</th>
+<th>Description</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td>The text of the footer</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>iconUrl</code></td>
+<td>The icon URL of the footer</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<h3 id="embedfield">@EmbedField<a class="headerlink" href="#embedfield" title="Permanent link">&para;</a></h3>
+<p>The <code>@EmbedField</code> annotation is used to define fields within the embed.</p>
+<table>
+<thead>
+<tr>
+<th>Annotation Field</th>
+<th>Description</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>The title of the field</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>The description of the field</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>inline</code></td>
+<td>Whether the field is inline</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<h3 id="defaultvariable">@DefaultVariable<a class="headerlink" href="#defaultvariable" title="Permanent link">&para;</a></h3>
+<p>The <code>@DefaultVariable</code> annotation is used to define default variables for the embed.</p>
+<table>
+<thead>
+<tr>
+<th>Annotation Field</th>
+<th>Description</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>variable</code></td>
+<td>The key of the variable</td>
+<td>String</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>The default value of the variable</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<h2 id="using-embeds">Using Embeds<a class="headerlink" href="#using-embeds" title="Permanent link">&para;</a></h2>
+<p>To use an embed, you can create an <code>AdvancedEmbed</code> from a <code>TemplateEmbed</code> using the <code>advancedEmbed()</code> method. Variables can be set dynamically using the <code>setVariable(key, value)</code> method. You can also add dynamic fields using the <code>addDynamicField(title, description, inline)</code> method. Once configured, the embed can be built using the <code>build()</code> method and sent as part of a Discord message.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;exampleEmbed&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Example Title&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This is an example embed.&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EmbedColor</span><span class="p">.</span><span class="na">BLUE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@EmbedAuthor</span><span class="p">(</span>
+<span class="w">            </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Author Name&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">iconUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://example.com/icon.png&quot;</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="n">footer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@EmbedFooter</span><span class="p">(</span>
+<span class="w">            </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Footer Text&quot;</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="n">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@EmbedField</span><span class="p">(</span>
+<span class="w">                </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 1&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 1 Description&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">inline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="p">),</span>
+<span class="w">            </span><span class="nd">@EmbedField</span><span class="p">(</span>
+<span class="w">                </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 2&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 2 Description&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">inline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendEmbed</span><span class="p">(</span><span class="n">SlashCommandInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AdvancedEmbed</span><span class="w"> </span><span class="n">advancedEmbed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">.</span><span class="na">advancedEmbed</span><span class="p">();</span>
+<span class="w">        </span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">addDynamicField</span><span class="p">(</span><span class="s">&quot;Dynamic Field&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dynamic Description&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">replyEmbeds</span><span class="p">(</span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">build</span><span class="p">()).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<h2 id="inheriting-embeds">Inheriting Embeds<a class="headerlink" href="#inheriting-embeds" title="Permanent link">&para;</a></h2>
+<p>Embeds can inherit properties from another embed using the <code>basedOn</code> field. This allows you to define a base embed with common properties and extend it in other embeds.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;baseEmbed&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EmbedColor</span><span class="p">.</span><span class="na">GREEN</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">baseEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">            </span><span class="n">basedOn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;baseEmbed&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;childEmbed&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Child Embed Title&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This embed inherits from the base embed.&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">childEmbed</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<h2 id="dynamic-variables">Dynamic Variables<a class="headerlink" href="#dynamic-variables" title="Permanent link">&para;</a></h2>
+<p>Embeds support dynamic variables, which can be replaced at runtime. Variables are defined using the <code>${variable}</code> syntax in fields like <code>title</code>, <code>description</code>, and others. These variables can be set using the <code>setVariable(key, value)</code> method of <code>AdvancedEmbed</code>.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Example Title&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;${description}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendEmbed</span><span class="p">(</span><span class="n">SlashCommandInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AdvancedEmbed</span><span class="w"> </span><span class="n">advancedEmbed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">.</span><span class="na">advancedEmbed</span><span class="p">();</span>
+<span class="w">        </span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">setVariable</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Example Description&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">replyEmbeds</span><span class="p">(</span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">build</span><span class="p">()).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../modals/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Modals">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Modals
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../events/" class="md-footer__link md-footer__link--next" aria-label="Next: Events">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Events
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      
+<div class="md-copyright">
+    
+    <div class="md-copyright__highlight">
+        Copyright &copy; 2025 JDA-Boot Developers
+        
+        :: <a href="/nav/legal/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+        
+        :: <a href="/nav/legal/imprint" target="_blank" rel="noopener">Imprint</a>
+        
+    </div>
+    
+    
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+        Material for MkDocs
+    </a>
+    
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
