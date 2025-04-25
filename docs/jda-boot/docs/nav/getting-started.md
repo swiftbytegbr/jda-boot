@@ -23,7 +23,7 @@ jda-boot version.
     ```
 
 ## Configure JDA-Boot
-In order for JDA-Boot to start-up, it must first be configured. To do this, a configuration file with the name config.properties must be created in the resources folder of the project. JDA-Boot also supports yml files. It is also possible to write your own config provider. More detailed information can be found at [Configuration Providers](translation-configuration.md#config-providers)
+In order for JDA-Boot to start-up, it must first be configured. To do this, a configuration file with the name config.properties must be created in the resources folder of the project. JDA-Boot also supports yml files. It is also possible to write your own config provider. More detailed information can be found at [Configuration Providers](translation-configuration.md#custom-configuration-providers)
 
 So in order for JDA-Boot to know which Discord token it should use, it must be entered in the config. 'TOKEN' should be replaced with the Discord Bot Token from the Discord Developers Portal.
 === "config.properties"

@@ -3,7 +3,7 @@ site_description: JDA-Boot is an annotation-driven JDA framework that lets you c
 repo_name: JDA-Boot
 repo_url: https://github.com/swiftbytegbr/jda-boot/
 site_url: https://jda-boot.swiftbyte.de/
-
+copyright: Copyright &copy; 2025 JDA-Boot Developers
 nav:
   - Home: index.md
   - Getting Started: nav/getting-started.md
@@ -19,12 +19,27 @@ nav:
 
 theme:
     name: material
+    custom_dir: overrides
     features:
     - content.tabs.link
     - content.code.copy
     - toc.integrate
     - navigation.expand
     - navigation.footer
+
+extra:
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  footer_links:
+    - text: "Privacy Policy"
+      href: "/nav/legal/privacy-policy"
+    - text: "Imprint"
+      href: "/nav/legal/imprint"
 
 markdown_extensions:
   - pymdownx.superfences
@@ -35,3 +50,6 @@ markdown_extensions:
   - tables
   - admonition
   - pymdownx.details
+
+plugins:
+  - privacy
