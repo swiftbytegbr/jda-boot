@@ -20,6 +20,8 @@ nav:
 theme:
     name: material
     custom_dir: overrides
+    logo: assets/swiftbyte_logo.png
+    favicon: assets/swiftbyte_logo.png
     features:
     - content.tabs.link
     - content.code.copy

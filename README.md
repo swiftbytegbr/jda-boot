@@ -6,7 +6,7 @@ WIP
 
 This project uses [JDA](https://github.com/DV8FromTheWorld/JDA) by [Austin Keener](https://github.com/DV8FromTheWorld/).
 
-More information coming soon!
+**A complete documentation for JDA-Boot can be found here: [Docs](https://jda-boot.swiftbyte.de/)**
 
 ## Installation
 
@@ -228,7 +228,7 @@ public class ConfigClass {
 - ✅ Variable transfer between commands, buttons, and modals
     - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Support for JDA 5.3.0 (User-Installable Apps)
-- 🚧 Updated and improved docs
+- ✅ Updated and improved docs
 - ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
 - ⛔ Better error handling

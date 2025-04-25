@@ -1,6 +1,6 @@
 # Getting Started
 ## Installation
-JDA-Boot can easily be added to your project via the Maven Central Repository. Please replace 'VERSION' with the current
+JDA-Boot can easily be added to your project via the [Maven Central Repository](https://central.sonatype.com/artifact/de.swiftbyte/jda-boot). Please replace 'VERSION' with the current
 jda-boot version.
 === "Maven"
     ```xml

@@ -8,7 +8,7 @@ New to JDA-Boot? Check out the [Getting Started page](nav/getting-started.md)!
 JDA-Boot aims to simplify Discord Bot development by providing pre-built tools. This allows developers to focus on the essentials of bot development without having to spend hours on a custom command system, for example. Nevertheless, we still use JDA, which is why everything that is already possible with JDA can be implemented. This ensures maximum flexibility. In addition, JDA-Boot is built in such a way that it can easily be extended if the existing functionality is not sufficient.
 
 ## Installation
-JDA-Boot can easily be added to your project via the Maven Central Repository. Please replace 'VERSION' with the current
+JDA-Boot can easily be added to your project via the [Maven Central Repository](https://central.sonatype.com/artifact/de.swiftbyte/jda-boot). Please replace 'VERSION' with the current
 jda-boot version.
 === "Maven"
     ```xml
@@ -42,7 +42,7 @@ jda-boot version.
 - ✅ Config System
 - ✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
 - ✅ .env configuration support
-- 🚧 Updated and improved docs
+- ✅ Updated and improved docs
 - ⛔ Improved Kotlin friendliness
 - ⛔ Database ORM System
 - ⛔ Better error handling

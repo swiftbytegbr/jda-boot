@@ -28,4 +28,4 @@ In this example, the `onMemberJoin` method is executed whenever a `GuildMemberJo
 
 ## Supported Events
 
-JDA-Boot supports all events provided by JDA. You can handle any event by simply creating a method with the appropriate event class as its parameter and annotating it with `@EventHandler`.
+JDA-Boot supports all events provided by JDA ([https://jda.wiki/introduction/events-list/](https://jda.wiki/introduction/events-list/)). You can handle any event by simply creating a method with the appropriate event class as its parameter and annotating it with `@EventHandler`.
