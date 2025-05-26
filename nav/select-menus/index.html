@@ -568,16 +568,9 @@
 
 
 <h1 id="select-menus">Select Menus<a class="headerlink" href="#select-menus" title="Permanent link">&para;</a></h1>
-<p>Select Menus in JDA-Boot allow users to make selections from a predefined list of options. They can be configured using
-annotations and executed when a user interacts with them. This page explains how to configure and use select menus in
-your bot.</p>
+<p>Select Menus in JDA-Boot allow users to make selections from a predefined list of options. They can be configured using annotations and executed when a user interacts with them. This page explains how to configure and use select menus in your bot.</p>
 <h2 id="select-menu-configuration">Select Menu Configuration<a class="headerlink" href="#select-menu-configuration" title="Permanent link">&para;</a></h2>
-<p>To create a select menu, a class must implement the appropriate executor interface (<code>StringSelectMenuExecutor</code> or
-<code>EntitySelectMenuExecutor</code>) and be annotated with the corresponding annotation (<code>@StringSelectMenuDefinition</code> or
-<code>@EntitySelectMenuDefinition</code>). Variables can be defined in the @SelectMenuDefinition for values whose value is not yet
-clear at the start. These are set later when the correct JDA select menu is generated and attached to an event. It is
-still possible to define default variables. If the same key is later given a value, the default value is overwritten. To
-use a variable, ${VARIABLE_KEY} must be entered in the respective field.</p>
+<p>To create a select menu, a class must implement the appropriate executor interface (<code>StringSelectMenuExecutor</code> or <code>EntitySelectMenuExecutor</code>) and be annotated with the corresponding annotation (<code>@StringSelectMenuDefinition</code> or <code>@EntitySelectMenuDefinition</code>). Variables can be defined in the @SelectMenuDefinition for values whose value is not yet clear at the start. These are set later when the correct JDA select menu is generated and attached to an event. It is still possible to define default variables. If the same key is later given a value, the default value is overwritten. To use a variable, ${VARIABLE_KEY} must be entered in the respective field.</p>
 <h3 id="stringselectmenudefinition">@StringSelectMenuDefinition<a class="headerlink" href="#stringselectmenudefinition" title="Permanent link">&para;</a></h3>
 <p>The <code>@StringSelectMenuDefinition</code> annotation is used to define a select menu with string-based options.</p>
 <table>
@@ -645,8 +638,7 @@ use a variable, ${VARIABLE_KEY} must be entered in the respective field.</p>
 </tbody>
 </table>
 <h3 id="entityselectmenudefinition">@EntitySelectMenuDefinition<a class="headerlink" href="#entityselectmenudefinition" title="Permanent link">&para;</a></h3>
-<p>The <code>@EntitySelectMenuDefinition</code> annotation is used to define a select menu for selecting Discord entities (e.g.,
-users, roles, channels).</p>
+<p>The <code>@EntitySelectMenuDefinition</code> annotation is used to define a select menu for selecting Discord entities (e.g., users, roles, channels).</p>
 <table>
 <thead>
 <tr>
@@ -694,90 +686,82 @@ users, roles, channels).</p>
 <li>For string select menus: <code>onSelectMenuSubmit(StringSelectInteractionEvent event, HashMap&lt;String, String&gt; variables)</code></li>
 <li>For entity select menus: <code>onSelectMenuSubmit(EntitySelectInteractionEvent event, HashMap&lt;String, String&gt; variables)</code></li>
 </ul>
-<p>The <code>event</code> parameter provides access to the interaction event, and the <code>variables</code> parameter is responsible for the
-variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated
-after the last restart. The variables specified during menu initialization can then be found in this HashMap.</p>
+<p>The <code>event</code> parameter provides access to the interaction event, and the <code>variables</code> parameter is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during menu initialization can then be found in this HashMap.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@StringSelectMenuDefinition</span><span class="p">(</span>
+<span class="w">    </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nd">@StringSelectOption</span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Option 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Value1&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="nd">@StringSelectOption</span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Option 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Value2&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Choose an option&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">maxOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExampleStringSelectMenu</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">StringSelectMenuExecutor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onSelectMenuSubmit</span><span class="p">(</span><span class="n">StringSelectInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">variables</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">selectedValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getSelectedOptions</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">getValue</span><span class="p">();</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;You selected: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">selectedValue</span><span class="p">).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@EntitySelectMenuDefinition</span><span class="p">(</span>
+<span class="w">        </span><span class="n">placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Select a channel&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">enableChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExampleEntitySelectMenu</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">EntitySelectMenuExecutor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onSelectMenuSubmit</span><span class="p">(</span><span class="n">EntitySelectInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">variables</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">selectedChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getValues</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">getName</span><span class="p">();</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;You selected the channel: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">selectedChannel</span><span class="p">).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-@StringSelectMenuDefinition(
-options = {
-@StringSelectOption(label = "Option 1", value = "Value1"),
-@StringSelectOption(label = "Option 2", value = "Value2")
-},
-placeholder = "Choose an option",
-maxOptions = 1
-)
-public class ExampleStringSelectMenu implements StringSelectMenuExecutor {</p>
-<pre><code>        @Override
-        public void onSelectMenuSubmit(StringSelectInteractionEvent event, HashMap&lt;String, String&gt; variables) {
-            String selectedValue = event.getSelectedOptions().get(0).getValue();
-            event.reply("You selected: " + selectedValue).queue();
-        }
-    }
-    ```
-
-    ```java
-    @EntitySelectMenuDefinition(
-            placeholder = "Select a channel",
-            enableChannel = true
-    )
-    public class ExampleEntitySelectMenu implements EntitySelectMenuExecutor {
-
-        @Override
-        public void onSelectMenuSubmit(EntitySelectInteractionEvent event, HashMap&lt;String, String&gt; variables) {
-            String selectedChannel = event.getValues().get(0).getName();
-            event.reply("You selected the channel: " + selectedChannel).queue();
-        }
-    }
-    ```
-</code></pre>
+</div>
+</div>
 <h2 id="using-select-menus">Using Select Menus<a class="headerlink" href="#using-select-menus" title="Permanent link">&para;</a></h2>
-<p>To use a select menu, it must be embedded in other parts of JDA-Boot, such as modals or buttons. This is done using the
-<code>@StringSelectMenuByClass</code> or <code>@EntitySelectMenuByClass</code> annotations, which must annotate a field of type
-<code>TemplateSelectMenu</code>. At runtime, JDA-Boot initializes the field with the corresponding <code>TemplateSelectMenu</code>.</p>
-<p>An <code>AdvancedSelectMenu</code> can be created from the <code>TemplateSelectMenu</code> using the <code>advancedSelectMenu()</code> method. Variables
-can be set using the <code>setVariable(key, value)</code> method, and dynamic options can be added to string select menus using the
-<code>addDynamicOption(label, value)</code> method. Finally, the select menu can be built using the <code>build()</code> method.</p>
+<p>To use a select menu, it must be embedded in other parts of JDA-Boot, such as modals or buttons. This is done using the <code>@StringSelectMenuByClass</code> or <code>@EntitySelectMenuByClass</code> annotations, which must annotate a field of type <code>TemplateSelectMenu</code>. At runtime, JDA-Boot initializes the field with the corresponding <code>TemplateSelectMenu</code>.</p>
+<p>An <code>AdvancedSelectMenu</code> can be created from the <code>TemplateSelectMenu</code> using the <code>advancedSelectMenu()</code> method. Variables can be set using the <code>setVariable(key, value)</code> method, and dynamic options can be added to string select menus using the <code>addDynamicOption(label, value)</code> method. Finally, the select menu can be built using the <code>build()</code> method.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@SlashCommandDefinition</span><span class="p">(</span>
+<span class="w">        </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;selectmenu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Demonstrates select menus&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SlashCommandDefinition</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">SLASH</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SelectMenuCommand</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">SlashCommandExecutor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@StringSelectMenuByClass</span><span class="p">(</span><span class="n">ExampleStringSelectMenu</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TemplateSelectMenu</span><span class="w"> </span><span class="n">stringMenu</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@EntitySelectMenuByClass</span><span class="p">(</span><span class="n">ExampleEntitySelectMenu</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TemplateSelectMenu</span><span class="w"> </span><span class="n">entityMenu</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCommand</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;Choose an option:&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">addActionRow</span><span class="p">(</span><span class="n">stringMenu</span><span class="p">.</span><span class="na">advancedSelectMenu</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">addDynamicOption</span><span class="p">(</span><span class="s">&quot;Dynamic Option&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;DynamicValue&quot;</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">addActionRow</span><span class="p">(</span><span class="n">entityMenu</span><span class="p">.</span><span class="na">advancedSelectMenu</span><span class="p">().</span><span class="na">build</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-@SlashCommandDefinition(
-name = "selectmenu",
-description = "Demonstrates select menus",
-type = SlashCommandDefinition.Type.SLASH
-)
-public class SelectMenuCommand extends SlashCommandExecutor {</p>
-<pre><code>        @StringSelectMenuByClass(ExampleStringSelectMenu.class)
-        private TemplateSelectMenu stringMenu;
-
-        @EntitySelectMenuByClass(ExampleEntitySelectMenu.class)
-        private TemplateSelectMenu entityMenu;
-
-        @Override
-        public void onCommand() {
-            event.reply("Choose an option:")
-                    .addActionRow(stringMenu.advancedSelectMenu()
-                            .addDynamicOption("Dynamic Option", "DynamicValue")
-                            .build())
-                    .addActionRow(entityMenu.advancedSelectMenu().build())
-                    .queue();
-        }
-    }
-    ```
-</code></pre>
+</div>
+</div>
 
 
 

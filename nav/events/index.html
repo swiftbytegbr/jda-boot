@@ -535,40 +535,33 @@
 
 
 <h1 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h1>
-<p>The event system in JDA-Boot allows you to handle Discord events in a structured and efficient way. By using
-annotations, you can define event handlers and integrate them into your bot. This page explains how to configure and use
-the event system in your project.</p>
+<p>The event system in JDA-Boot allows you to handle Discord events in a structured and efficient way. By using annotations, you can define event handlers and integrate them into your bot. This page explains how to configure and use the event system in your project.</p>
 <h2 id="event-configuration">Event Configuration<a class="headerlink" href="#event-configuration" title="Permanent link">&para;</a></h2>
-<p>To handle an event, you need to create a method annotated with <code>@EventHandler</code>. This method will be executed whenever
-the specified event occurs. The method must have a single parameter, which is the event class you want to handle.</p>
+<p>To handle an event, you need to create a method annotated with <code>@EventHandler</code>. This method will be executed whenever the specified event occurs. The method must have a single parameter, which is the event class you want to handle.</p>
 <h2 id="event-execution">Event Execution<a class="headerlink" href="#event-execution" title="Permanent link">&para;</a></h2>
-<p>When an event occurs, JDA-Boot automatically calls the corresponding method annotated with <code>@EventHandler</code>. The event
-object is passed as a parameter, allowing you to access all relevant information about the event.</p>
+<p>When an event occurs, JDA-Boot automatically calls the corresponding method annotated with <code>@EventHandler</code>. The event object is passed as a parameter, allowing you to access all relevant information about the event.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MemberJoinEventHandler</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@EventHandler</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onMemberJoin</span><span class="p">(</span><span class="n">GuildMemberJoinEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">getGuild</span><span class="p">().</span><span class="na">getSystemChannel</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Welcome &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getUser</span><span class="p">().</span><span class="na">getAsMention</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; to the server!&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-public class MemberJoinEventHandler {</p>
-<pre><code>        @EventHandler
-        public void onMemberJoin(GuildMemberJoinEvent event) {
-            event.getGuild().getSystemChannel()
-                    .sendMessage("Welcome " + event.getUser().getAsMention() + " to the server!")
-                    .queue();
-        }
-    }
-    ```
-</code></pre>
-<p>In this example, the <code>onMemberJoin</code> method is executed whenever a <code>GuildMemberJoinEvent</code> occurs. The method sends a
-welcome message to the system channel of the guild.</p>
+</div>
+</div>
+<p>In this example, the <code>onMemberJoin</code> method is executed whenever a <code>GuildMemberJoinEvent</code> occurs. The method sends a welcome message to the system channel of the guild.</p>
 <h2 id="supported-events">Supported Events<a class="headerlink" href="#supported-events" title="Permanent link">&para;</a></h2>
-<p>JDA-Boot supports all events provided by
-JDA (<a href="https://jda.wiki/introduction/events-list/">https://jda.wiki/introduction/events-list/</a>). You can handle any event
-by simply creating a method with the appropriate event class as its parameter and annotating it with <code>@EventHandler</code>.</p>
+<p>JDA-Boot supports all events provided by JDA (<a href="https://jda.wiki/introduction/events-list/">https://jda.wiki/introduction/events-list/</a>). You can handle any event by simply creating a method with the appropriate event class as its parameter and annotating it with <code>@EventHandler</code>.</p>
 
 
 

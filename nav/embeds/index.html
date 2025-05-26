@@ -595,16 +595,11 @@
 
 
 <h1 id="embeds">Embeds<a class="headerlink" href="#embeds" title="Permanent link">&para;</a></h1>
-<p>Embeds in JDA-Boot allow you to create rich, styled messages for Discord. They can be configured using annotations and
-support dynamic variables, making them highly customizable. This page explains how to configure and use embeds in your
-bot.</p>
+<p>Embeds in JDA-Boot allow you to create rich, styled messages for Discord. They can be configured using annotations and support dynamic variables, making them highly customizable. This page explains how to configure and use embeds in your bot.</p>
 <h2 id="embed-configuration">Embed Configuration<a class="headerlink" href="#embed-configuration" title="Permanent link">&para;</a></h2>
-<p>Embeds are defined using the <code>@Embed</code> annotation. This annotation allows you to configure various aspects of the embed,
-such as its title, description, author, footer, fields, and more. You can also define default variables that can be
-replaced dynamically at runtime.</p>
+<p>Embeds are defined using the <code>@Embed</code> annotation. This annotation allows you to configure various aspects of the embed, such as its title, description, author, footer, fields, and more. You can also define default variables that can be replaced dynamically at runtime.</p>
 <h3 id="embed">@Embed<a class="headerlink" href="#embed" title="Permanent link">&para;</a></h3>
-<p>The <code>@Embed</code> annotation has several fields for customization. The <code>id</code> field is required, and it is recommended to set a
-<code>title</code> and <code>description</code> for the embed.</p>
+<p>The <code>@Embed</code> annotation has several fields for customization. The <code>id</code> field is required, and it is recommended to set a <code>title</code> and <code>description</code> for the embed.</p>
 <table>
 <thead>
 <tr>
@@ -769,113 +764,107 @@ replaced dynamically at runtime.</p>
 </tbody>
 </table>
 <h2 id="using-embeds">Using Embeds<a class="headerlink" href="#using-embeds" title="Permanent link">&para;</a></h2>
-<p>To use an embed, you can create an <code>AdvancedEmbed</code> from a <code>TemplateEmbed</code> using the <code>advancedEmbed()</code> method. Variables
-can be set dynamically using the <code>setVariable(key, value)</code> method. You can also add dynamic fields using the
-<code>addDynamicField(title, description, inline)</code> method. Once configured, the embed can be built using the <code>build()</code> method
-and sent as part of a Discord message.</p>
+<p>To use an embed, you can create an <code>AdvancedEmbed</code> from a <code>TemplateEmbed</code> using the <code>advancedEmbed()</code> method. Variables can be set dynamically using the <code>setVariable(key, value)</code> method. You can also add dynamic fields using the <code>addDynamicField(title, description, inline)</code> method. Once configured, the embed can be built using the <code>build()</code> method and sent as part of a Discord message.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;exampleEmbed&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Example Title&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This is an example embed.&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EmbedColor</span><span class="p">.</span><span class="na">BLUE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@EmbedAuthor</span><span class="p">(</span>
+<span class="w">            </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Author Name&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">iconUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://example.com/icon.png&quot;</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="n">footer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@EmbedFooter</span><span class="p">(</span>
+<span class="w">            </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Footer Text&quot;</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="n">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@EmbedField</span><span class="p">(</span>
+<span class="w">                </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 1&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 1 Description&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">inline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="p">),</span>
+<span class="w">            </span><span class="nd">@EmbedField</span><span class="p">(</span>
+<span class="w">                </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 2&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Field 2 Description&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">inline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendEmbed</span><span class="p">(</span><span class="n">SlashCommandInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AdvancedEmbed</span><span class="w"> </span><span class="n">advancedEmbed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">.</span><span class="na">advancedEmbed</span><span class="p">();</span>
+<span class="w">        </span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">addDynamicField</span><span class="p">(</span><span class="s">&quot;Dynamic Field&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dynamic Description&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">replyEmbeds</span><span class="p">(</span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">build</span><span class="p">()).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-public class EmbedClass {</p>
-<pre><code>        @Embed(
-            id = "exampleEmbed",
-            title = "Example Title",
-            description = "This is an example embed.",
-            color = EmbedColor.BLUE,
-            author = @EmbedAuthor(
-                name = "Author Name",
-                iconUrl = "https://example.com/icon.png"
-            ),
-            footer = @EmbedFooter(
-                text = "Footer Text"
-            ),
-            fields = {
-                @EmbedField(
-                    title = "Field 1",
-                    description = "Field 1 Description",
-                    inline = true
-                ),
-                @EmbedField(
-                    title = "Field 2",
-                    description = "Field 2 Description",
-                    inline = false
-                )
-            }
-        )
-        public static TemplateEmbed exampleEmbed;
-
-        public void sendEmbed(SlashCommandInteractionEvent event) {
-            AdvancedEmbed advancedEmbed = exampleEmbed.advancedEmbed();
-            advancedEmbed.addDynamicField("Dynamic Field", "Dynamic Description", false);
-
-            event.replyEmbeds(advancedEmbed.build()).queue();
-        }
-    }
-    ```
-</code></pre>
+</div>
+</div>
 <h2 id="inheriting-embeds">Inheriting Embeds<a class="headerlink" href="#inheriting-embeds" title="Permanent link">&para;</a></h2>
-<p>Embeds can inherit properties from another embed using the <code>basedOn</code> field. This allows you to define a base embed with
-common properties and extend it in other embeds.</p>
+<p>Embeds can inherit properties from another embed using the <code>basedOn</code> field. This allows you to define a base embed with common properties and extend it in other embeds.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<p>```java
-public class EmbedClass {</p>
-<pre><code>        @Embed(
-            id = "baseEmbed",
-            color = EmbedColor.GREEN
-        )
-        public static TemplateEmbed baseEmbed;
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
 
-        @Embed(
-                basedOn = "baseEmbed",
-                id = "childEmbed",
-                title = "Child Embed Title",
-                description = "This embed inherits from the base embed."
-        )
-        public static TemplateEmbed childEmbed;
-    }
-    ```
-</code></pre>
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;baseEmbed&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EmbedColor</span><span class="p">.</span><span class="na">GREEN</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">baseEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">            </span><span class="n">basedOn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;baseEmbed&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;childEmbed&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Child Embed Title&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This embed inherits from the base embed.&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">childEmbed</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
 <h2 id="dynamic-variables">Dynamic Variables<a class="headerlink" href="#dynamic-variables" title="Permanent link">&para;</a></h2>
-<p>Embeds support dynamic variables, which can be replaced at runtime. Variables are defined using the <code>${variable}</code> syntax
-in fields like <code>title</code>, <code>description</code>, and others. These variables can be set using the <code>setVariable(key, value)</code> method
-of <code>AdvancedEmbed</code>.</p>
+<p>Embeds support dynamic variables, which can be replaced at runtime. Variables are defined using the <code>${variable}</code> syntax in fields like <code>title</code>, <code>description</code>, and others. These variables can be set using the <code>setVariable(key, value)</code> method of <code>AdvancedEmbed</code>.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<p>```java
-public class EmbedClass {</p>
-<pre><code>        @Embed(
-            title = "Example Title",
-            description = "${description}",
-        )
-        public static TemplateEmbed exampleEmbed;
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EmbedClass</span><span class="w"> </span><span class="p">{</span>
 
-        public void sendEmbed(SlashCommandInteractionEvent event) {
-            AdvancedEmbed advancedEmbed = exampleEmbed.advancedEmbed();
-            advancedEmbed.setVariable("description", "Example Description");
-            event.replyEmbeds(advancedEmbed.build()).queue();
-        }
-    }
-    ```
-</code></pre>
+<span class="w">    </span><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">        </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Example Title&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;${description}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendEmbed</span><span class="p">(</span><span class="n">SlashCommandInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AdvancedEmbed</span><span class="w"> </span><span class="n">advancedEmbed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">exampleEmbed</span><span class="p">.</span><span class="na">advancedEmbed</span><span class="p">();</span>
+<span class="w">        </span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">setVariable</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Example Description&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">replyEmbeds</span><span class="p">(</span><span class="n">advancedEmbed</span><span class="p">.</span><span class="na">build</span><span class="p">()).</span><span class="na">queue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
 
 
 

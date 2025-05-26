@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#translation-configuration-and-variables" class="md-skip">
+        <a href="#translation-and-configuration-and-variables" class="md-skip">
           Skip to content
         </a>
       
@@ -648,15 +648,12 @@
   
 
 
-<h1 id="translation-configuration-and-variables">Translation, Configuration and Variables<a class="headerlink" href="#translation-configuration-and-variables" title="Permanent link">&para;</a></h1>
-<p>JDA-Boot provides robust systems for managing translations and configurations, allowing you to create dynamic and
-localized bots with ease. This page explains how to use these systems and customize them for your project.</p>
+<h1 id="translation-and-configuration-and-variables">Translation and Configuration and Variables<a class="headerlink" href="#translation-and-configuration-and-variables" title="Permanent link">&para;</a></h1>
+<p>JDA-Boot provides robust systems for managing translations and configurations, allowing you to create dynamic and localized bots with ease. This page explains how to use these systems and customize them for your project.</p>
 <h2 id="translation-system">Translation System<a class="headerlink" href="#translation-system" title="Permanent link">&para;</a></h2>
-<p>The translation system in JDA-Boot allows you to use localized strings in your bot. By default, JDA-Boot uses Java
-resource bundles for translations, but you can also implement your own <code>TranslationProvider</code>.</p>
+<p>The translation system in JDA-Boot allows you to use localized strings in your bot. By default, JDA-Boot uses Java resource bundles for translations, but you can also implement your own <code>TranslationProvider</code>.</p>
 <h3 id="using-translations">Using Translations<a class="headerlink" href="#using-translations" title="Permanent link">&para;</a></h3>
-<p>Translations can be used in any place where normal variables are supported by using the syntax <code>#{TRANSLATION_KEY}</code>. You
-can also use variables within translations to dynamically customize the content.</p>
+<p>Translations can be used in any place where normal variables are supported by using the syntax <code>#{TRANSLATION_KEY}</code>. You can also use variables within translations to dynamically customize the content.</p>
 <h4 id="default-translation-files">Default Translation Files<a class="headerlink" href="#default-translation-files" title="Permanent link">&para;</a></h4>
 <ul>
 <li>The default language file is <code>messages.properties</code>.</li>
@@ -664,32 +661,31 @@ can also use variables within translations to dynamically customize the content.
 </ul>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <p><code>messages.properties</code>:
 <div class="highlight"><pre><span></span><code>welcome.message=Welcome, ${username}!
 </code></pre></div></p>
-<pre><code>=== "Java"
-    Usage in code:
-    ```java
-    @Embed(
-        title = "#{welcome.message}",
-        description = "Enjoy your stay!"
-    )
-    private TemplateEmbed embed;
-    ```
-</code></pre>
-<p>If the <code>username</code> variable is set to "John", the title will render as "Welcome, John!".</p>
-<h3 id="custom-translation-providers">Custom Translation Providers<a class="headerlink" href="#custom-translation-providers" title="Permanent link">&para;</a></h3>
-<p>You can create a custom translation provider by implementing the <code>TranslationProvider</code> interface and setting it in the
-<code>translationProvider</code> field of the <code>@JDABootConfiguration</code> annotation.</p>
-<div class="admonition example">
-<p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<p>Usage in code:
+<div class="highlight"><pre><span></span><code><span class="nd">@Embed</span><span class="p">(</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#{welcome.message}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Enjoy your stay!&quot;</span>
+<span class="p">)</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">TemplateEmbed</span><span class="w"> </span><span class="n">embed</span><span class="p">;</span>
+</code></pre></div></p>
 </div>
 </div>
+</div>
+</div>
+<p>If the <code>username</code> variable is set to "John", the title will render as "Welcome, John!".</p>
+<h3 id="custom-translation-providers">Custom Translation Providers<a class="headerlink" href="#custom-translation-providers" title="Permanent link">&para;</a></h3>
+<p>You can create a custom translation provider by implementing the <code>TranslationProvider</code> interface and setting it in the <code>translationProvider</code> field of the <code>@JDABootConfiguration</code> annotation.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="nd">@JDABootConfiguration</span><span class="p">(</span>
 <span class="w">    </span><span class="n">translationProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CustomTranslationProvider</span><span class="p">.</span><span class="na">class</span>
 <span class="p">)</span>
@@ -697,98 +693,85 @@ can also use variables within translations to dynamically customize the content.
 <span class="w">    </span><span class="c1">// Main Class</span>
 <span class="p">}</span>
 </code></pre></div>
+</div>
+</div>
+</div>
+</div>
 <h2 id="configuration-system">Configuration System<a class="headerlink" href="#configuration-system" title="Permanent link">&para;</a></h2>
-<p>The configuration system in JDA-Boot allows you to manage settings for your bot. Configuration values can be retrieved
-dynamically or injected into fields using annotations.</p>
+<p>The configuration system in JDA-Boot allows you to manage settings for your bot. Configuration values can be retrieved dynamically or injected into fields using annotations.</p>
 <h3 id="using-configuration">Using Configuration<a class="headerlink" href="#using-configuration" title="Permanent link">&para;</a></h3>
-<p>Configuration values can be used in any place where normal variables are supported by using the syntax <code>?{CONFIG_KEY}</code>.
-Alternatively, you can use the <code>@SetValue</code> annotation to inject configuration values into fields.</p>
+<p>Configuration values can be used in any place where normal variables are supported by using the syntax <code>?{CONFIG_KEY}</code>. Alternatively, you can use the <code>@SetValue</code> annotation to inject configuration values into fields.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">yml</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">yml</label><label for="__tabbed_3_2">properties</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <p><code>config.yml</code>:
 <div class="highlight"><pre><span></span><code><span class="nt">app</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MyBot&quot;</span>
 </code></pre></div></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">properties</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
 </div>
-</div>
+<div class="tabbed-block">
 <p><code>config.properties</code>:
 <div class="highlight"><pre><span></span><code>app.name=MyBot
 </code></pre></div></p>
-<pre><code>Usage in code:
-=== "java"
-    ```java
-    @SetValue("app.name")
-    private String appName;
-    ```
-
-The `appName` field will be automatically set to "MyBot".
-</code></pre>
+</div>
+</div>
+</div>
+<p>Usage in code:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@SetValue</span><span class="p">(</span><span class="s">&quot;app.name&quot;</span><span class="p">)</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">appName</span><span class="p">;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>appName</code> field will be automatically set to "MyBot".</p>
+</div>
 <h3 id="configuration-providers">Configuration Providers<a class="headerlink" href="#configuration-providers" title="Permanent link">&para;</a></h3>
-<p>By default, JDA-Boot supports the following configuration providers:</p>
-<ol>
-<li><strong>Environment Variables</strong> (including .env files): Variables must have the prefix <code>JDA_BOOT_</code> and be in uppercase with
-   underscores (e.g., <code>JDA_BOOT_APP_NAME</code>).</li>
-<li><strong>Properties Files</strong>: Configuration can be stored in <code>.properties</code> files.</li>
-<li><strong>YAML Files</strong>: Configuration can be stored in <code>.yml</code> files.</li>
-</ol>
-<p>These providers are organized in a chain, so if a value is not found in one provider, the next provider in the chain is
-used. The default order is:</p>
-<ol>
-<li>Environment Variables</li>
-<li>Properties Files</li>
-<li>YAML Files</li>
-</ol>
+<p>By default, JDA-Boot supports the following configuration providers:
+1. <strong>Environment Variables</strong> (including .env files): Variables must have the prefix <code>JDA_BOOT_</code> and be in uppercase with underscores (e.g., <code>JDA_BOOT_APP_NAME</code>).
+2. <strong>Properties Files</strong>: Configuration can be stored in <code>.properties</code> files.
+3. <strong>YAML Files</strong>: Configuration can be stored in <code>.yml</code> files.</p>
+<p>These providers are organized in a chain, so if a value is not found in one provider, the next provider in the chain is used. The default order is:
+1. Environment Variables
+2. Properties Files
+3. YAML Files</p>
 <h3 id="configuration-profiles">Configuration Profiles<a class="headerlink" href="#configuration-profiles" title="Permanent link">&para;</a></h3>
-<p>You can define configuration profiles to manage different environments (e.g., development, production). The active
-profile is determined by the <code>profile</code> configuration key. For example, if the profile is set to <code>dev</code>, the files
-<code>config-dev.yml</code> or <code>config-dev.properties</code> will be used.</p>
+<p>You can define configuration profiles to manage different environments (e.g., development, production). The active profile is determined by the <code>profile</code> configuration key. For example, if the profile is set to <code>dev</code>, the files <code>config-dev.yml</code> or <code>config-dev.properties</code> will be used.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">yml</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">yml</label><label for="__tabbed_5_2">properties</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <p><code>config.yml</code>:
 <div class="highlight"><pre><span></span><code><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev&quot;</span>
 </code></pre></div></p>
-<pre><code>    `config-dev.yml`:
-    ```yaml
-    app:
-      name: "MyBot (Development)"
-    ```
-=== "properties"
-    `config.properties`:
-    ```
-    profile=dev
-    ```
-
-    `config-dev.properties`:
-    ```
-    app.name=MyBot (Development)
-    ```
-</code></pre>
+<p><code>config-dev.yml</code>:
+<div class="highlight"><pre><span></span><code><span class="nt">app</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MyBot</span><span class="nv"> </span><span class="s">(Development)&quot;</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p><code>config.properties</code>:
+<div class="highlight"><pre><span></span><code>profile=dev
+</code></pre></div></p>
+<p><code>config-dev.properties</code>:
+<div class="highlight"><pre><span></span><code>app.name=MyBot (Development)
+</code></pre></div></p>
+</div>
+</div>
+</div>
+</div>
 <h3 id="custom-configuration-providers">Custom Configuration Providers<a class="headerlink" href="#custom-configuration-providers" title="Permanent link">&para;</a></h3>
-<p>You can create a custom configuration provider by implementing the <code>ConfigProvider</code> class and adding it to the
-<code>additionalConfigProviders</code> field in the <code>@JDABootConfiguration</code> annotation.</p>
+<p>You can create a custom configuration provider by implementing the <code>ConfigProvider</code> class and adding it to the <code>additionalConfigProviders</code> field in the <code>@JDABootConfiguration</code> annotation.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">java</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="nd">@JDABootConfiguration</span><span class="p">(</span>
 <span class="w">    </span><span class="n">additionalConfigProviders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">CustomConfigProvider</span><span class="p">.</span><span class="na">class</span><span class="p">}</span>
 <span class="p">)</span>
@@ -796,6 +779,10 @@ profile is determined by the <code>profile</code> configuration key. For example
 <span class="w">    </span><span class="c1">// Main Class</span>
 <span class="p">}</span>
 </code></pre></div>
+</div>
+</div>
+</div>
+</div>
 <h2 id="global-variables">Global Variables<a class="headerlink" href="#global-variables" title="Permanent link">&para;</a></h2>
 <p>Global variables are accessible throughout your entire application and can be set or updated at runtime.
 They are useful for values that need to be shared across different parts of your bot.</p>
@@ -804,19 +791,19 @@ They are useful for values that need to be shared across different parts of your
 Dynamic variables allow the value to be computed each time it is accessed.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Java</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:1"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1">// Static global variable</span>
+<span class="n">GlobalVariables</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;botVersion&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span><span class="p">);</span>
+
+<span class="c1">// Dynamic global variable (e.g., current time)</span>
+<span class="n">GlobalVariables</span><span class="p">.</span><span class="na">setDynamicValue</span><span class="p">(</span><span class="s">&quot;currentTime&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-// Static global variable
-GlobalVariables.set("botVersion", "1.0");</p>
-<pre><code>        // Dynamic global variable (e.g., current time)
-        GlobalVariables.setDynamicValue("currentTime", () -&gt; LocalDateTime.now().toString());
-    ```
-</code></pre>
+</div>
+</div>
 <p>Now, you can use <code>${botVersion}</code> or <code>${currentTime}</code> in your embeds or anywhere variables are supported.</p>
 <h3 id="default-variables">Default Variables<a class="headerlink" href="#default-variables" title="Permanent link">&para;</a></h3>
 <table>

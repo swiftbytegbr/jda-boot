@@ -602,14 +602,9 @@
 
 <h1 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h1>
 <h2 id="slash-commands">Slash Commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h2>
-<p>Slash Commands are the regular Discord commands which can be executed via the chat with <code>/</code>. To create a command in
-JDA-Boot, a <code>@SlashCommandDefinition</code> annotation must be annotated to a class that extends the <code>SlashCommandExecutor</code>
-class. In addition, the commands must be registered with Discord via <code>JDABoot.getInstance.updateCommands()</code> or
-<code>JDABoot.getInstance.updateCommands(guildId)</code>.</p>
+<p>Slash Commands are the regular Discord commands which can be executed via the chat with <code>/</code>. To create a command in JDA-Boot, a <code>@SlashCommandDefinition</code> annotation must be annotated to a class that extends the <code>SlashCommandExecutor</code> class. In addition, the commands must be registered with Discord via <code>JDABoot.getInstance.updateCommands()</code> or <code>JDABoot.getInstance.updateCommands(guildId)</code>.</p>
 <h3 id="command-configuration">Command Configuration<a class="headerlink" href="#command-configuration" title="Permanent link">&para;</a></h3>
-<p>The <code>@SlashCommandDefinition</code> annotation has many customization options for the command. This is a list of all fields
-with a description of what each field does. If a command is not global, it can be registered via
-<code>JDABoot.getInstance.registerCommand(guildId, commandId)</code>. The command id corresponds to the name of the command.</p>
+<p>The <code>@SlashCommandDefinition</code> annotation has many customization options for the command. This is a list of all fields with a description of what each field does. If a command is not global, it can be registered via <code>JDABoot.getInstance.registerCommand(guildId, commandId)</code>. The command id corresponds to the name of the command.</p>
 <h4 id="slashcommanddefinition">@SlashCommandDefinition<a class="headerlink" href="#slashcommanddefinition" title="Permanent link">&para;</a></h4>
 <p>The fields <code>name</code> and <code>type</code> are required. It also makes sense to set <code>description</code>.</p>
 <table>
@@ -798,76 +793,61 @@ with a description of what each field does. If a command is not global, it can b
 </tbody>
 </table>
 <h3 id="command-execution">Command Execution<a class="headerlink" href="#command-execution" title="Permanent link">&para;</a></h3>
-<p>If the Command class is extended with SlashCommandExecutor, the <code>onCommand</code> method must be implemented. This is executed
-every time the command is used on Discord. The <code>SlashCommandInteractionEvent</code> is a field of the superclass with the name
-<code>event</code>. Optionally, the method <code>onEnable(SlashCommandData data)</code> can also be implemented. As the name suggests, this is
-executed when the command is initialized by JDA-Boot. In addition, the method
-<code>onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event)</code> can be overwritten. This is only
-necessary if <code>autoComplete = true</code> in a command option. The functionality is the same as with JDA. In addition to these
-methods, there are also other utility methods that simplify the use of <a href="../embeds/">Embed Systems</a>.</p>
+<p>If the Command class is extended with SlashCommandExecutor, the <code>onCommand</code> method must be implemented. This is executed every time the command is used on Discord. The <code>SlashCommandInteractionEvent</code> is a field of the superclass with the name <code>event</code>. Optionally, the method <code>onEnable(SlashCommandData data)</code> can also be implemented. As the name suggests, this is executed when the command is initialized by JDA-Boot. In addition, the method <code>onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event)</code> can be overwritten. This is only necessary if <code>autoComplete = true</code> in a command option. The functionality is the same as with JDA. In addition to these methods, there are also other utility methods that simplify the use of <a href="../embeds/">Embed Systems</a>.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@SlashCommandDefinition</span><span class="p">(</span>
+<span class="w">        </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ping&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Check the bot&#39;s ping.&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SlashCommandDefinition</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">SLASH</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PingCommand</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">SlashCommandExecutor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCommand</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;Pong!&quot;</span><span class="p">).</span><span class="na">setEphemeral</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="na">queue</span><span class="p">(</span><span class="n">response</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                </span><span class="n">response</span><span class="p">.</span><span class="na">editOriginal</span><span class="p">(</span><span class="s">&quot;Pong: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; ms&quot;</span><span class="p">).</span><span class="na">queue</span><span class="p">());</span>
+
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onEnable</span><span class="p">(</span><span class="n">SlashCommandData</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Ping command enabled!&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-@SlashCommandDefinition(
-name = "ping",
-description = "Check the bot's ping.",
-type = SlashCommandDefinition.Type.SLASH
-)
-public class PingCommand extends SlashCommandExecutor {</p>
-<pre><code>        @Override
-        public void onCommand() {
-            long time = System.currentTimeMillis();
-
-            event.reply("Pong!").setEphemeral(true).queue(response -&gt;
-                    response.editOriginal("Pong: " + (System.currentTimeMillis() - time) + " ms").queue());
-
-        }
-
-        @Override
-        public void onEnable(SlashCommandData data) {
-            System.out.println("Ping command enabled!");
-        }
-    }
-    ```
-</code></pre>
+</div>
+</div>
 <h2 id="console-commands">Console Commands<a class="headerlink" href="#console-commands" title="Permanent link">&para;</a></h2>
-<p>JDABoot supports a simple small console command system. It is important that the setting <code>enableConsoleCommands</code> of the
-<code>@JDABootConfiguration</code> annotation is enabled. Then a class that implements the <code>ConsoleCommandExecutor</code> class can be
-annotated with the <code>@ConsoleCommandDefinition</code> annotation. This has the field <code>name</code> which sets the name of the command
-and the field <code>aliases</code> which takes an array of strings and sets alternative names for the command. The command itself
-is implemented in the method <code>onCommand(String[] args)</code>. The arguments specified during execution are passed as an
-array.</p>
+<p>JDABoot supports a simple small console command system. It is important that the setting <code>enableConsoleCommands</code> of the <code>@JDABootConfiguration</code> annotation is enabled. Then a class that implements the <code>ConsoleCommandExecutor</code> class can be annotated with the <code>@ConsoleCommandDefinition</code> annotation. This has the field <code>name</code> which sets the name of the command and the field <code>aliases</code> which takes an array of strings and sets alternative names for the command. The command itself is implemented in the method <code>onCommand(String[] args)</code>. The arguments specified during execution are passed as an array.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@ConsoleCommandDefinition</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;registerCommands&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RegisterCommandsCommand</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ConsoleCommandExecutor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCommand</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Registering commands!&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">JDABoot</span><span class="p">.</span><span class="na">getInstance</span><span class="p">().</span><span class="na">updateCommands</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 </div>
 </div>
-<p>```java
-@ConsoleCommandDefinition(name = "registerCommands")
-public class RegisterCommandsCommand implements ConsoleCommandExecutor {</p>
-<pre><code>        @Override
-        public void onCommand(String[] args) {
-            System.out.println("Registering commands!");
-            JDABoot.getInstance().updateCommands();
-        }
-    }
-    ```
-</code></pre>
+</div>
+</div>
 <h2 id="user-and-message-context-commands">User and Message Context Commands<a class="headerlink" href="#user-and-message-context-commands" title="Permanent link">&para;</a></h2>
-<p>In addition to the classic slash commands, there are now also user and message context commands. These are commands that
-can be executed by right-clicking on a user or a message. The creation of such a command is very similar to the slash
-commands, in fact so similar that the same <code>SlashCommandDefinition</code> annotation is used. Only the type has to be changed
-and some options cannot be set. However, the <code>SlashCommandExecutor</code> may no longer be extended, but the
-<code>UserContextCommandExecutor</code> or <code>MessageContextCommandExecutor</code> must be implemented.</p>
+<p>In addition to the classic slash commands, there are now also user and message context commands. These are commands that can be executed by right-clicking on a user or a message. The creation of such a command is very similar to the slash commands, in fact so similar that the same <code>SlashCommandDefinition</code> annotation is used. Only the type has to be changed and some options cannot be set. However, the <code>SlashCommandExecutor</code> may no longer be extended, but the <code>UserContextCommandExecutor</code> or <code>MessageContextCommandExecutor</code> must be implemented.</p>
 
 
 
