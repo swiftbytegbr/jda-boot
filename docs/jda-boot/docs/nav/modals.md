@@ -1,17 +1,10 @@
 # Modals
 
-Modals in JDA-Boot allow you to create interactive forms that users can fill out. They consist of a title and multiple
-input fields, called rows. Modals can be configured using annotations and executed when submitted by a user. This page
-explains how to configure and use modals in your bot.
+Modals in JDA-Boot allow you to create interactive forms that users can fill out. They consist of a title and multiple input fields, called rows. Modals can be configured using annotations and executed when submitted by a user. This page explains how to configure and use modals in your bot.
 
 ## Modal Configuration
 
-To create a modal, a class must implement the `ModalExecutor` interface and be annotated with the `@ModalDefinition`
-annotation. Each modal consists of a title and one or more rows, which are defined using the `@ModalRow` annotation.
-Variables can be defined in the @ModalDefinition for values whose value is not yet clear at the start. These are set
-later when the correct JDA modal is generated and attached to an event. It is still possible to define default
-variables. If the same key is later given a value, the default value is overwritten. To use a variable, ${VARIABLE_KEY}
-must be entered in the respective field.
+To create a modal, a class must implement the `ModalExecutor` interface and be annotated with the `@ModalDefinition` annotation. Each modal consists of a title and one or more rows, which are defined using the `@ModalRow` annotation. Variables can be defined in the @ModalDefinition for values whose value is not yet clear at the start. These are set later when the correct JDA modal is generated and attached to an event. It is still possible to define default variables. If the same key is later given a value, the default value is overwritten. To use a variable, ${VARIABLE_KEY} must be entered in the respective field.
 
 ### @ModalDefinition
 
@@ -39,36 +32,33 @@ The `@ModalRow` annotation is used to define individual input fields within the 
 
 ## Modal Execution
 
-If the modal class implements the `ModalExecutor` interface, the
-`onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables)` method must be implemented. This method
-is executed when the modal is submitted by a user. The `event` parameter provides access to the interaction event, and
-the `variables` parameter contains any variables passed to the modal on creation.
+If the modal class implements the `ModalExecutor` interface, the `onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables)` method must be implemented. This method is executed when the modal is submitted by a user. The `event` parameter provides access to the interaction event, and the `variables` parameter contains any variables passed to the modal on creation.
 
 !!! example
-=== "Java"
-```java
-@ModalDefinition(
-title = "Example Modal",
-rows = {
-@ModalRow(
-id = "name",
-label = "Your Name",
-placeholder = "Enter your name",
-inputStyle = ModalRow.InputStyle.SHORT,
-required = true
-),
-@ModalRow(
-id = "feedback",
-label = "Your Feedback",
-placeholder = "Enter your feedback",
-inputStyle = ModalRow.InputStyle.PARAGRAPH,
-minLength = 10,
-maxLength = 200
-)
-}
-)
-public class ExampleModal implements ModalExecutor {
-
+    === "Java"
+        ```java
+        @ModalDefinition(
+            title = "Example Modal",
+            rows = {
+                @ModalRow(
+                    id = "name",
+                    label = "Your Name",
+                    placeholder = "Enter your name",
+                    inputStyle = ModalRow.InputStyle.SHORT,
+                    required = true
+                ),
+                @ModalRow(
+                    id = "feedback",
+                    label = "Your Feedback",
+                    placeholder = "Enter your feedback",
+                    inputStyle = ModalRow.InputStyle.PARAGRAPH,
+                    minLength = 10,
+                    maxLength = 200
+                )
+            }
+        )
+        public class ExampleModal implements ModalExecutor {
+        
             @Override
             public void onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables) {
                 String name = event.getValue("name").getAsString();
@@ -81,14 +71,12 @@ public class ExampleModal implements ModalExecutor {
 
 ## Using Modals
 
-To use a modal, it must be triggered by an interaction, such as a button or a command. The modal can be created and
-displayed using the `event.replyModal()` method. Variables can be passed to the modal using the
-`setVariable(key, value)` method of the `AdvancedModal`.
+To use a modal, it must be triggered by an interaction, such as a button or a command. The modal can be created and displayed using the `event.replyModal()` method. Variables can be passed to the modal using the `setVariable(key, value)` method of the `AdvancedModal`.
 
 !!! example
-=== "Java"
-```java
-public class CommandClass {
+    === "Java"
+        ```java
+        public class CommandClass {
 
             @ModalByClass(ExampleModal.class)
             public TemplateModal templateModal;
