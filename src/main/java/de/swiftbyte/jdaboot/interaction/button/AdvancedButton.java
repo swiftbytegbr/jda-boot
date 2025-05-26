@@ -77,7 +77,9 @@ public class AdvancedButton {
             case LINK -> Button.link(processVar(definition.url()), label);
         };
 
-        if (!definition.emoji().isEmpty()) btn = btn.withEmoji(Emoji.fromUnicode(processVar(definition.emoji())));
+        if (!definition.emoji().isEmpty()) {
+            btn = btn.withEmoji(Emoji.fromUnicode(processVar(definition.emoji())));
+        }
 
         return btn;
     }

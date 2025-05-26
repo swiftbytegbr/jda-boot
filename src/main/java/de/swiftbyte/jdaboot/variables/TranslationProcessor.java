@@ -35,8 +35,9 @@ public class TranslationProcessor {
         Matcher m = p.matcher(newText);
 
         while (m.find()) {
-            if (getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")) != null)
+            if (getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")) != null) {
                 newText = newText.replace(m.group(), getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")));
+            }
         }
 
         return newText;
@@ -58,7 +59,7 @@ public class TranslationProcessor {
         try {
             translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
         } catch (MissingResourceException e) {
-            log.warn("Translation key not found in resources {} at:", key, e);
+            log.warn("Translation key not found in resources '{}' at:", key, e);
         }
         return translation;
     }

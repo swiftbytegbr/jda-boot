@@ -75,7 +75,8 @@ public class ExampleBot {
 }
 ```
 
-If there is a method available in your main class called `onReady()`, the method gets executed after jda-boot is initialized.
+If there is a method available in your main class called `onReady()`, the method gets executed after jda-boot is
+initialized.
 
 ### Create a Command
 
@@ -183,20 +184,23 @@ public class EmbedClass {
 ```
 
 To be able to use the template embed, it must be converted into a JDA embed
-using `embed.advancedEmbed().build()`. You can define an id to an embed and creat another embed based on this id. The new
+using `embed.advancedEmbed().build()`. You can define an id to an embed and creat another embed based on this id. The
+new
 embed then copies all values from the base embed.
 
 ### Variables and Translation
 
-It is also possible to use variables in jda-boot objects like buttons, select menus, embeds, etc. The syntax for this is 
-as follows: `${VARIABLE_NAME}`. 'VARIABLE_NAME' is a freely selectable name. It is also possible for variables to appear in a translation texts. They are set in the
+It is also possible to use variables in jda-boot objects like buttons, select menus, embeds, etc. The syntax for this is
+as follows: `${VARIABLE_NAME}`. 'VARIABLE_NAME' is a freely selectable name. It is also possible for variables to appear
+in a translation texts. They are set in the
 annotation via the defaultVars setting or via the `setVariable()` method in the Advanced Object. To be able to use
 values from the Config, a ? must be used instead of the $. The Java resources bundles are used as the translation system
 by default. The `messages.properties` file must therefore be added to the resources for the "default language". All
 others must append a language code to the file name. The file name for German would therefore
 be `messages_de.properties`. Translated content can be used in embeds as well as in most other areas of jda-boot where a
 string is required. A usage looks like this: `#{TRANSLATION_KEY}`. The translation key is the key of the translation in
-the properties file. To use values from the config in you code you can create a variable annotated with setValue("SETTING_KEY"):
+the properties file. To use values from the config in you code you can create a variable annotated with setValue("
+SETTING_KEY"):
 
 ```java
 import de.swiftbyte.jdaboot.annotation.SetValue;

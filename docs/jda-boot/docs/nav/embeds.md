@@ -1,14 +1,19 @@
 # Embeds
 
-Embeds in JDA-Boot allow you to create rich, styled messages for Discord. They can be configured using annotations and support dynamic variables, making them highly customizable. This page explains how to configure and use embeds in your bot.
+Embeds in JDA-Boot allow you to create rich, styled messages for Discord. They can be configured using annotations and
+support dynamic variables, making them highly customizable. This page explains how to configure and use embeds in your
+bot.
 
 ## Embed Configuration
 
-Embeds are defined using the `@Embed` annotation. This annotation allows you to configure various aspects of the embed, such as its title, description, author, footer, fields, and more. You can also define default variables that can be replaced dynamically at runtime.
+Embeds are defined using the `@Embed` annotation. This annotation allows you to configure various aspects of the embed,
+such as its title, description, author, footer, fields, and more. You can also define default variables that can be
+replaced dynamically at runtime.
 
 ### @Embed
 
-The `@Embed` annotation has several fields for customization. The `id` field is required, and it is recommended to set a `title` and `description` for the embed.
+The `@Embed` annotation has several fields for customization. The `id` field is required, and it is recommended to set a
+`title` and `description` for the embed.
 
 | Annotation Field | Description                                                         | Data Type         |
 |------------------|---------------------------------------------------------------------|-------------------|
@@ -63,12 +68,15 @@ The `@DefaultVariable` annotation is used to define default variables for the em
 
 ## Using Embeds
 
-To use an embed, you can create an `AdvancedEmbed` from a `TemplateEmbed` using the `advancedEmbed()` method. Variables can be set dynamically using the `setVariable(key, value)` method. You can also add dynamic fields using the `addDynamicField(title, description, inline)` method. Once configured, the embed can be built using the `build()` method and sent as part of a Discord message.
+To use an embed, you can create an `AdvancedEmbed` from a `TemplateEmbed` using the `advancedEmbed()` method. Variables
+can be set dynamically using the `setVariable(key, value)` method. You can also add dynamic fields using the
+`addDynamicField(title, description, inline)` method. Once configured, the embed can be built using the `build()` method
+and sent as part of a Discord message.
 
 !!! example
-    === "Java"
-        ```java
-        public class EmbedClass {
+=== "Java"
+```java
+public class EmbedClass {
 
             @Embed(
                 id = "exampleEmbed",
@@ -108,12 +116,13 @@ To use an embed, you can create an `AdvancedEmbed` from a `TemplateEmbed` using 
 
 ## Inheriting Embeds
 
-Embeds can inherit properties from another embed using the `basedOn` field. This allows you to define a base embed with common properties and extend it in other embeds.
+Embeds can inherit properties from another embed using the `basedOn` field. This allows you to define a base embed with
+common properties and extend it in other embeds.
 
 !!! example
-    === "Java"
-        ```java
-        public class EmbedClass {
+=== "Java"
+```java
+public class EmbedClass {
 
             @Embed(
                 id = "baseEmbed",
@@ -133,12 +142,14 @@ Embeds can inherit properties from another embed using the `basedOn` field. This
 
 ## Dynamic Variables
 
-Embeds support dynamic variables, which can be replaced at runtime. Variables are defined using the `${variable}` syntax in fields like `title`, `description`, and others. These variables can be set using the `setVariable(key, value)` method of `AdvancedEmbed`.
+Embeds support dynamic variables, which can be replaced at runtime. Variables are defined using the `${variable}` syntax
+in fields like `title`, `description`, and others. These variables can be set using the `setVariable(key, value)` method
+of `AdvancedEmbed`.
 
 !!! example
-    === "Java"
-        ```java
-        public class EmbedClass {
+=== "Java"
+```java
+public class EmbedClass {
 
             @Embed(
                 title = "Example Title",

@@ -1,12 +1,20 @@
 # Commands
 
 ## Slash Commands
-Slash Commands are the regular Discord commands which can be executed via the chat with `/`. To create a command in JDA-Boot, a `@SlashCommandDefinition` annotation must be annotated to a class that extends the `SlashCommandExecutor` class. In addition, the commands must be registered with Discord via `JDABoot.getInstance.updateCommands()` or `JDABoot.getInstance.updateCommands(guildId)`.
+
+Slash Commands are the regular Discord commands which can be executed via the chat with `/`. To create a command in
+JDA-Boot, a `@SlashCommandDefinition` annotation must be annotated to a class that extends the `SlashCommandExecutor`
+class. In addition, the commands must be registered with Discord via `JDABoot.getInstance.updateCommands()` or
+`JDABoot.getInstance.updateCommands(guildId)`.
 
 ### Command Configuration
-The `@SlashCommandDefinition` annotation has many customization options for the command. This is a list of all fields with a description of what each field does. If a command is not global, it can be registered via `JDABoot.getInstance.registerCommand(guildId, commandId)`. The command id corresponds to the name of the command.
+
+The `@SlashCommandDefinition` annotation has many customization options for the command. This is a list of all fields
+with a description of what each field does. If a command is not global, it can be registered via
+`JDABoot.getInstance.registerCommand(guildId, commandId)`. The command id corresponds to the name of the command.
 
 #### @SlashCommandDefinition
+
 The fields `name` and `type` are required. It also makes sense to set `description`.
 
 | Annotation Field   | Description                                                                                   | Data Type                             |
@@ -23,6 +31,7 @@ The fields `name` and `type` are required. It also makes sense to set `descripti
 | `subcommands`      | The subcommands that the command should have                                                  | [Subcommand[]](#subcommand)           |
 
 #### @CommandOption
+
 The fields `type`, `name` and `description` are required.
 
 | Annotation Field | Description                                         | Data Type              |
@@ -40,6 +49,7 @@ The fields `type`, `name` and `description` are required.
 | `optionChoices`  | The choices for the option                          | CommandOption.Choice[] |
 
 #### @Subcommand
+
 The fields `name` and `description` are required.
 
 | Annotation Field | Description                       | Data Type                         |
@@ -49,6 +59,7 @@ The fields `name` and `description` are required.
 | `options`        | The options of the subcommand     | [CommandOption[]](#commandoption) |
 
 #### @SubcommandGroup
+
 The fields `name` and `description` are required.
 
 | Annotation Field | Description                             | Data Type                   |
@@ -58,17 +69,24 @@ The fields `name` and `description` are required.
 | `subcommands`    | The subcommands in the subcommand group | [Subcommand[]](#subcommand) |
 
 ### Command Execution
-If the Command class is extended with SlashCommandExecutor, the `onCommand` method must be implemented. This is executed every time the command is used on Discord. The `SlashCommandInteractionEvent` is a field of the superclass with the name `event`. Optionally, the method `onEnable(SlashCommandData data)` can also be implemented. As the name suggests, this is executed when the command is initialized by JDA-Boot. In addition, the method `onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event)` can be overwritten. This is only necessary if `autoComplete = true` in a command option. The functionality is the same as with JDA. In addition to these methods, there are also other utility methods that simplify the use of [Embed Systems](embeds.md).
+
+If the Command class is extended with SlashCommandExecutor, the `onCommand` method must be implemented. This is executed
+every time the command is used on Discord. The `SlashCommandInteractionEvent` is a field of the superclass with the name
+`event`. Optionally, the method `onEnable(SlashCommandData data)` can also be implemented. As the name suggests, this is
+executed when the command is initialized by JDA-Boot. In addition, the method
+`onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event)` can be overwritten. This is only
+necessary if `autoComplete = true` in a command option. The functionality is the same as with JDA. In addition to these
+methods, there are also other utility methods that simplify the use of [Embed Systems](embeds.md).
 
 !!! example
-    === "Java"
-        ```java
-        @SlashCommandDefinition(
-                name = "ping",
-                description = "Check the bot's ping.",
-                type = SlashCommandDefinition.Type.SLASH
-        )
-        public class PingCommand extends SlashCommandExecutor {
+=== "Java"
+```java
+@SlashCommandDefinition(
+name = "ping",
+description = "Check the bot's ping.",
+type = SlashCommandDefinition.Type.SLASH
+)
+public class PingCommand extends SlashCommandExecutor {
 
             @Override
             public void onCommand() {
@@ -87,13 +105,19 @@ If the Command class is extended with SlashCommandExecutor, the `onCommand` meth
         ```
 
 ## Console Commands
-JDABoot supports a simple small console command system. It is important that the setting `enableConsoleCommands` of the `@JDABootConfiguration` annotation is enabled. Then a class that implements the `ConsoleCommandExecutor` class can be annotated with the `@ConsoleCommandDefinition` annotation. This has the field `name` which sets the name of the command and the field `aliases` which takes an array of strings and sets alternative names for the command. The command itself is implemented in the method `onCommand(String[] args)`. The arguments specified during execution are passed as an array.
+
+JDABoot supports a simple small console command system. It is important that the setting `enableConsoleCommands` of the
+`@JDABootConfiguration` annotation is enabled. Then a class that implements the `ConsoleCommandExecutor` class can be
+annotated with the `@ConsoleCommandDefinition` annotation. This has the field `name` which sets the name of the command
+and the field `aliases` which takes an array of strings and sets alternative names for the command. The command itself
+is implemented in the method `onCommand(String[] args)`. The arguments specified during execution are passed as an
+array.
 
 !!! example
-    === "Java"
-        ```java
-        @ConsoleCommandDefinition(name = "registerCommands")
-        public class RegisterCommandsCommand implements ConsoleCommandExecutor {
+=== "Java"
+```java
+@ConsoleCommandDefinition(name = "registerCommands")
+public class RegisterCommandsCommand implements ConsoleCommandExecutor {
 
             @Override
             public void onCommand(String[] args) {
@@ -104,4 +128,9 @@ JDABoot supports a simple small console command system. It is important that the
         ```
 
 ## User and Message Context Commands
-In addition to the classic slash commands, there are now also user and message context commands. These are commands that can be executed by right-clicking on a user or a message. The creation of such a command is very similar to the slash commands, in fact so similar that the same `SlashCommandDefinition` annotation is used. Only the type has to be changed and some options cannot be set. However, the `SlashCommandExecutor` may no longer be extended, but the `UserContextCommandExecutor` or `MessageContextCommandExecutor` must be implemented.
+
+In addition to the classic slash commands, there are now also user and message context commands. These are commands that
+can be executed by right-clicking on a user or a message. The creation of such a command is very similar to the slash
+commands, in fact so similar that the same `SlashCommandDefinition` annotation is used. Only the type has to be changed
+and some options cannot be set. However, the `SlashCommandExecutor` may no longer be extended, but the
+`UserContextCommandExecutor` or `MessageContextCommandExecutor` must be implemented.

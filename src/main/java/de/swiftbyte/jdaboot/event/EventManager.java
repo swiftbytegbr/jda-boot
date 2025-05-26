@@ -47,7 +47,9 @@ public class EventManager implements EventListener {
 
         for (Class<?> clazz : classes) {
             for (Method method : clazz.getMethods()) {
-                if (method.isAnnotationPresent(EventHandler.class)) methods.add(method);
+                if (method.isAnnotationPresent(EventHandler.class)) {
+                    methods.add(method);
+                }
             }
         }
 

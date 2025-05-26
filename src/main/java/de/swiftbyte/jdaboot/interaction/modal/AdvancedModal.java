@@ -140,12 +140,19 @@ public class AdvancedModal {
             };
 
             TextInput.Builder input = TextInput.create(inputId, label, style);
-            if (StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
+            if (StringUtils.isNotBlank(placeholder)) {
+                input.setPlaceholder(placeholder);
+            }
             input.setRequired(inputDefinition.required());
-            if (inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
-            if (inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
-            if (StringUtils.isNotBlank(inputDefinition.defaultValue()))
+            if (inputDefinition.maxLength() > 0) {
+                input.setMaxLength(inputDefinition.maxLength());
+            }
+            if (inputDefinition.minLength() > 0) {
+                input.setMinLength(inputDefinition.minLength());
+            }
+            if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
                 input.setValue(processVar(inputDefinition.defaultValue()));
+            }
             modal.addActionRow(input.build());
         }
 
@@ -160,12 +167,19 @@ public class AdvancedModal {
             };
 
             TextInput.Builder input = TextInput.create(inputId, label, style);
-            if (StringUtils.isNotBlank(placeholder)) input.setPlaceholder(placeholder);
+            if (StringUtils.isNotBlank(placeholder)) {
+                input.setPlaceholder(placeholder);
+            }
             input.setRequired(inputDefinition.required());
-            if (inputDefinition.maxLength() > 0) input.setMaxLength(inputDefinition.maxLength());
-            if (inputDefinition.minLength() > 0) input.setMinLength(inputDefinition.minLength());
-            if (StringUtils.isNotBlank(inputDefinition.defaultValue()))
+            if (inputDefinition.maxLength() > 0) {
+                input.setMaxLength(inputDefinition.maxLength());
+            }
+            if (inputDefinition.minLength() > 0) {
+                input.setMinLength(inputDefinition.minLength());
+            }
+            if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
                 input.setValue(processVar(inputDefinition.defaultValue()));
+            }
             modal.addActionRow(input.build());
         }
 

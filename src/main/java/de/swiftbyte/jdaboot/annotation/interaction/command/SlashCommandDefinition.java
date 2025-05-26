@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.annotation.interaction.command;
 
-import net.dv8tion.jda.annotations.ReplaceWith;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.IntegrationType;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
@@ -57,9 +56,9 @@ public @interface SlashCommandDefinition {
      * Specifies whether the command should only be used on servers and not in private messages.
      * This will override {@link SlashCommandDefinition#contexts()}
      *
-     * @deprecated will be replaced with {@link SlashCommandDefinition#contexts()}
      * @return True if the command should only be used on servers, false otherwise.
      * @since alpha.4
+     * @deprecated will be replaced with {@link SlashCommandDefinition#contexts()}
      */
     @Deprecated(since = "1.0.0-alpha.13")
     boolean guildOnly() default false;
@@ -73,7 +72,7 @@ public @interface SlashCommandDefinition {
      * @return The contexts of the command
      * @since 1.0.0-alpha.13
      */
-    InteractionContextType[] contexts() default { InteractionContextType.GUILD, InteractionContextType.BOT_DM, InteractionContextType.PRIVATE_CHANNEL };
+    InteractionContextType[] contexts() default {InteractionContextType.GUILD, InteractionContextType.BOT_DM, InteractionContextType.PRIVATE_CHANNEL};
 
     /**
      * Specifies whether the command can be installed on guilds or users
@@ -82,7 +81,7 @@ public @interface SlashCommandDefinition {
      * @return The integration types of the command
      * @since 1.0.0-alpha.13
      */
-    IntegrationType[] integrationTypes() default { IntegrationType.GUILD_INSTALL };
+    IntegrationType[] integrationTypes() default {IntegrationType.GUILD_INSTALL};
 
     /**
      * Specifies whether the command should be global.

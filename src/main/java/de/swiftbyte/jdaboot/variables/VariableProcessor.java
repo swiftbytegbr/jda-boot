@@ -62,8 +62,9 @@ public class VariableProcessor {
 
         String newText = old;
 
-        for (DefaultVariable variable : defaultVariable)
+        for (DefaultVariable variable : defaultVariable) {
             newText = newText.replace("${" + variable.variable() + "}", variable.value());
+        }
 
         Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher m = p.matcher(newText);
@@ -107,16 +108,31 @@ public class VariableProcessor {
         Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher variableMatcher = variablePattern.matcher(newText);
 
-        while (withLanguage && languageMatcher.find())
-            if (!ignoredVariables.contains(languageMatcher.group())) return true;
-        while (configMatcher.find()) if (!ignoredVariables.contains(configMatcher.group())) return true;
-        while (variableMatcher.find()) if (!ignoredVariables.contains(variableMatcher.group())) return true;
+        while (withLanguage && languageMatcher.find()) {
+            if (!ignoredVariables.contains(languageMatcher.group())) {
+                return true;
+            }
+        }
+        while (configMatcher.find()) {
+            if (!ignoredVariables.contains(configMatcher.group())) {
+                return true;
+            }
+        }
+        while (variableMatcher.find()) {
+            if (!ignoredVariables.contains(variableMatcher.group())) {
+                return true;
+            }
+        }
         return false;
     }
 
     private static String getVariable(String key, HashMap<String, String> variables) {
-        if(variables.containsKey(key)) return variables.get(key);
-        else if(GlobalVariables.hasVariable(key)) return GlobalVariables.get(key);
-        else return null;
+        if (variables.containsKey(key)) {
+            return variables.get(key);
+        } else if (GlobalVariables.hasVariable(key)) {
+            return GlobalVariables.get(key);
+        } else {
+            return null;
+        }
     }
 }

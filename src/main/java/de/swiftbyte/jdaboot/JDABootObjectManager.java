@@ -2,7 +2,10 @@ package de.swiftbyte.jdaboot;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 /**
@@ -79,11 +82,15 @@ public class JDABootObjectManager {
         try {
 
             if (Modifier.isStatic(field.getModifiers())) {
-                if (!field.canAccess(null)) field.setAccessible(true);
+                if (!field.canAccess(null)) {
+                    field.setAccessible(true);
+                }
                 field.set(null, autoCast(field.getType(), value));
             } else {
                 Object object = getOrInitialiseObject(clazz);
-                if (!field.canAccess(object)) field.setAccessible(true);
+                if (!field.canAccess(object)) {
+                    field.setAccessible(true);
+                }
                 field.set(object, autoCast(field.getType(), value));
             }
         } catch (Exception e) {
@@ -96,7 +103,7 @@ public class JDABootObjectManager {
      * we may add an interface to define a custom cast option for custom data types. This method is used to convert a setting
      * value to the needed data type.
      *
-     * @param type The type the given object should be castet to
+     * @param type   The type the given object should be castet to
      * @param object The object to cast
      * @return The castet object
      * @since 1.0.0-alpha.12
@@ -124,9 +131,9 @@ public class JDABootObjectManager {
                 case "byte" -> num.byteValue();
                 default -> object;
             };
-        } else if(object instanceof Boolean bool) {
+        } else if (object instanceof Boolean bool) {
             return bool;
-        } else if(object instanceof Character ch) {
+        } else if (object instanceof Character ch) {
             return ch;
         }
 
@@ -157,11 +164,15 @@ public class JDABootObjectManager {
     public static Object runMethod(Class<?> clazz, Method method, Object... args) {
         try {
             if (Modifier.isStatic(method.getModifiers())) {
-                if (!method.canAccess(null)) method.setAccessible(true);
+                if (!method.canAccess(null)) {
+                    method.setAccessible(true);
+                }
                 return method.invoke(null, args);
             } else {
                 Object object = getOrInitialiseObject(clazz);
-                if (!method.canAccess(object)) method.setAccessible(true);
+                if (!method.canAccess(object)) {
+                    method.setAccessible(true);
+                }
                 return method.invoke(object, args);
             }
         } catch (Exception e) {

@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.IntegrationType;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -21,7 +20,9 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The CommandManager class is responsible for managing commands in the application.
@@ -67,7 +68,9 @@ public class CommandManager extends ListenerAdapter {
                 }
                 commandData.put(data.getName(), data);
                 commands.put(data.getName(), cmd);
-                if (!annotation.isGlobal()) return;
+                if (!annotation.isGlobal()) {
+                    return;
+                }
                 jda.upsertCommand(data).queue();
                 cmd.onEnable((SlashCommandData) data);
                 log.info("Registered slash command {}", clazz.getName());
@@ -82,7 +85,9 @@ public class CommandManager extends ListenerAdapter {
                 }
                 commandData.put(data.getName(), data);
                 contextCommands.put(data.getName(), cmd);
-                if (!annotation.isGlobal()) return;
+                if (!annotation.isGlobal()) {
+                    return;
+                }
                 jda.upsertCommand(data).queue();
                 cmd.onEnable(data);
                 log.info("Registered user context command {}", clazz.getName());
@@ -97,7 +102,9 @@ public class CommandManager extends ListenerAdapter {
                 }
                 commandData.put(data.getName(), data);
                 contextCommands.put(data.getName(), cmd);
-                if (!annotation.isGlobal()) return;
+                if (!annotation.isGlobal()) {
+                    return;
+                }
                 jda.upsertCommand(data).queue();
                 cmd.onEnable(data);
                 log.info("Registered message context command {}", clazz.getName());
@@ -220,10 +227,11 @@ public class CommandManager extends ListenerAdapter {
         SlashCommandData data = Commands.slash(id, description);
 
         //Command
-        if (command.enabledFor() != Permission.UNKNOWN)
+        if (command.enabledFor() != Permission.UNKNOWN) {
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        }
 
-        if(command.guildOnly()) {
+        if (command.guildOnly()) {
             data.setContexts(InteractionContextType.GUILD);
         } else {
             data.setContexts(command.contexts());
@@ -270,10 +278,11 @@ public class CommandManager extends ListenerAdapter {
             data = Commands.message(id);
         }
 
-        if (command.enabledFor() != Permission.UNKNOWN)
+        if (command.enabledFor() != Permission.UNKNOWN) {
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
+        }
 
-        if(command.guildOnly()) {
+        if (command.guildOnly()) {
             data.setContexts(InteractionContextType.GUILD);
         } else {
             data.setContexts(command.contexts());
@@ -322,17 +331,28 @@ public class CommandManager extends ListenerAdapter {
             String optionDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, option.description());
             OptionData optionData = new OptionData(option.type(), optionId, optionDescription, option.required(), option.autoComplete());
 
-            if (option.maxLength() > 0) optionData.setMaxLength(option.maxLength());
-            if (option.minLength() > 0) optionData.setMinLength(option.minLength());
-            if (option.maxValue() > 0) optionData.setMaxValue(option.maxValue());
-            if (option.minValue() > 0) optionData.setMinValue(option.minValue());
-            if (option.type().equals(OptionType.CHANNEL)) optionData.setChannelTypes(option.channelTypes());
+            if (option.maxLength() > 0) {
+                optionData.setMaxLength(option.maxLength());
+            }
+            if (option.minLength() > 0) {
+                optionData.setMinLength(option.minLength());
+            }
+            if (option.maxValue() > 0) {
+                optionData.setMaxValue(option.maxValue());
+            }
+            if (option.minValue() > 0) {
+                optionData.setMinValue(option.minValue());
+            }
+            if (option.type().equals(OptionType.CHANNEL)) {
+                optionData.setChannelTypes(option.channelTypes());
+            }
             optionData.setNameLocalizations(generateDiscordLocalised(option.name()));
             optionData.setDescriptionLocalizations(generateDiscordLocalised(option.description()));
 
             //Choices
-            for (CommandOption.Choice choice : option.optionChoices())
+            for (CommandOption.Choice choice : option.optionChoices()) {
                 optionData.addChoice(choice.name(), choice.value());
+            }
 
             optionDataList.add(optionData);
         }

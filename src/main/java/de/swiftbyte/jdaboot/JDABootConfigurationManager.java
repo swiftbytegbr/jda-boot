@@ -157,7 +157,9 @@ public class JDABootConfigurationManager {
         new EmbedManager(mainClass);
         new SchedulerManager(mainClass);
 
-        if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
+        if (consoleCommandsEnabled) {
+            new ConsoleCommandManager(mainClass);
+        }
         new ConfigValueManager(mainClass);
     }
 
@@ -169,7 +171,7 @@ public class JDABootConfigurationManager {
      * @since 1.0.0-beta.1
      */
     protected static void initialiseGlobalVariables(JDA jda) {
-        GlobalVariables.setDynamicValue("guildCount", () ->  Integer.toString(jda.getGuilds().size()));
+        GlobalVariables.setDynamicValue("guildCount", () -> Integer.toString(jda.getGuilds().size()));
         GlobalVariables.setDynamicValue("selfUsername", () -> jda.getSelfUser().getName());
         GlobalVariables.setDynamicValue("shardCount", () -> Integer.toString(jda.getShardInfo().getShardTotal()));
     }

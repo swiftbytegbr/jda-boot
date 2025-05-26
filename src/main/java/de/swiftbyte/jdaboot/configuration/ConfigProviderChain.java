@@ -64,7 +64,9 @@ public class ConfigProviderChain extends ConfigProvider {
      */
     public ConfigProvider getProviderInChain(Class<?> clazz) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.getClass().equals(clazz)) return provider;
+            if (provider.getClass().equals(clazz)) {
+                return provider;
+            }
         }
         return null;
     }
@@ -107,7 +109,9 @@ public class ConfigProviderChain extends ConfigProvider {
     @Override
     public Object get(String key, Object defaultValue) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.hasKey(key)) return provider.get(key, defaultValue);
+            if (provider.hasKey(key)) {
+                return provider.get(key, defaultValue);
+            }
         }
         return defaultValue;
     }
@@ -124,7 +128,9 @@ public class ConfigProviderChain extends ConfigProvider {
     @Override
     public String getString(String key, String defaultValue) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.hasKey(key)) return provider.getString(key, defaultValue);
+            if (provider.hasKey(key)) {
+                return provider.getString(key, defaultValue);
+            }
         }
         return defaultValue;
     }
@@ -140,7 +146,9 @@ public class ConfigProviderChain extends ConfigProvider {
     @Override
     public int getInt(String key, int defaultValue) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.hasKey(key)) return provider.getInt(key, defaultValue);
+            if (provider.hasKey(key)) {
+                return provider.getInt(key, defaultValue);
+            }
         }
         return defaultValue;
     }
@@ -156,7 +164,9 @@ public class ConfigProviderChain extends ConfigProvider {
     @Override
     public boolean getBoolean(String key, boolean defaultValue) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.hasKey(key)) return provider.getBoolean(key, defaultValue);
+            if (provider.hasKey(key)) {
+                return provider.getBoolean(key, defaultValue);
+            }
         }
         return defaultValue;
     }
@@ -171,7 +181,9 @@ public class ConfigProviderChain extends ConfigProvider {
     @Override
     public boolean hasKey(String key) {
         for (ConfigProvider provider : providerChain) {
-            if (provider.hasKey(key)) return true;
+            if (provider.hasKey(key)) {
+                return true;
+            }
         }
         return false;
     }

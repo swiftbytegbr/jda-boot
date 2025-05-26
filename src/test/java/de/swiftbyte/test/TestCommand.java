@@ -39,7 +39,7 @@ public class TestCommand extends SlashCommandExecutor {
     @Embed(
             basedOn = "testEmbed",
             title = "${test}Test",
-            author = @EmbedAuthor(name = "${name}${test}"),
+            author = @EmbedAuthor(name = "${selfUsername}"),
             fields = {
                     @EmbedField(description = "#{test2}#{nested}")
             },
