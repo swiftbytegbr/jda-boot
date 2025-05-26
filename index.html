@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="assets/swiftbyte_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.2afb09e1.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.342714a4.min.css">
       
       
 
@@ -242,15 +242,6 @@
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       Installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roadmap" class="md-nav__link">
-    <span class="md-ellipsis">
-      Roadmap
     </span>
   </a>
   
@@ -481,7 +472,7 @@
   
   
   <span class="md-ellipsis">
-    Translation and Configuration
+    Translation, Configuration and Variables
     
   </span>
   
@@ -536,53 +527,66 @@
 <p>This project uses <a href="https://github.com/DV8FromTheWorld/JDA">JDA</a> by <a href="https://github.com/DV8FromTheWorld/">Austin Keener</a>.</p>
 <p>New to JDA-Boot? Check out the <a href="nav/getting-started/">Getting Started page</a>!</p>
 <h2 id="why-jda-boot">Why JDA-Boot?<a class="headerlink" href="#why-jda-boot" title="Permanent link">&para;</a></h2>
-<p>JDA-Boot aims to simplify Discord Bot development by providing pre-built tools. This allows developers to focus on the essentials of bot development without having to spend hours on a custom command system, for example. Nevertheless, we still use JDA, which is why everything that is already possible with JDA can be implemented. This ensures maximum flexibility. In addition, JDA-Boot is built in such a way that it can easily be extended if the existing functionality is not sufficient.</p>
+<p>JDA-Boot aims to simplify Discord Bot development by providing pre-built tools. This allows developers to focus on the
+essentials of bot development without having to spend hours on a custom command system, for example. Nevertheless, we
+still use JDA, which is why everything that is already possible with JDA can be implemented. This ensures maximum
+flexibility. In addition, JDA-Boot is built in such a way that it can easily be extended if the existing functionality
+is not sufficient.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>JDA-Boot can easily be added to your project via the <a href="https://central.sonatype.com/artifact/de.swiftbyte/jda-boot">Maven Central Repository</a>. Please replace 'VERSION' with the current
+<p>JDA-Boot can easily be added to your project via
+the <a href="https://central.sonatype.com/artifact/de.swiftbyte/jda-boot">Maven Central Repository</a>. Please replace 'VERSION'
+with the current
 jda-boot version.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Maven</label><label for="__tabbed_1_2">Gradle</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Maven</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
+<div class="tabbed-block"></div>
+</div>
+</div>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">  </span><span class="nt">&lt;groupId&gt;</span>de.swiftbyte<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>jda-boot<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;version&gt;</span>VERSION<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Gradle</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
 </div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">mavenCentral</span><span class="o">()</span>
+</div>
+<p><div class="highlight"><pre><span></span><code><span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
+<span class="n">mavenCentral</span><span class="o">()</span>
 <span class="o">}</span>
 
-<span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="s1">&#39;de.swiftbyte:jda-boot:VERSION&#39;</span>
-<span class="o">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>✅ = Implemented, 🚧 = Work in Progress, ⛔ = ToDo
+<span class="w">    </span><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">implementation</span><span class="w"> </span><span class="s1">&#39;de.swiftbyte:jda-boot:VERSION&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="err">```</span>
 
-- ✅ Commands
-- ✅ Option Commands
-- ✅ Events
-- ✅ Embeds
-- ✅ Variable System
-- ✅ internationalization (i18n)
-- ✅ Config System
-- ✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
-- ✅ .env configuration support
-- ✅ Updated and improved docs
-- ⛔ Improved Kotlin friendliness
-- ⛔ Database ORM System
-- ⛔ Better error handling
-- ✅ Variable transfer between commands, buttons, and modals
-    - ⛔ Options to save variables and random command ids between bot restarts
-- ✅ Scheduler System
-- ✅ Functionality to set a voice dispatch interceptor
+<span class="err">##</span><span class="w"> </span><span class="n">Roadmap</span>
 </code></pre></div>
+✅ = Implemented, 🚧 = Work in Progress, ⛔ = ToDo</p>
+<ul>
+<li>✅ Commands</li>
+<li>✅ Option Commands</li>
+<li>✅ Events</li>
+<li>✅ Embeds</li>
+<li>✅ Variable System</li>
+<li>✅ internationalization (i18n)</li>
+<li>✅ Config System</li>
+<li>✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)</li>
+<li>✅ .env configuration support</li>
+<li>✅ Updated and improved docs</li>
+<li>⛔ Improved Kotlin friendliness</li>
+<li>⛔ Database ORM System</li>
+<li>⛔ Better error handling</li>
+<li>✅ Variable transfer between commands, buttons, and modals<ul>
+<li>⛔ Options to save variables and random command ids between bot restarts</li>
+</ul>
+</li>
+<li>✅ Scheduler System</li>
+<li>✅ Functionality to set a voice dispatch interceptor
+```</li>
+</ul>
 
 
 
@@ -727,10 +731,10 @@ jda-boot version.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": ".", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>

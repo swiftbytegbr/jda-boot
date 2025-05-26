@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/swiftbyte_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
       
 
@@ -412,7 +412,7 @@
   
   
   <span class="md-ellipsis">
-    Translation and Configuration
+    Translation, Configuration and Variables
     
   </span>
   
@@ -548,9 +548,12 @@
 
 
 <h1 id="scheduler">Scheduler<a class="headerlink" href="#scheduler" title="Permanent link">&para;</a></h1>
-<p>The Scheduler system in JDA-Boot allows you to execute recurring tasks at specified intervals. Schedulers are configured using the <code>@Scheduler</code> annotation and can be used to automate periodic actions in your bot. This page explains how to configure and use schedulers in your project.</p>
+<p>The Scheduler system in JDA-Boot allows you to execute recurring tasks at specified intervals. Schedulers are configured
+using the <code>@Scheduler</code> annotation and can be used to automate periodic actions in your bot. This page explains how to
+configure and use schedulers in your project.</p>
 <h2 id="scheduler-configuration">Scheduler Configuration<a class="headerlink" href="#scheduler-configuration" title="Permanent link">&para;</a></h2>
-<p>To create a scheduler, a method must be annotated with the <code>@Scheduler</code> annotation. The method will be executed periodically based on the specified interval and initial delay.</p>
+<p>To create a scheduler, a method must be annotated with the <code>@Scheduler</code> annotation. The method will be executed
+periodically based on the specified interval and initial delay.</p>
 <h3 id="scheduler_1">@Scheduler<a class="headerlink" href="#scheduler_1" title="Permanent link">&para;</a></h3>
 <p>The <code>@Scheduler</code> annotation is used to define the configuration of a scheduler.</p>
 <table>
@@ -581,29 +584,31 @@
 <li>If the return type is <code>boolean</code>, returning <code>false</code> stops the scheduler.</li>
 </ul>
 <h2 id="scheduler-execution">Scheduler Execution<a class="headerlink" href="#scheduler-execution" title="Permanent link">&para;</a></h2>
-<p>When the bot starts, all methods annotated with <code>@Scheduler</code> are automatically registered and executed based on their configuration. The scheduler will continue to run until the method returns <code>false</code>.</p>
+<p>When the bot starts, all methods annotated with <code>@Scheduler</code> are automatically registered and executed based on their
+configuration. The scheduler will continue to run until the method returns <code>false</code>.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
+</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExampleScheduler</span><span class="w"> </span><span class="p">{</span>
+<div class="tabbed-block"></div>
+</div>
+</div>
+<p>```java
+public class ExampleScheduler {</p>
+<pre><code>        private int counter = 0;
 
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Scheduler</span><span class="p">(</span><span class="n">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="n">initialDelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">runScheduler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">counter</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Scheduler executed &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; times.&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="c1">// Stops after 5 executions</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-</div>
-<p>In this example, the <code>runScheduler</code> method is executed every 10 seconds, starting 5 seconds after the bot starts. The scheduler stops after 5 executions.</p>
+        @Scheduler(interval = 10000, initialDelay = 5000)
+        private boolean runScheduler() {
+            counter++;
+            System.out.println("Scheduler executed " + counter + " times.");
+            return counter &lt; 5; // Stops after 5 executions
+        }
+    }
+    ```
+</code></pre>
+<p>In this example, the <code>runScheduler</code> method is executed every 10 seconds, starting 5 seconds after the bot starts. The
+scheduler stops after 5 executions.</p>
 
 
 
@@ -635,7 +640,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../translation-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Translation and Configuration">
+          <a href="../translation-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Translation, Configuration and Variables">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -645,7 +650,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Translation and Configuration
+                Translation, Configuration and Variables
               </div>
             </div>
           </a>
@@ -748,10 +753,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>

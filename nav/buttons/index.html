@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/swiftbyte_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
       
 
@@ -498,7 +498,7 @@
   
   
   <span class="md-ellipsis">
-    Translation and Configuration
+    Translation, Configuration and Variables
     
   </span>
   
@@ -550,11 +550,18 @@
 
 
 <h1 id="buttons">Buttons<a class="headerlink" href="#buttons" title="Permanent link">&para;</a></h1>
-<p>Buttons have a configuration part and an execution part, similar to a command. However, there is extended logic to be able to use buttons easily and an option to use variables. Um einen Knopf zu erstellen muss eine Klasse die Klasse <code>ButtonExecutor</code> implementieren und von der <code>@ButtonDefinition</code> Annotation annotiert werden.</p>
+<p>Buttons have a configuration part and an execution part, similar to a command. However, there is extended logic to be
+able to use buttons easily and an option to use variables. Um einen Knopf zu erstellen muss eine Klasse die Klasse
+<code>ButtonExecutor</code> implementieren und von der <code>@ButtonDefinition</code> Annotation annotiert werden.</p>
 <h2 id="button-configuration">Button Configuration<a class="headerlink" href="#button-configuration" title="Permanent link">&para;</a></h2>
-<p>Variables can be defined in the <code>@ButtonDefinition</code> for values whose value is not yet clear at the start. These are set later when the correct JDA button is generated and attached to an event. It is still possible to define default variables. If the same key is later given a value, the default value is overwritten. To use a variable, <code>${VARIABLE_KEY}</code> must be entered in the respective field.</p>
+<p>Variables can be defined in the <code>@ButtonDefinition</code> for values whose value is not yet clear at the start. These are set
+later when the correct JDA button is generated and attached to an event. It is still possible to define default
+variables. If the same key is later given a value, the default value is overwritten. To use a variable,
+<code>${VARIABLE_KEY}</code> must be entered in the respective field.</p>
 <h4 id="buttondefinition">@ButtonDefinition<a class="headerlink" href="#buttondefinition" title="Permanent link">&para;</a></h4>
-<p>The fields <code>label</code> and <code>type</code> are required. If the <code>id</code> field is not set, JDA-Boot generates a new random ID each time it is booted. If a button already attached to a message should continue to work even after a restart of the bot, a fixed ID must be defined.</p>
+<p>The fields <code>label</code> and <code>type</code> are required. If the <code>id</code> field is not set, JDA-Boot generates a new random ID each time
+it is booted. If a button already attached to a message should continue to work even after a restart of the bot, a fixed
+ID must be defined.</p>
 <table>
 <thead>
 <tr>
@@ -597,56 +604,68 @@
 </tbody>
 </table>
 <h2 id="button-execution">Button Execution<a class="headerlink" href="#button-execution" title="Permanent link">&para;</a></h2>
-<p>If the button class implements the <code>ButtonExecutor</code> interface, the method <code>onButtonClick(ButtonInteractionEvent event, HashMap&lt;String, String&gt; variables)</code> must be implemented. <code>event</code> is the triggered ButtonInteractionEvent and <code>variables</code> is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during button initialization can then be found in this HashMap.</p>
+<p>If the button class implements the <code>ButtonExecutor</code> interface, the method
+<code>onButtonClick(ButtonInteractionEvent event, HashMap&lt;String, String&gt; variables)</code> must be implemented. <code>event</code> is the
+triggered ButtonInteractionEvent and <code>variables</code> is responsible for the variable transfer. The variable transfer only
+works with randomly generated IDs and only if the button was generated after the last restart. The variables specified
+during button initialization can then be found in this HashMap.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
+</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nd">@ButtonDefinition</span><span class="p">(</span>
-<span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Test&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;test_button&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ButtonDefinition</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">PRIMARY</span>
-<span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TestButton</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ButtonExecutor</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onButtonClick</span><span class="p">(</span><span class="n">ButtonInteractionEvent</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">variables</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;Button clicked!&quot;</span><span class="p">).</span><span class="na">queue</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="tabbed-block"></div>
 </div>
 </div>
-</div>
-</div>
+<p>```java
+@ButtonDefinition(
+label = "Test",
+id = "test_button",
+type = ButtonDefinition.Type.PRIMARY
+)
+public class TestButton implements ButtonExecutor {</p>
+<pre><code>        public void onButtonClick(ButtonInteractionEvent event, HashMap&lt;String, String&gt; variables) {
+            event.reply("Button clicked!").queue();
+        }
+    }
+    ```
+</code></pre>
 <h2 id="using-buttons">Using Buttons<a class="headerlink" href="#using-buttons" title="Permanent link">&para;</a></h2>
-<p>To be able to use the previously created button, we need to embed it in other parts of JDA-Boot. For this, there are the annotations <code>@ButtonById</code> or <code>@ButtonByClass</code>, which must annotate a field with the type <code>TemplateButton</code>. On startup, JDA-Boot sets the respective field to the corresponding <code>TemplateButton</code>. To be able to use the button, an <code>AdvancedButton</code> must first be created from the <code>TemplateButton</code> using the <code>advancedButton()</code> or <code>advancedButton(discordLocale)</code> method. The second method is important if the bot is supposed to <a href="../translation-configuration/#translation-system">implement different languages</a>. Variables can then be set in the <code>AdvancedButton</code> using the <code>setVariable(key, value)</code> method. To finally pass the button to an event, a JDA <code>Button</code> must be created from the <code>AdvancedButton</code> using the <code>build()</code> method.</p>
+<p>To be able to use the previously created button, we need to embed it in other parts of JDA-Boot. For this, there are the
+annotations <code>@ButtonById</code> or <code>@ButtonByClass</code>, which must annotate a field with the type <code>TemplateButton</code>. On startup,
+JDA-Boot sets the respective field to the corresponding <code>TemplateButton</code>. To be able to use the button, an
+<code>AdvancedButton</code> must first be created from the <code>TemplateButton</code> using the <code>advancedButton()</code> or
+<code>advancedButton(discordLocale)</code> method. The second method is important if the bot is supposed
+to <a href="../translation-configuration/#translation-system">implement different languages</a>. Variables can then be set in the
+<code>AdvancedButton</code> using the <code>setVariable(key, value)</code> method. To finally pass the button to an event, a JDA <code>Button</code> must
+be created from the <code>AdvancedButton</code> using the <code>build()</code> method.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
+</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nd">@ButtonByClass</span><span class="p">(</span><span class="n">TestButton</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">TemplateButton</span><span class="w"> </span><span class="n">button</span><span class="p">;</span>
-
-<span class="nd">@SlashCommandDefinition</span><span class="p">(</span>
-<span class="w">        </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SlashCommandDefinition</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">SLASH</span>
-<span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TestCommand</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">SlashCommandExecutor</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCommand</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">reply</span><span class="p">(</span><span class="s">&quot;Test&quot;</span><span class="p">).</span><span class="na">addActionRow</span><span class="p">(</span><span class="n">button</span><span class="p">.</span><span class="na">advancedButton</span><span class="p">().</span><span class="na">build</span><span class="p">()).</span><span class="na">queue</span><span class="p">();</span>
-
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="tabbed-block"></div>
 </div>
 </div>
-</div>
-</div>
+<p>```java</p>
+<pre><code>    @ButtonByClass(TestButton.class)
+    public TemplateButton button;
+
+    @SlashCommandDefinition(
+            name = "test",
+            type = SlashCommandDefinition.Type.SLASH
+    )
+    public class TestCommand extends SlashCommandExecutor {
+
+        @Override
+        public void onCommand() {
+
+            event.reply("Test").addActionRow(button.advancedButton().build()).queue();
+
+        }
+    }
+    ```
+</code></pre>
 
 
 
@@ -807,10 +826,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "toc.integrate", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
