@@ -12,6 +12,7 @@ import de.swiftbyte.jdaboot.interaction.command.CommandManager;
 import de.swiftbyte.jdaboot.interaction.modal.ModalManager;
 import de.swiftbyte.jdaboot.interaction.selection.SelectMenuManager;
 import de.swiftbyte.jdaboot.scheduler.SchedulerManager;
+import de.swiftbyte.jdaboot.variables.GlobalVariables;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -156,7 +157,22 @@ public class JDABootConfigurationManager {
         new EmbedManager(mainClass);
         new SchedulerManager(mainClass);
 
-        if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
+        if (consoleCommandsEnabled) {
+            new ConsoleCommandManager(mainClass);
+        }
         new ConfigValueManager(mainClass);
+    }
+
+    /**
+     * Initializes global variables that provide dynamic values from the JDA instance.
+     * These variables can be accessed at runtime and always reflect the current state.
+     *
+     * @param jda The JDA instance from which the values are retrieved.
+     * @since 1.0.0-beta.1
+     */
+    protected static void initialiseGlobalVariables(JDA jda) {
+        GlobalVariables.setDynamicValue("guildCount", () -> Integer.toString(jda.getGuilds().size()));
+        GlobalVariables.setDynamicValue("selfUsername", () -> jda.getSelfUser().getName());
+        GlobalVariables.setDynamicValue("shardCount", () -> Integer.toString(jda.getShardInfo().getShardTotal()));
     }
 }

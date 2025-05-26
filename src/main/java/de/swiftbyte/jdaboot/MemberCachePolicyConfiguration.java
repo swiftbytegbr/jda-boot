@@ -14,7 +14,8 @@ public enum MemberCachePolicyConfiguration {
     VOICE,
     OWNER,
     PENDING,
-    NONE;
+    NONE,
+    BOOSTER;
 
     /**
      * This method is used to get the corresponding JDA's MemberCachePolicy for the enum constant.
@@ -29,6 +30,7 @@ public enum MemberCachePolicyConfiguration {
             case OWNER -> MemberCachePolicy.OWNER;
             case PENDING -> MemberCachePolicy.PENDING;
             case NONE -> MemberCachePolicy.NONE;
+            case BOOSTER -> MemberCachePolicy.BOOSTER;
             default -> MemberCachePolicy.DEFAULT;
         };
     }

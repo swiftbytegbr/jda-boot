@@ -46,7 +46,9 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public String getString(String key, String defaultValue) {
-        if (properties.getProperty(key) == null) return defaultValue;
+        if (properties.getProperty(key) == null) {
+            return defaultValue;
+        }
         return properties.getProperty(key);
     }
 
@@ -100,8 +102,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
         properties = new Properties();
 
         String configFileName;
-        if (configProfile.equals("default")) configFileName = "config.properties";
-        else configFileName = "config-" + configProfile + ".properties";
+        if (configProfile.equals("default")) {
+            configFileName = "config.properties";
+        } else {
+            configFileName = "config-" + configProfile + ".properties";
+        }
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
             if (resourceStream != null) {

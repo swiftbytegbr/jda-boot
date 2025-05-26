@@ -171,18 +171,23 @@ public class JDABoot {
 
         builder.setMemberCachePolicy(JDABootConfigurationManager.getMemberCachePolicy());
 
-        if (allow.isEmpty()) builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
-        else builder.setEnabledIntents(allow);
+        if (allow.isEmpty()) {
+            builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT));
+        } else {
+            builder.setEnabledIntents(allow);
+        }
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {
             if (declaredMethod.getName().equalsIgnoreCase("getVoiceDispatchInterceptor")) {
-                if (VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType()))
+                if (VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType())) {
                     builder.setVoiceDispatchInterceptor((VoiceDispatchInterceptor) JDABootObjectManager.runMethod(mainClass, declaredMethod));
+                }
             }
         }
 
         this.jda = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, jda);
+        JDABootConfigurationManager.initialiseGlobalVariables(jda);
         jda.awaitReady();
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {

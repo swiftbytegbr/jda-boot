@@ -73,8 +73,9 @@ public class AdvancedEmbed {
      */
     public AdvancedEmbed setVariable(String variable, String value) {
 
-        if (variable == null || value == null)
+        if (variable == null || value == null) {
             throw new NullPointerException("Can not use null as variable key or value on variable " + variable);
+        }
 
         variables.put(variable, value);
         return this;
@@ -161,59 +162,79 @@ public class AdvancedEmbed {
      * @since alpha.4
      */
     public MessageEmbed build(Instant timestamp) {
+
+        return generateEmbedBuilder(timestamp).build();
+    }
+
+    /**
+     * Generates a EmbedBuilder based on the template and the set variables, with the specified timestamp.
+     *
+     * @param timestamp The timestamp to set in the embed.
+     * @return The generated EmbedBuilder.
+     * @since 1.0.0-beta.1
+     */
+    private EmbedBuilder generateEmbedBuilder(Instant timestamp) {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
 
         if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
             if (basedOn != null) {
-                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).build(timestamp));
+                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).generateEmbedBuilder(timestamp));
             } else {
                 log.error("Embed with ID {} is based on an unknown embed with ID {}!", embed.id(), embed.basedOn());
             }
         }
 
-        if(StringUtils.isNotBlank(embed.title())) {
+        if (StringUtils.isNotBlank(embed.title())) {
             String title = processVar(embed.title());
             String url = processVar(embed.url());
-            if (StringUtils.isNotBlank(title))
+            if (StringUtils.isNotBlank(title)) {
                 builder.setTitle(title, StringUtils.isNotBlank(url) ? url : null);
+            }
         }
 
-        if(StringUtils.isNotBlank(embed.thumbnailUrl())) {
+        if (StringUtils.isNotBlank(embed.thumbnailUrl())) {
             String thumbnailUrl = processVar(embed.thumbnailUrl());
-            if (StringUtils.isNotBlank(thumbnailUrl))
+            if (StringUtils.isNotBlank(thumbnailUrl)) {
                 builder.setThumbnail(thumbnailUrl);
+            }
         }
 
-        if(StringUtils.isNotBlank(embed.imageUrl())) {
+        if (StringUtils.isNotBlank(embed.imageUrl())) {
             String imageUrl = processVar(embed.imageUrl());
-            if (StringUtils.isNotBlank(imageUrl))
+            if (StringUtils.isNotBlank(imageUrl)) {
                 builder.setImage(imageUrl);
+            }
         }
 
-        if(StringUtils.isNotBlank(embed.description())) {
+        if (StringUtils.isNotBlank(embed.description())) {
             String description = processVar(embed.description());
-            if (StringUtils.isNotBlank(description)) builder.setDescription(description);
+            if (StringUtils.isNotBlank(description)) {
+                builder.setDescription(description);
+            }
         }
 
         String hexColor = processVar(embed.hexColor());
-        if (StringUtils.isNotBlank(hexColor) || embed.color().getColor() != null)
+        if (StringUtils.isNotBlank(hexColor) || embed.color().getColor() != null) {
             builder.setColor(StringUtils.isNotBlank(hexColor) ? Color.decode(hexColor) : embed.color().getColor());
+        }
 
-        if(StringUtils.isNotBlank(embed.author().name())) {
+        if (StringUtils.isNotBlank(embed.author().name())) {
             String authorName = processVar(embed.author().name());
             String authorUrl = processVar(embed.author().url());
             String authorIconUrl = processVar(embed.author().iconUrl());
-            if (StringUtils.isNotBlank(authorName))
+            if (StringUtils.isNotBlank(authorName)) {
                 builder.setAuthor(authorName, StringUtils.isNotBlank(authorUrl) ? authorUrl : null, StringUtils.isNotBlank(authorIconUrl) ? authorIconUrl : null);
+            }
         }
 
-        if(StringUtils.isNotBlank(embed.footer().text())) {
+        if (StringUtils.isNotBlank(embed.footer().text())) {
             String footerText = processVar(embed.footer().text());
             String footerIconUrl = processVar(embed.footer().iconUrl());
-            if (StringUtils.isNotBlank(footerText))
+            if (StringUtils.isNotBlank(footerText)) {
                 builder.setFooter(footerText, StringUtils.isNotBlank(footerIconUrl) ? footerIconUrl : null);
+            }
         }
 
         for (EmbedField embedField : embed.fields()) {
@@ -224,9 +245,11 @@ public class AdvancedEmbed {
             builder.addField(processVar(dynamicField.title()), processVar(dynamicField.description()), dynamicField.inline());
         }
 
-        if (timestamp != null) builder.setTimestamp(timestamp);
+        if (timestamp != null) {
+            builder.setTimestamp(timestamp);
+        }
 
-        return builder.build();
+        return builder;
     }
 
     /**

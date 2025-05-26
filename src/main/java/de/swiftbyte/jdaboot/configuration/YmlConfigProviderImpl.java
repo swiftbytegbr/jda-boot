@@ -30,8 +30,11 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     public void reload() {
 
         String configFileName;
-        if (configProfile.equals("default")) configFileName = "config.yml";
-        else configFileName = "config-" + configProfile + ".yml";
+        if (configProfile.equals("default")) {
+            configFileName = "config.yml";
+        } else {
+            configFileName = "config-" + configProfile + ".yml";
+        }
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
             if (resourceStream != null) {

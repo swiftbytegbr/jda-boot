@@ -3,28 +3,45 @@ site_description: JDA-Boot is an annotation-driven JDA framework that lets you c
 repo_name: JDA-Boot
 repo_url: https://github.com/swiftbytegbr/jda-boot/
 site_url: https://jda-boot.swiftbyte.de/
-
+copyright: Copyright &copy; 2025 JDA-Boot Developers
 nav:
   - Home: index.md
   - Getting Started: nav/getting-started.md
   - Interactions:
-    - Commands: nav/commands.md
-    - Buttons: nav/buttons.md
-    - Select Menus: nav/select-menus.md
-    - Modals: nav/modals.md
+      - Commands: nav/commands.md
+      - Buttons: nav/buttons.md
+      - Select Menus: nav/select-menus.md
+      - Modals: nav/modals.md
   - Embeds: nav/embeds.md
   - Events: nav/events.md
-  - Translation and Configuration: nav/translation-configuration.md
+  - Translation, Configuration and Variables: nav/translation-configuration.md
   - Scheduler: nav/scheduler.md
 
 theme:
-    name: material
-    features:
+  name: material
+  custom_dir: overrides
+  logo: assets/swiftbyte_logo.png
+  favicon: assets/swiftbyte_logo.png
+  features:
     - content.tabs.link
     - content.code.copy
     - toc.integrate
     - navigation.expand
     - navigation.footer
+
+extra:
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  footer_links:
+    - text: "Privacy Policy"
+      href: "/nav/legal/privacy-policy"
+    - text: "Imprint"
+      href: "/nav/legal/imprint"
 
 markdown_extensions:
   - pymdownx.superfences
@@ -35,3 +52,6 @@ markdown_extensions:
   - tables
   - admonition
   - pymdownx.details
+
+plugins:
+  - privacy

@@ -36,7 +36,9 @@ public class EmbedManager {
 
             TemplateEmbed templateEmbed = new TemplateEmbed(embedAnnotation);
 
-            if (StringUtils.isNotBlank(embedAnnotation.id())) templateEmbeds.put(embedAnnotation.id(), templateEmbed);
+            if (StringUtils.isNotBlank(embedAnnotation.id())) {
+                templateEmbeds.put(embedAnnotation.id(), templateEmbed);
+            }
 
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, templateEmbed);
 
