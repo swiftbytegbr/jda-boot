@@ -183,6 +183,7 @@ public class JDABoot {
 
         this.jda = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, jda);
+        JDABootConfigurationManager.initialiseGlobalVariables(jda);
         jda.awaitReady();
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {

@@ -12,6 +12,7 @@ import de.swiftbyte.jdaboot.interaction.command.CommandManager;
 import de.swiftbyte.jdaboot.interaction.modal.ModalManager;
 import de.swiftbyte.jdaboot.interaction.selection.SelectMenuManager;
 import de.swiftbyte.jdaboot.scheduler.SchedulerManager;
+import de.swiftbyte.jdaboot.variables.GlobalVariables;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -158,5 +159,11 @@ public class JDABootConfigurationManager {
 
         if (consoleCommandsEnabled) new ConsoleCommandManager(mainClass);
         new ConfigValueManager(mainClass);
+    }
+
+    protected static void initialiseGlobalVariables(JDA jda) {
+        GlobalVariables.setDynamicValue("guildCount", () ->  Integer.toString(jda.getGuilds().size()));
+        GlobalVariables.setDynamicValue("selfUsername", () -> jda.getSelfUser().getName());
+        GlobalVariables.setDynamicValue("shardCount", () -> Integer.toString(jda.getShardInfo().getShardTotal()));
     }
 }

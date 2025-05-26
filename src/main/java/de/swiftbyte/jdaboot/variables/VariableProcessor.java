@@ -68,7 +68,7 @@ public class VariableProcessor {
         Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
         Matcher m = p.matcher(newText);
         while (m.find()) {
-            String value = variables.get(m.group().replace("${", "").replace("}", ""));
+            String value = getVariable(m.group().replace("${", "").replace("}", ""), variables);
             if (value == null) {
                 unknownVariables.add(m.group());
                 continue;
@@ -112,5 +112,11 @@ public class VariableProcessor {
         while (configMatcher.find()) if (!ignoredVariables.contains(configMatcher.group())) return true;
         while (variableMatcher.find()) if (!ignoredVariables.contains(variableMatcher.group())) return true;
         return false;
+    }
+
+    private static String getVariable(String key, HashMap<String, String> variables) {
+        if(variables.containsKey(key)) return variables.get(key);
+        else if(GlobalVariables.hasVariable(key)) return GlobalVariables.get(key);
+        else return null;
     }
 }
