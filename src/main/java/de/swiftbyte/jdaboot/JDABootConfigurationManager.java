@@ -161,6 +161,13 @@ public class JDABootConfigurationManager {
         new ConfigValueManager(mainClass);
     }
 
+    /**
+     * Initializes global variables that provide dynamic values from the JDA instance.
+     * These variables can be accessed at runtime and always reflect the current state.
+     *
+     * @param jda The JDA instance from which the values are retrieved.
+     * @since 1.0.0-beta.1
+     */
     protected static void initialiseGlobalVariables(JDA jda) {
         GlobalVariables.setDynamicValue("guildCount", () ->  Integer.toString(jda.getGuilds().size()));
         GlobalVariables.setDynamicValue("selfUsername", () -> jda.getSelfUser().getName());

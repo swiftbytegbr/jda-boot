@@ -14,7 +14,7 @@ nav:
     - Modals: nav/modals.md
   - Embeds: nav/embeds.md
   - Events: nav/events.md
-  - Translation and Configuration: nav/translation-configuration.md
+  - Translation, Configuration and Variables: nav/translation-configuration.md
   - Scheduler: nav/scheduler.md
 
 theme:

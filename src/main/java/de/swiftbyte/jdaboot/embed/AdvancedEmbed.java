@@ -165,6 +165,13 @@ public class AdvancedEmbed {
         return generateEmbedBuilder(timestamp).build();
     }
 
+    /**
+     * Generates a EmbedBuilder based on the template and the set variables, with the specified timestamp.
+     *
+     * @param timestamp The timestamp to set in the embed.
+     * @return The generated EmbedBuilder.
+     * @since 1.0.0-beta.1
+     */
     private EmbedBuilder generateEmbedBuilder(Instant timestamp) {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();

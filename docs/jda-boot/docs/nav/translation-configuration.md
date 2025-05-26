@@ -1,4 +1,4 @@
-# Translation and Configuration
+# Translation, Configuration and Variables
 
 JDA-Boot provides robust systems for managing translations and configurations, allowing you to create dynamic and localized bots with ease. This page explains how to use these systems and customize them for your project.
 
@@ -131,3 +131,41 @@ You can create a custom configuration provider by implementing the `ConfigProvid
             // Main Class
         }
         ```
+
+## Global Variables
+
+Global variables are accessible throughout your entire application and can be set or updated at runtime.
+They are useful for values that need to be shared across different parts of your bot.
+
+### Setting Global Variables
+
+You can set global variables either as static values or as dynamic values using a `Supplier`.
+Dynamic variables allow the value to be computed each time it is accessed.
+
+!!! example
+    === "Java"
+        ```java
+            // Static global variable
+            GlobalVariables.set("botVersion", "1.0");
+            
+            // Dynamic global variable (e.g., current time)
+            GlobalVariables.setDynamicValue("currentTime", () -> LocalDateTime.now().toString());
+        ```
+
+Now, you can use `${botVersion}` or `${currentTime}` in your embeds or anywhere variables are supported.
+
+### Default Variables
+| Variable Name  | Content                                     |
+|----------------|---------------------------------------------|
+| `guildCount`   | The number of guilds in which the bot is    |
+| `shardCount`   | The number of shards                        |
+| `selfUsername` | The current username of the bot application |
+
+
+### Variable Resolution Order
+
+When resolving a variable, JDA-Boot checks the following sources in order:
+
+1. Local variables (set on the specific component)
+2. Global variables (set via `GlobalVariables`)
+3. Default variables (set via the annotation)
