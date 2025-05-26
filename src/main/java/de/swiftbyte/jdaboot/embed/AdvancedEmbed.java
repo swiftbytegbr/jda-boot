@@ -161,13 +161,18 @@ public class AdvancedEmbed {
      * @since alpha.4
      */
     public MessageEmbed build(Instant timestamp) {
+
+        return generateEmbedBuilder(timestamp).build();
+    }
+
+    private EmbedBuilder generateEmbedBuilder(Instant timestamp) {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
 
         if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
             if (basedOn != null) {
-                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).build(timestamp));
+                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).generateEmbedBuilder(timestamp));
             } else {
                 log.error("Embed with ID {} is based on an unknown embed with ID {}!", embed.id(), embed.basedOn());
             }
@@ -226,7 +231,7 @@ public class AdvancedEmbed {
 
         if (timestamp != null) builder.setTimestamp(timestamp);
 
-        return builder.build();
+        return builder;
     }
 
     /**
