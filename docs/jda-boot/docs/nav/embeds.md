@@ -17,6 +17,7 @@ The `@Embed` annotation has several fields for customization. The `id` field is 
 | `title`          | The title of the embed, supports variables                          | String            |
 | `description`    | The description of the embed, supports variables                    | String            |
 | `color`          | The color of the embed                                              | EmbedColor        |
+| `hexColor`       | The color of the embed as hex value                                 | String            |
 | `author`         | The author of the embed, configured with `@EmbedAuthor`             | EmbedAuthor       |
 | `footer`         | The footer of the embed, configured with `@EmbedFooter`             | EmbedFooter       |
 | `fields`         | The fields of the embed, configured with `@EmbedField`              | EmbedField[]      |
