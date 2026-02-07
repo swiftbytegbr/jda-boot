@@ -15,6 +15,7 @@ import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -58,7 +59,7 @@ public class TestCommand extends SlashCommandExecutor {
     private TemplateSelectMenu menu2;
 
     @Override
-    public void onCommand() {
+    public void onCommand(SlashCommandInteractionEvent event) {
 
         AdvancedEmbed advancedEmbed = embed.advancedEmbed();
         advancedEmbed.setVariable("test", "Test");

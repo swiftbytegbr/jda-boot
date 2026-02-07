@@ -15,13 +15,6 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  */
 public abstract class SlashCommandExecutor {
 
-    protected SlashCommandInteractionEvent event;
-
-    protected void call(SlashCommandInteractionEvent event) {
-        this.event = event;
-        onCommand();
-    }
-
     /**
      * Called when the slash command is enabled. The default implementation does nothing.
      *
@@ -34,9 +27,10 @@ public abstract class SlashCommandExecutor {
     /**
      * Called when the slash command is invoked.
      *
+     * @param event The event of the slash command interaction.
      * @since alpha.4
      */
-    public abstract void onCommand();
+    public abstract void onCommand(SlashCommandInteractionEvent event);
 
     /**
      * Called when the slash command is auto-completed.
@@ -46,19 +40,19 @@ public abstract class SlashCommandExecutor {
     public void onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event) {
     }
 
-    protected void reply(TemplateEmbed embed) {
-        reply(embed, event.getUserLocale());
+    protected void reply(SlashCommandInteractionEvent event, TemplateEmbed embed) {
+        reply(event, embed, event.getUserLocale());
     }
 
-    protected void reply(TemplateEmbed embed, DiscordLocale locale) {
+    protected void reply(SlashCommandInteractionEvent event, TemplateEmbed embed, DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).queue();
     }
 
-    protected void replyEphemeral(TemplateEmbed embed) {
-        replyEphemeral(embed, event.getUserLocale());
+    protected void replyEphemeral(SlashCommandInteractionEvent event, TemplateEmbed embed) {
+        replyEphemeral(event, embed, event.getUserLocale());
     }
 
-    protected void replyEphemeral(TemplateEmbed embed, DiscordLocale locale) {
+    protected void replyEphemeral(SlashCommandInteractionEvent event, TemplateEmbed embed, DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 }
