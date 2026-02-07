@@ -6,7 +6,7 @@ import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import de.swiftbyte.jdaboot.interaction.modal.AdvancedModal;
 import de.swiftbyte.jdaboot.interaction.modal.TemplateModal;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 
 import java.util.HashMap;
 

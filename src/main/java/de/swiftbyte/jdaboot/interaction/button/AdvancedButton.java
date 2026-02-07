@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.components.buttons.Button;
 
 import java.util.HashMap;
 import java.util.UUID;

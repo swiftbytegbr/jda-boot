@@ -8,10 +8,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.components.textinput.TextInput;
+import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.modals.Modal;
 
 import java.util.*;
 
@@ -139,7 +141,7 @@ public class AdvancedModal {
                 case SHORT -> TextInputStyle.SHORT;
             };
 
-            TextInput.Builder input = TextInput.create(inputId, label, style);
+            TextInput.Builder input = TextInput.create(inputId, style);
             if (StringUtils.isNotBlank(placeholder)) {
                 input.setPlaceholder(placeholder);
             }
@@ -153,7 +155,7 @@ public class AdvancedModal {
             if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
                 input.setValue(processVar(inputDefinition.defaultValue()));
             }
-            modal.addActionRow(input.build());
+            modal.addComponents(Label.of(label, input.build()));
         }
 
         for (DynamicModalRow inputDefinition : dynamicRows) {
@@ -166,7 +168,7 @@ public class AdvancedModal {
                 case SHORT -> TextInputStyle.SHORT;
             };
 
-            TextInput.Builder input = TextInput.create(inputId, label, style);
+            TextInput.Builder input = TextInput.create(inputId, style);
             if (StringUtils.isNotBlank(placeholder)) {
                 input.setPlaceholder(placeholder);
             }
@@ -180,7 +182,7 @@ public class AdvancedModal {
             if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
                 input.setValue(processVar(inputDefinition.defaultValue()));
             }
-            modal.addActionRow(input.build());
+            modal.addComponents(Label.of(label, input.build()));
         }
 
         return modal.build();

@@ -13,6 +13,7 @@ import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -66,16 +67,17 @@ public class TestCommand extends SlashCommandExecutor {
         advancedEmbed.addDynamicField("Dynamisches Feld", "${test}", false);
 
         event.replyEmbeds(advancedEmbed.build())
-                .addActionRow(button.advancedButton()
-                        .setVariable("test", "Transferred Variable")
-                        .setVariable("user", event.getUser().getName())
-                        .build())
-                .addActionRow(menu.advancedSelectMenu()
-                        .setVariable("test", "Test Variable")
-                        .addDynamicOption("Dynamic Option", "Dynamic Option")
-                        .build())
-                .addActionRow(menu2.advancedSelectMenu().build())
-                .queue();
+                .addComponents(
+                        ActionRow.of(button.advancedButton()
+                                .setVariable("test", "Transferred Variable")
+                                .setVariable("user", event.getUser().getName())
+                                .build()),
+                        ActionRow.of(menu.advancedSelectMenu()
+                                .setVariable("test", "Test Variable")
+                                .addDynamicOption("Dynamic Option", "Dynamic Option")
+                                .build()),
+                        ActionRow.of(menu2.advancedSelectMenu().build())
+                ).queue();
 
     }
 
