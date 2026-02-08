@@ -54,15 +54,22 @@ public class TranslationProcessor {
      * @since alpha.4
      */
     public static @NonNull String getTranslatedString(@NonNull DiscordLocale locale, @NonNull String key) {
-        Locale.setDefault(Locale.ENGLISH);
         TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
-        String translation = "MISSING TRANSLATION";
-        try {
-            translation = translationProvider.getTranslation(key, new Locale(locale.getLocale()));
-        } catch (MissingResourceException e) {
-            log.warn("Translation key not found in resources '{}' at:", key, e);
+        Locale targetLocale = Locale.forLanguageTag(locale.getLocale());
+        if (targetLocale.getLanguage().isEmpty()) {
+            targetLocale = Locale.ENGLISH;
         }
-        return translation;
+
+        try {
+            return translationProvider.getTranslation(key, targetLocale);
+        } catch (MissingResourceException ignored) {
+            try {
+                return translationProvider.getTranslation(key, Locale.ENGLISH);
+            } catch (MissingResourceException e) {
+                log.warn("Translation key '{}' was not found for locale '{}' or fallback locale 'en'", key, locale.getLocale(), e);
+                return "MISSING TRANSLATION";
+            }
+        }
     }
 
 }
