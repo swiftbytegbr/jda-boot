@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 public class YmlConfigProviderImpl extends ConfigProvider {
 
-    private static @NonNull HashMap<@NonNull String, @NonNull Object> ymlConfig = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull Object> ymlConfig = new HashMap<>();
     private @NonNull String configFileName = "config.yml";
 
     /**
@@ -31,6 +31,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      */
     @Override
     public void reload() {
+        ymlConfig = new HashMap<>();
 
         if (configProfile.equals("default")) {
             configFileName = "config.yml";
@@ -40,7 +41,10 @@ public class YmlConfigProviderImpl extends ConfigProvider {
 
         try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
             if (resourceStream != null) {
-                ymlConfig = new Yaml().load(resourceStream);
+                Map<String, Object> loadedConfig = new Yaml().load(resourceStream);
+                if (loadedConfig != null) {
+                    ymlConfig.putAll(loadedConfig);
+                }
             }
         } catch (IOException e) {
             throw new ConfigurationException("Failed to load configuration", configFileName, e);
