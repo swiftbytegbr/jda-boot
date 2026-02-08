@@ -16,6 +16,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -129,7 +130,7 @@ public class ModalManager extends ListenerAdapter {
         String[] idParts = event.getModalId().split(";");
 
         if (modalExecutableList.containsKey(idParts[0])) {
-            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? AdvancedModal.getVariablesFromId(idParts[1]) : new HashMap<>());
+            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedModal.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 }

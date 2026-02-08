@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.modals.Modal;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -236,7 +237,7 @@ public class AdvancedModal {
      * @return The variables from the given ID.
      * @since 1.0.0-alpha.9
      */
-    public static @NonNull HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
+    public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
         return variableTransfer.get(id);
     }
 }
