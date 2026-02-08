@@ -99,7 +99,11 @@ public class ButtonManager extends ListenerAdapter {
      * @since alpha.4
      */
     public @Nullable TemplateButton getButton(@NonNull String id) {
-        ButtonDefinition definition = buttonExecutableList.get(id).getClass().getAnnotation(ButtonDefinition.class);
+        ButtonExecutor executor = buttonExecutableList.get(id);
+        if (executor == null) {
+            return null;
+        }
+        ButtonDefinition definition = executor.getClass().getAnnotation(ButtonDefinition.class);
         return new TemplateButton(definition, id);
     }
 

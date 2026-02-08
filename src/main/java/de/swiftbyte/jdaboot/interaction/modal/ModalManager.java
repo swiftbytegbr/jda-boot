@@ -101,7 +101,11 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-alpha.7
      */
     public @Nullable TemplateModal getModal(@NonNull String id) {
-        ModalDefinition definition = modalExecutableList.get(id).getClass().getAnnotation(ModalDefinition.class);
+        ModalExecutor executor = modalExecutableList.get(id);
+        if (executor == null) {
+            return null;
+        }
+        ModalDefinition definition = executor.getClass().getAnnotation(ModalDefinition.class);
         return new TemplateModal(definition, id);
     }
 
