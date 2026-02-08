@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.interaction.selection.EntitySelectMenuExecutor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,6 +30,6 @@ public @interface EntitySelectMenuByClass {
      *
      * @return The class implementing {@link EntitySelectMenuExecutor} to handle entity select menu interactions.
      */
-    Class<? extends EntitySelectMenuExecutor> value();
+    @NonNull Class<? extends EntitySelectMenuExecutor> value();
 
 }

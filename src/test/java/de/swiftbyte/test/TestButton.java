@@ -5,8 +5,8 @@ import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import de.swiftbyte.jdaboot.interaction.modal.AdvancedModal;
 import de.swiftbyte.jdaboot.interaction.modal.TemplateModal;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.HashMap;
 

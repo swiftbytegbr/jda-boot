@@ -1,16 +1,25 @@
 package de.swiftbyte.jdaboot.interaction.selection;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
-import de.swiftbyte.jdaboot.annotation.interaction.selection.*;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuDefinition;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.SelectMenuById;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDefinition;
+import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
+import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -25,17 +34,17 @@ public class SelectMenuManager extends ListenerAdapter {
     /**
      * The map of select menu IDs to StringSelectMenuExecutor instances.
      */
-    private HashMap<String, StringSelectMenuExecutor> stringSelectMenuExecutableList = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull StringSelectMenuExecutor> stringSelectMenuExecutableList = new HashMap<>();
 
     /**
      * The map of select menu IDs to EntitySelectMenuExecutor instances.
      */
-    private HashMap<String, EntitySelectMenuExecutor> entitySelectMenuExecutableList = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull EntitySelectMenuExecutor> entitySelectMenuExecutableList = new HashMap<>();
 
     /**
      * The map of classes to select menu IDs.
      */
-    private HashMap<Class<?>, String> classList = new HashMap<>();
+    private @NonNull HashMap<@NonNull Class<?>, @NonNull String> classList = new HashMap<>();
 
 
     /**
@@ -46,7 +55,7 @@ public class SelectMenuManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since 1.0.0-alpha.11
      */
-    public SelectMenuManager(JDA jda, Class<?> mainClass) {
+    public SelectMenuManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(StringSelectMenuDefinition.class).forEach(clazz -> {
@@ -54,9 +63,7 @@ public class SelectMenuManager extends ListenerAdapter {
             StringSelectMenuDefinition annotation = clazz.getAnnotation(StringSelectMenuDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
-            if (checkId(id, clazz)) {
-                return;
-            }
+            checkId(id, clazz);
 
             if (StringSelectMenuExecutor.class.isAssignableFrom(clazz)) {
                 StringSelectMenuExecutor cmd = (StringSelectMenuExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
@@ -73,9 +80,7 @@ public class SelectMenuManager extends ListenerAdapter {
             EntitySelectMenuDefinition annotation = clazz.getAnnotation(EntitySelectMenuDefinition.class);
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
-            if (checkId(id, clazz)) {
-                return;
-            }
+            checkId(id, clazz);
 
             if (EntitySelectMenuExecutor.class.isAssignableFrom(clazz)) {
                 EntitySelectMenuExecutor cmd = (EntitySelectMenuExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
@@ -89,30 +94,37 @@ public class SelectMenuManager extends ListenerAdapter {
 
         reflections.getFieldsAnnotatedWith(SelectMenuById.class).forEach(field -> {
             SelectMenuById annotation = field.getAnnotation(SelectMenuById.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getSelectMenu(annotation.value()));
+            TemplateSelectMenu selectMenu = getSelectMenu(annotation.value());
+            if (selectMenu == null) {
+                throw new ElementNotFoundException("Could not found select menu", annotation.value(), field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
         reflections.getFieldsAnnotatedWith(StringSelectMenuByClass.class).forEach(field -> {
-            StringSelectMenuByClass annotation = field.getAnnotation(StringSelectMenuByClass.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getStringSelectMenu(annotation.value()));
+            TemplateSelectMenu selectMenu = getStringSelectMenu(field.getAnnotation(StringSelectMenuByClass.class).value());
+            if (selectMenu == null) {
+                throw new ElementNotFoundException("Could not found select menu", field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
         reflections.getFieldsAnnotatedWith(EntitySelectMenuByClass.class).forEach(field -> {
-            EntitySelectMenuByClass annotation = field.getAnnotation(EntitySelectMenuByClass.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getEntitySelectMenu(annotation.value()));
+            TemplateSelectMenu selectMenu = getEntitySelectMenu(field.getAnnotation(EntitySelectMenuByClass.class).value());
+            if (selectMenu == null) {
+                throw new ElementNotFoundException("Could not found select menu", field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
 
         jda.addEventListener(this);
     }
 
-    private boolean checkId(String id, Class<?> clazz) {
+    private void checkId(@NonNull String id, @NonNull Class<?> clazz) {
         if (id.contains(";")) {
-            log.error("SelectMenu IDs cannot contain semicolons on select menu '{}'", clazz.getName());
-            return true;
+            throw new ElementRegistrationException("SelectMenu IDs cannot contain semicolons", clazz);
         }
         if (id.length() >= 60) {
-            log.error("SelectMenu ID cannot be longer than 60 characters on select menu '{}'", clazz.getName());
-            return true;
+            throw new ElementRegistrationException("SelectMenu ID cannot be longer than 60 characters", clazz);
         }
-        return false;
     }
 
     /**
@@ -122,7 +134,7 @@ public class SelectMenuManager extends ListenerAdapter {
      * @return The TemplateSelectMenu instance.
      * @since 1.0.0-alpha.11
      */
-    public TemplateSelectMenu getSelectMenu(String id) {
+    public @Nullable TemplateSelectMenu getSelectMenu(@NonNull String id) {
 
         if (stringSelectMenuExecutableList.containsKey(id)) {
             StringSelectMenuDefinition definition = stringSelectMenuExecutableList.get(id).getClass().getAnnotation(StringSelectMenuDefinition.class);
@@ -142,7 +154,7 @@ public class SelectMenuManager extends ListenerAdapter {
      * @return The SelectMenuButton instance.
      * @since 1.0.0-alpha.11
      */
-    public <T extends StringSelectMenuExecutor> TemplateSelectMenu getStringSelectMenu(Class<T> clazz) {
+    public <T extends StringSelectMenuExecutor> @Nullable TemplateSelectMenu getStringSelectMenu(@NonNull Class<T> clazz) {
         String id = classList.get(clazz);
         return getSelectMenu(id);
     }
@@ -154,7 +166,7 @@ public class SelectMenuManager extends ListenerAdapter {
      * @return The SelectMenuButton instance.
      * @since 1.0.0-alpha.11
      */
-    public <T extends EntitySelectMenuExecutor> TemplateSelectMenu getEntitySelectMenu(Class<T> clazz) {
+    public <T extends EntitySelectMenuExecutor> @Nullable TemplateSelectMenu getEntitySelectMenu(Class<T> clazz) {
         String id = classList.get(clazz);
         return getSelectMenu(id);
     }
@@ -167,12 +179,12 @@ public class SelectMenuManager extends ListenerAdapter {
      * @since 1.0.0-alpha.11
      */
     @Override
-    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
+    public void onStringSelectInteraction(@NonNull StringSelectInteractionEvent event) {
 
         String[] idParts = event.getComponentId().split(";");
 
         if (stringSelectMenuExecutableList.containsKey(idParts[0])) {
-            stringSelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? AdvancedSelectMenu.getVariablesFromId(idParts[1]) : new HashMap<>());
+            stringSelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 
@@ -184,11 +196,11 @@ public class SelectMenuManager extends ListenerAdapter {
      * @since 1.0.0-alpha.11
      */
     @Override
-    public void onEntitySelectInteraction(EntitySelectInteractionEvent event) {
+    public void onEntitySelectInteraction(@NonNull EntitySelectInteractionEvent event) {
         String[] idParts = event.getComponentId().split(";");
 
         if (entitySelectMenuExecutableList.containsKey(idParts[0])) {
-            entitySelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? AdvancedSelectMenu.getVariablesFromId(idParts[1]) : new HashMap<>());
+            entitySelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 }

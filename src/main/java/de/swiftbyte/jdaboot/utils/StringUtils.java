@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.utils;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * The StringUtils class provides utility methods for working with strings.
  *
@@ -14,7 +16,7 @@ public class StringUtils {
      * @return True if the string is blank, false otherwise.
      * @since 1.0.0.alpha.5
      */
-    public static boolean isBlank(String string) {
+    public static boolean isBlank(@Nullable String string) {
         return string == null || string.trim().isEmpty();
     }
 
@@ -25,7 +27,7 @@ public class StringUtils {
      * @return True if the string is not blank, false otherwise.
      * @since 1.0.0.alpha.5
      */
-    public static boolean isNotBlank(String string) {
+    public static boolean isNotBlank(@Nullable String string) {
         return !isBlank(string);
     }
 }

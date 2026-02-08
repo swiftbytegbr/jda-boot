@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,7 +23,7 @@ public @interface StringSelectMenuDefinition {
      * @return The id of the select menu.
      * @since 1.0.0-alpha.11
      */
-    String id() default "";
+    @NonNull String id() default "";
 
     /**
      * The placeholder text for the select menu.
@@ -30,7 +31,7 @@ public @interface StringSelectMenuDefinition {
      * @return The placeholder text.
      * @since 1.0.0-alpha.11
      */
-    String placeholder() default "";
+    @NonNull String placeholder() default "";
 
     /**
      * The minimum number of options that can be selected.
@@ -62,7 +63,7 @@ public @interface StringSelectMenuDefinition {
      * @return An array of StringSelectOption.
      * @since 1.0.0-alpha.11
      */
-    StringSelectOption[] options();
+    @NonNull StringSelectOption @NonNull [] options();
 
     /**
      * The default variables for the select menu.
@@ -70,5 +71,5 @@ public @interface StringSelectMenuDefinition {
      * @return An array of DefaultVariable.
      * @since 1.0.0-alpha.11
      */
-    DefaultVariable[] defaultVars() default {};
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 }

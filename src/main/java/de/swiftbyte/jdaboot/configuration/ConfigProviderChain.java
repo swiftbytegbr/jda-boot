@@ -1,6 +1,8 @@
 package de.swiftbyte.jdaboot.configuration;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class ConfigProviderChain extends ConfigProvider {
     /**
      * The configuration provider chain.
      */
-    private List<ConfigProvider> providerChain;
+    private @NonNull List<@NonNull ConfigProvider> providerChain;
 
     /**
      * Constructs a new ConfigProviderChain and initializes the provider chain with the default providers.
@@ -39,7 +41,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @param provider The ConfigProvider to add to the chain.
      * @since 1.0.0.alpha.5
      */
-    public void addConfigProviderToChain(ConfigProvider provider) {
+    public void addConfigProviderToChain(@NonNull ConfigProvider provider) {
         providerChain.add(provider);
         reload();
     }
@@ -51,7 +53,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @return The ConfigProvider at the specified index.
      * @since 1.0.0.alpha.5
      */
-    public ConfigProvider getProviderInChain(int index) {
+    public @Nullable ConfigProvider getProviderInChain(int index) {
         return providerChain.get(index);
     }
 
@@ -62,7 +64,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @return The ConfigProvider with the specified class.
      * @since 1.0.0.alpha.5
      */
-    public ConfigProvider getProviderInChain(Class<?> clazz) {
+    public @Nullable ConfigProvider getProviderInChain(@NonNull Class<?> clazz) {
         for (ConfigProvider provider : providerChain) {
             if (provider.getClass().equals(clazz)) {
                 return provider;
@@ -78,7 +80,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     @Override
-    public void setConfigProfile(String configProfile) {
+    public void setConfigProfile(@NonNull String configProfile) {
         for (ConfigProvider provider : providerChain) {
             provider.setConfigProfile(configProfile);
             provider.reload();
@@ -107,7 +109,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     @Override
-    public Object get(String key, Object defaultValue) {
+    public @NonNull Object get(@NonNull String key, @NonNull Object defaultValue) {
         for (ConfigProvider provider : providerChain) {
             if (provider.hasKey(key)) {
                 return provider.get(key, defaultValue);
@@ -126,7 +128,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     @Override
-    public String getString(String key, String defaultValue) {
+    public @NonNull String getString(@NonNull String key, @NonNull String defaultValue) {
         for (ConfigProvider provider : providerChain) {
             if (provider.hasKey(key)) {
                 return provider.getString(key, defaultValue);
@@ -144,7 +146,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     @Override
-    public int getInt(String key, int defaultValue) {
+    public int getInt(@NonNull String key, int defaultValue) {
         for (ConfigProvider provider : providerChain) {
             if (provider.hasKey(key)) {
                 return provider.getInt(key, defaultValue);
@@ -162,7 +164,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public boolean getBoolean(String key, boolean defaultValue) {
+    public boolean getBoolean(@NonNull String key, boolean defaultValue) {
         for (ConfigProvider provider : providerChain) {
             if (provider.hasKey(key)) {
                 return provider.getBoolean(key, defaultValue);
@@ -179,7 +181,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     @Override
-    public boolean hasKey(String key) {
+    public boolean hasKey(@NonNull String key) {
         for (ConfigProvider provider : providerChain) {
             if (provider.hasKey(key)) {
                 return true;

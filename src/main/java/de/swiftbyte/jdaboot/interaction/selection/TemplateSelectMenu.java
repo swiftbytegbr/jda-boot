@@ -5,6 +5,8 @@ import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDef
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The TemplateSelectMenu class is responsible for generating advanced select menus based on a provided template.
@@ -16,13 +18,13 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 public class TemplateSelectMenu {
 
     @Getter(AccessLevel.PACKAGE)
-    private final EntitySelectMenuDefinition entityDefinition;
+    private final @Nullable EntitySelectMenuDefinition entityDefinition;
 
     @Getter(AccessLevel.PACKAGE)
-    private final StringSelectMenuDefinition stringDefinition;
+    private final @Nullable StringSelectMenuDefinition stringDefinition;
 
     @Getter(AccessLevel.PACKAGE)
-    private final String id;
+    private final @NonNull String id;
 
     /**
      * Constructor for TemplateSelectMenu. Initializes the template with the specified EntitySelectMenuDefinition annotation.
@@ -30,7 +32,7 @@ public class TemplateSelectMenu {
      * @param selectMenuDefinition The EntitySelectMenuDefinition annotation to use as a template.
      * @since 1.0.0-alpha.11
      */
-    protected TemplateSelectMenu(EntitySelectMenuDefinition selectMenuDefinition, String id) {
+    protected TemplateSelectMenu(@NonNull EntitySelectMenuDefinition selectMenuDefinition, @NonNull String id) {
         this.entityDefinition = selectMenuDefinition;
         this.stringDefinition = null;
         this.id = id;
@@ -42,7 +44,7 @@ public class TemplateSelectMenu {
      * @param selectMenuDefinition The StringSelectMenuDefinition annotation to use as a template.
      * @since 1.0.0-alpha.11
      */
-    protected TemplateSelectMenu(StringSelectMenuDefinition selectMenuDefinition, String id) {
+    protected TemplateSelectMenu(@NonNull StringSelectMenuDefinition selectMenuDefinition, @NonNull String id) {
         this.stringDefinition = selectMenuDefinition;
         this.entityDefinition = null;
         this.id = id;
@@ -55,7 +57,7 @@ public class TemplateSelectMenu {
      * @return The generated AdvancedSelectMenu.
      * @since 1.0.0-alpha.11
      */
-    public AdvancedSelectMenu advancedSelectMenu(DiscordLocale locale) {
+    public @NonNull AdvancedSelectMenu advancedSelectMenu(@NonNull DiscordLocale locale) {
         return new AdvancedSelectMenu(this, locale);
     }
 
@@ -65,7 +67,7 @@ public class TemplateSelectMenu {
      * @return The generated AdvancedSelectMenu.
      * @since 1.0.0-alpha.11
      */
-    public AdvancedSelectMenu advancedSelectMenu() {
+    public @NonNull AdvancedSelectMenu advancedSelectMenu() {
         return new AdvancedSelectMenu(this, DiscordLocale.ENGLISH_US);
     }
 }

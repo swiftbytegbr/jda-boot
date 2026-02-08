@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.button;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,7 +24,7 @@ public @interface ButtonDefinition {
      * @return The label of the button.
      * @since alpha.4
      */
-    String label();
+    @NonNull String label();
 
     /**
      * The type of the button.
@@ -31,7 +32,7 @@ public @interface ButtonDefinition {
      * @return The type of the button.
      * @since alpha.4
      */
-    Type type();
+    @NonNull Type type();
 
     /**
      * The id of the button.
@@ -39,7 +40,7 @@ public @interface ButtonDefinition {
      * @return The id of the button.
      * @since alpha.4
      */
-    String id() default "";
+    @NonNull String id() default "";
 
     /**
      * The emoji of the button.
@@ -47,7 +48,7 @@ public @interface ButtonDefinition {
      * @return The emoji of the button.
      * @since alpha.4
      */
-    String emoji() default "";
+    @NonNull String emoji() default "";
 
     /**
      * The url of the button.
@@ -55,7 +56,7 @@ public @interface ButtonDefinition {
      * @return The url of the button.
      * @since alpha.4
      */
-    String url() default "";
+    @NonNull String url() default "";
 
     /**
      * The default variables of the button.
@@ -63,7 +64,7 @@ public @interface ButtonDefinition {
      * @return The default variables of the button.
      * @since 1.0.0-alpha.6
      */
-    DefaultVariable[] defaultVars() default {};
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 
     /**
      * The Type enum defines the types of buttons that can be created.

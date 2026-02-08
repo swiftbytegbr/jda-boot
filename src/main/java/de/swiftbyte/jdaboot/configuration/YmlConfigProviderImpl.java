@@ -1,12 +1,15 @@
 package de.swiftbyte.jdaboot.configuration;
 
-import lombok.extern.slf4j.Slf4j;
+import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Implements the ConfigProvider interface using a YAML file for configuration.
@@ -15,10 +18,10 @@ import java.util.Map;
  * @see ConfigProvider
  * @since alpha.4
  */
-@Slf4j
 public class YmlConfigProviderImpl extends ConfigProvider {
 
-    private static HashMap<String, Object> ymlConfig = new HashMap<>();
+    private static @NonNull HashMap<@NonNull String, @NonNull Object> ymlConfig = new HashMap<>();
+    private @NonNull String configFileName = "config.yml";
 
     /**
      * Reloads the configuration from the YAML file.
@@ -29,7 +32,6 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     @Override
     public void reload() {
 
-        String configFileName;
         if (configProfile.equals("default")) {
             configFileName = "config.yml";
         } else {
@@ -41,7 +43,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
                 ymlConfig = new Yaml().load(resourceStream);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ConfigurationException("Failed to load configuration", configFileName, e);
         }
     }
 
@@ -55,10 +57,11 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public Object get(String key, Object defaultValue) {
+    public @NonNull Object get(@NonNull String key, @NonNull Object defaultValue) {
         if (hasKey(key)) {
             if (key.contains(".")) {
-                return getFromPath(ymlConfig, key);
+                Object value = getFromPath(ymlConfig, key);
+                return Objects.requireNonNullElse(value, defaultValue);
             } else {
                 return ymlConfig.get(key);
             }
@@ -77,7 +80,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @throws RuntimeException If the path is invalid.
      * @since alpha.4
      */
-    private Object getFromPath(Map<String, Object> current, String path) {
+    private @Nullable Object getFromPath(@NonNull Map<@NonNull String, @NonNull Object> current, @NonNull String path) {
         String[] pathChildren = path.split("\\.", 2);
         String firstPart = pathChildren[0];
 
@@ -91,7 +94,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
 
         Object next = current.get(firstPart);
         if (!(next instanceof Map)) {
-            throw new RuntimeException("Invalid path: " + path);
+            throw new ConfigurationException("Invalid path", configFileName, path);
         }
 
         //noinspection unchecked
@@ -108,7 +111,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public String getString(String key, String defaultValue) {
+    public @NonNull String getString(@NonNull String key, @NonNull String defaultValue) {
         return (String) get(key, defaultValue);
     }
 
@@ -122,7 +125,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public int getInt(String key, int defaultValue) {
+    public int getInt(@NonNull String key, int defaultValue) {
         return (Integer) get(key, defaultValue);
     }
 
@@ -136,7 +139,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public boolean getBoolean(String key, boolean defaultValue) {
+    public boolean getBoolean(@NonNull String key, boolean defaultValue) {
         return (Boolean) get(key, defaultValue);
     }
 
@@ -148,7 +151,7 @@ public class YmlConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public boolean hasKey(String key) {
+    public boolean hasKey(@NonNull String key) {
         if (key.contains(".")) {
             return getFromPath(ymlConfig, key) != null;
         } else {

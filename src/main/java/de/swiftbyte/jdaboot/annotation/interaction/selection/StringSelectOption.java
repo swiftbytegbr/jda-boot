@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +23,7 @@ public @interface StringSelectOption {
      * @return The label of the select option.
      * @since 1.0.0-alpha.11
      */
-    String label();
+    @NonNull String label();
 
     /**
      * The value of the select option.
@@ -29,7 +31,7 @@ public @interface StringSelectOption {
      * @return The value of the select option.
      * @since 1.0.0-alpha.11
      */
-    String value();
+    @NonNull String value();
 
     /**
      * The description of the select option.
@@ -37,7 +39,7 @@ public @interface StringSelectOption {
      * @return The description of the select option.
      * @since 1.0.0-alpha.11
      */
-    String description() default "";
+    @NonNull String description() default "";
 
     /**
      * The emoji associated with the select option.
@@ -45,7 +47,7 @@ public @interface StringSelectOption {
      * @return The emoji of the select option.
      * @since 1.0.0-alpha.11
      */
-    String emoji() default "";
+    @NonNull String emoji() default "";
 
     /**
      * Indicates whether the select option is the default option.

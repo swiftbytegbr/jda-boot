@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * The DefaultVariable annotation is used to specify a default variable that can be used in the application.
  * It includes properties to specify the variable's name and value.
@@ -14,7 +16,7 @@ public @interface DefaultVariable {
      * @return The name of the variable.
      * @since alpha.4
      */
-    String variable();
+    @NonNull String variable();
 
     /**
      * The value of the variable.
@@ -22,6 +24,6 @@ public @interface DefaultVariable {
      * @return The value of the variable.
      * @since alpha.4
      */
-    String value();
+    @NonNull String value();
 
 }

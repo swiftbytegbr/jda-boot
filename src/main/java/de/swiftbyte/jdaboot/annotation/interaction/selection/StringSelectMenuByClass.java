@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.interaction.selection.StringSelectMenuExecutor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,6 +30,6 @@ public @interface StringSelectMenuByClass {
      *
      * @return The class implementing {@link StringSelectMenuExecutor} to handle string select menu interactions.
      */
-    Class<? extends StringSelectMenuExecutor> value();
+    @NonNull Class<? extends StringSelectMenuExecutor> value();
 
 }

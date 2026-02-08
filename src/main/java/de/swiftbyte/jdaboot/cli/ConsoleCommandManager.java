@@ -3,8 +3,9 @@ package de.swiftbyte.jdaboot.cli;
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.cli.ConsoleCommandDefinition;
 import lombok.AccessLevel;
+import lombok.CustomLog;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
@@ -15,14 +16,14 @@ import java.util.HashMap;
  *
  * @since alpha.4
  */
-@Slf4j
+@CustomLog
 public class ConsoleCommandManager {
 
     @Getter(AccessLevel.PROTECTED)
-    private HashMap<String, String> aliases = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull String> aliases = new HashMap<>();
 
     @Getter(AccessLevel.PROTECTED)
-    private HashMap<String, ConsoleCommandExecutor> commands = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull ConsoleCommandExecutor> commands = new HashMap<>();
 
     /**
      * Constructs a new ConsoleCommandManager and registers all classes annotated with ConsoleCommand.
@@ -30,7 +31,7 @@ public class ConsoleCommandManager {
      * @param mainClass The main class of the application.
      * @since alpha.4
      */
-    public ConsoleCommandManager(Class<?> mainClass) {
+    public ConsoleCommandManager(@NonNull Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(ConsoleCommandDefinition.class).forEach(clazz -> {
@@ -60,8 +61,9 @@ public class ConsoleCommandManager {
      * @param command The command to execute.
      * @since alpha.4
      */
-    protected void runCommand(String command) {
+    protected void runCommand(@NonNull String command) {
 
+        //TODO clean up the thread handling
         String cmd = command.split(" ")[0];
         String[] args;
         if (command.trim().equals(cmd)) {

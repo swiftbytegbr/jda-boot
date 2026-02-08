@@ -2,7 +2,9 @@ package de.swiftbyte.jdaboot.scheduler;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.Scheduler;
+import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -21,16 +23,14 @@ import java.util.TimerTask;
 @Slf4j
 public class SchedulerManager {
 
-    Reflections reflections;
-
     /**
      * Constructs a new SchedulerManager and registers all methods annotated with Scheduler.
      *
      * @param mainClass The main class of the application.
      * @since alpha.4
      */
-    public SchedulerManager(Class<?> mainClass) {
-        reflections = new Reflections(mainClass.getPackageName(), Scanners.SubTypes.filterResultsBy(c -> true));
+    public SchedulerManager(@NonNull Class<?> mainClass) {
+        Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.SubTypes.filterResultsBy(c -> true));
 
         Set<Class<?>> classes = new HashSet<>(reflections.getSubTypesOf(Object.class));
 
@@ -41,8 +41,7 @@ public class SchedulerManager {
                     Scheduler scheduler = method.getAnnotation(Scheduler.class);
 
                     if (method.getParameterCount() != 0) {
-                        log.error("Method {} in class {} is annotated with @Scheduler but has parameters!", method.getName(), clazz.getSimpleName());
-                        continue;
+                        throw new ElementRegistrationException("Method is annotated with @Scheduler but has parameters!", method);
                     }
                     addScheduler(scheduler, method);
                     log.info("Registered scheduler '{}' in class {}", method.getName(), clazz.getName());
@@ -59,12 +58,13 @@ public class SchedulerManager {
      * @param method    The method representing the task.
      * @since alpha.4
      */
-    private void addScheduler(Scheduler scheduler, Method method) {
+    private void addScheduler(@NonNull Scheduler scheduler, @NonNull Method method) {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (method.getReturnType() == boolean.class) {
+                    //noinspection DataFlowIssue
                     if (!(boolean) JDABootObjectManager.runMethod(method.getDeclaringClass(), method)) {
                         timer.cancel();
                     }

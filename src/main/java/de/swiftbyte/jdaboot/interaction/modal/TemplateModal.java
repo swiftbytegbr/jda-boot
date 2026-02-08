@@ -4,6 +4,7 @@ import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The TemplateModal class is responsible for generating advanced modals based on a provided template.
@@ -15,10 +16,10 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 public class TemplateModal {
 
     @Getter(AccessLevel.PACKAGE)
-    private final ModalDefinition definition;
+    private final @NonNull ModalDefinition definition;
 
     @Getter(AccessLevel.PACKAGE)
-    private final String id;
+    private final @NonNull String id;
 
     /**
      * Constructor for TemplateModal. Initializes the template with the specified ModalDefinition annotation.
@@ -26,7 +27,7 @@ public class TemplateModal {
      * @param modalDefinition The ModalDefinition annotation to use as a template.
      * @since 1.0.0-alpha.7
      */
-    protected TemplateModal(ModalDefinition modalDefinition, String id) {
+    protected TemplateModal(@NonNull ModalDefinition modalDefinition, @NonNull String id) {
         this.definition = modalDefinition;
         this.id = id;
     }
@@ -38,7 +39,7 @@ public class TemplateModal {
      * @return The generated AdvancedModal.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal advancedModal(DiscordLocale locale) {
+    public @NonNull AdvancedModal advancedModal(@NonNull DiscordLocale locale) {
         return new AdvancedModal(this, locale);
     }
 
@@ -48,7 +49,7 @@ public class TemplateModal {
      * @return The generated AdvancedModal.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal advancedModal() {
+    public @NonNull AdvancedModal advancedModal() {
         return new AdvancedModal(this, DiscordLocale.ENGLISH_US);
     }
 }

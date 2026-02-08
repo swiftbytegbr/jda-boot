@@ -1,6 +1,8 @@
 package de.swiftbyte.jdaboot.configuration;
 
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the contract for configuration providers.
@@ -17,7 +19,7 @@ public abstract class ConfigProvider {
      *
      * @since 1.0.0-alpha.5
      */
-    protected String configProfile = "default";
+    protected @NonNull String configProfile = "default";
 
     /**
      * Reloads the configuration.
@@ -34,7 +36,7 @@ public abstract class ConfigProvider {
      * @return The configuration value or null if the key is not found.
      * @since alpha.4
      */
-    public Object get(String key) {
+    public @Nullable Object get(@NonNull String key) {
         return get(key, null);
     }
 
@@ -47,7 +49,7 @@ public abstract class ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    public abstract Object get(String key, Object defaultValue);
+    public abstract @NonNull Object get(@NonNull String key, @NonNull Object defaultValue);
 
     /**
      * Retrieves the string value associated with the specified key.
@@ -57,7 +59,7 @@ public abstract class ConfigProvider {
      * @return The configuration value or null if the key is not found.
      * @since alpha.4
      */
-    public String getString(String key) {
+    public @Nullable String getString(@NonNull String key) {
         return getString(key, null);
     }
 
@@ -70,7 +72,7 @@ public abstract class ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    public abstract String getString(String key, String defaultValue);
+    public abstract @NonNull String getString(@NonNull String key, @NonNull String defaultValue);
 
     /**
      * Retrieves the integer value associated with the specified key.
@@ -80,7 +82,7 @@ public abstract class ConfigProvider {
      * @return The configuration value or 0 if the key is not found.
      * @since alpha.4
      */
-    public int getInt(String key) {
+    public int getInt(@NonNull String key) {
         return getInt(key, 0);
     }
 
@@ -93,7 +95,7 @@ public abstract class ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    public abstract int getInt(String key, int defaultValue);
+    public abstract int getInt(@NonNull String key, int defaultValue);
 
     /**
      * Retrieves the boolean value associated with the specified key.
@@ -103,7 +105,7 @@ public abstract class ConfigProvider {
      * @return The configuration value or false if the key is not found.
      * @since alpha.4
      */
-    public boolean getBoolean(String key) {
+    public boolean getBoolean(@NonNull String key) {
         return getBoolean(key, false);
     }
 
@@ -116,7 +118,7 @@ public abstract class ConfigProvider {
      * @return The configuration value.
      * @since alpha.4
      */
-    public abstract boolean getBoolean(String key, boolean defaultValue);
+    public abstract boolean getBoolean(@NonNull String key, boolean defaultValue);
 
     /**
      * Checks if the configuration contains the specified key.
@@ -125,5 +127,5 @@ public abstract class ConfigProvider {
      * @return True if the configuration contains the key, false otherwise.
      * @since alpha.4
      */
-    public abstract boolean hasKey(String key);
+    public abstract boolean hasKey(@NonNull String key);
 }

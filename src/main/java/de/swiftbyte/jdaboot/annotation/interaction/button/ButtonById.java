@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.button;
 
 import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,6 +30,6 @@ public @interface ButtonById {
      *
      * @return The unique ID of the button.
      */
-    String value();
+    @NonNull String value();
 
 }

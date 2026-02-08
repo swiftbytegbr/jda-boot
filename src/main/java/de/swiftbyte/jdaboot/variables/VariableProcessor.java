@@ -2,8 +2,10 @@ package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
-import lombok.extern.slf4j.Slf4j;
+import lombok.CustomLog;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import java.util.regex.Pattern;
  *
  * @since alpha.4
  */
-@Slf4j
+@CustomLog
 public class VariableProcessor {
 
     /**
@@ -32,7 +34,7 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static String processVariable(DiscordLocale locale, String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable) {
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
 
         List<String> unknownVariables = new ArrayList<>();
         String newText = old;
@@ -58,7 +60,7 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static String processVariable(String old, HashMap<String, String> variables, DefaultVariable[] defaultVariable, List<String> unknownVariables) {
+    public static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
 
         String newText = old;
 
@@ -87,7 +89,7 @@ public class VariableProcessor {
                     unknownVariables.add(m.group());
                     continue;
                 }
-                newText = newText.replace(m.group(), JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", "")));
+                newText = newText.replace(m.group(), value);
             } else {
                 unknownVariables.add(m.group());
             }
@@ -100,7 +102,7 @@ public class VariableProcessor {
         return newText;
     }
 
-    private static boolean isIncompletelyProcessed(String newText, boolean withLanguage, List<String> ignoredVariables) {
+    private static boolean isIncompletelyProcessed(@NonNull String newText, boolean withLanguage, @NonNull List<@NonNull String> ignoredVariables) {
         Pattern languagePattern = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
         Matcher languageMatcher = languagePattern.matcher(newText);
         Pattern configPattern = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
@@ -126,7 +128,7 @@ public class VariableProcessor {
         return false;
     }
 
-    private static String getVariable(String key, HashMap<String, String> variables) {
+    private static @Nullable String getVariable(@NonNull String key, @NonNull HashMap<@NonNull String, @NonNull String> variables) {
         if (variables.containsKey(key)) {
             return variables.get(key);
         } else if (GlobalVariables.hasVariable(key)) {

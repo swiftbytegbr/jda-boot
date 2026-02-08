@@ -1,6 +1,9 @@
 package de.swiftbyte.jdaboot.configuration;
 
+import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implements the ConfigProvider interface using env variables for configuration.
@@ -10,7 +13,7 @@ import io.github.cdimascio.dotenv.Dotenv;
  */
 public class EnvConfigProviderImpl extends ConfigProvider {
 
-    private Dotenv dotenv;
+    private @Nullable Dotenv dotenv;
 
     /**
      * Constructs a new EnvConfigProviderImpl and reloads the configuration.
@@ -32,7 +35,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public Object get(String key, Object defaultValue) {
+    public @NonNull Object get(@NonNull String key, @NonNull Object defaultValue) {
         return getString(key, (String) defaultValue);
     }
 
@@ -46,7 +49,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public String getString(String key, String defaultValue) {
+    public @NonNull String getString(@NonNull String key, @NonNull String defaultValue) {
         key = "JDA_BOOT_" + key.toUpperCase().replace(".", "_");
         if (dotenv != null && dotenv.get(key) != null) {
             return dotenv.get(key);
@@ -66,7 +69,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public int getInt(String key, int defaultValue) {
+    public int getInt(@NonNull String key, int defaultValue) {
         return Integer.parseInt(getString(key, String.valueOf(defaultValue)));
     }
 
@@ -79,7 +82,7 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public boolean getBoolean(String key, boolean defaultValue) {
+    public boolean getBoolean(@NonNull String key, boolean defaultValue) {
         return Boolean.parseBoolean(getString(key, String.valueOf(defaultValue)));
     }
 
@@ -91,7 +94,10 @@ public class EnvConfigProviderImpl extends ConfigProvider {
      * @since 1.0.0-alpha.5
      */
     @Override
-    public boolean hasKey(String key) {
+    public boolean hasKey(@NonNull String key) {
+        if (dotenv == null) {
+            throw new StillInitializingException();
+        }
         key = "JDA_BOOT_" + key.toUpperCase().replace(".", "_");
         if (dotenv.get(key) != null) {
             return true;

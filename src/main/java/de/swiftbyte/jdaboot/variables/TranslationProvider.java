@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.variables;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Locale;
 
 /**
@@ -18,6 +20,6 @@ public interface TranslationProvider {
      * @return The translated string.
      * @since alpha.4
      */
-    String getTranslation(String key, Locale locale);
+    @NonNull String getTranslation(@NonNull String key, @NonNull Locale locale);
 
 }

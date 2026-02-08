@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.annotation.interaction.command;
 
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +26,7 @@ public @interface CommandOption {
      * @return The type of the option.
      * @since alpha.4
      */
-    OptionType type();
+    @NonNull OptionType type();
 
     /**
      * The name of the option.
@@ -33,7 +34,7 @@ public @interface CommandOption {
      * @return The name of the option.
      * @since alpha.4
      */
-    String name();
+    @NonNull String name();
 
     /**
      * The description of the option.
@@ -41,7 +42,7 @@ public @interface CommandOption {
      * @return The description of the option.
      * @since alpha.4
      */
-    String description();
+    @NonNull String description();
 
     /**
      * The minimum length of the option.
@@ -97,7 +98,7 @@ public @interface CommandOption {
      * @return The channel types for the option.
      * @since alpha.4
      */
-    ChannelType[] channelTypes() default {};
+    @NonNull ChannelType @NonNull [] channelTypes() default {};
 
     /**
      * The choices for the option.
@@ -105,7 +106,7 @@ public @interface CommandOption {
      * @return The choices for the option.
      * @since alpha.4
      */
-    Choice[] optionChoices() default {};
+    @NonNull Choice @NonNull [] optionChoices() default {};
 
     /**
      * The Choice annotation is used to specify a choice for a command option.
@@ -123,7 +124,7 @@ public @interface CommandOption {
          * @return The name of the choice.
          * @since alpha.4
          */
-        String name();
+        @NonNull String name();
 
         /**
          * The value of the choice.
@@ -131,7 +132,7 @@ public @interface CommandOption {
          * @return The value of the choice.
          * @since alpha.4
          */
-        String value();
+        @NonNull String value();
     }
 
 }

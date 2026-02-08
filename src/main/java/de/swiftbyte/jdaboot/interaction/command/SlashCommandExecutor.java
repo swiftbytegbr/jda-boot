@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The SlashCommandExecutor interface represents a slash command in the application.
@@ -21,7 +22,7 @@ public abstract class SlashCommandExecutor {
      * @param data The data of the slash command.
      * @since alpha.4
      */
-    public void onEnable(SlashCommandData data) {
+    public void onEnable(@NonNull SlashCommandData data) {
     }
 
     /**
@@ -30,29 +31,29 @@ public abstract class SlashCommandExecutor {
      * @param event The event of the slash command interaction.
      * @since alpha.4
      */
-    public abstract void onCommand(SlashCommandInteractionEvent event);
+    public abstract void onCommand(@NonNull SlashCommandInteractionEvent event);
 
     /**
      * Called when the slash command is auto-completed.
      *
      * @since alpha.4
      */
-    public void onAutoComplete(AutoCompleteQuery query, CommandAutoCompleteInteractionEvent event) {
+    public void onAutoComplete(@NonNull AutoCompleteQuery query, @NonNull CommandAutoCompleteInteractionEvent event) {
     }
 
-    protected void reply(SlashCommandInteractionEvent event, TemplateEmbed embed) {
+    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed) {
         reply(event, embed, event.getUserLocale());
     }
 
-    protected void reply(SlashCommandInteractionEvent event, TemplateEmbed embed, DiscordLocale locale) {
+    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).queue();
     }
 
-    protected void replyEphemeral(SlashCommandInteractionEvent event, TemplateEmbed embed) {
+    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed) {
         replyEphemeral(event, embed, event.getUserLocale());
     }
 
-    protected void replyEphemeral(SlashCommandInteractionEvent event, TemplateEmbed embed, DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 }

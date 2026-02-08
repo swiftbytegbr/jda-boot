@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.embed;
 
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -31,7 +32,7 @@ public enum EmbedColor {
     /**
      * The java.awt.Color instance associated with the enum constant.
      */
-    private final Color color;
+    private final @Nullable Color color;
 
     /**
      * Constructor for EmbedColor. Initializes the enum constant with the specified java.awt.Color instance.
@@ -39,7 +40,7 @@ public enum EmbedColor {
      * @param color The java.awt.Color instance to associate with the enum constant.
      * @since alpha.4
      */
-    EmbedColor(Color color) {
+    EmbedColor(@Nullable Color color) {
 
         this.color = color;
 

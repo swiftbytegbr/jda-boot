@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot.variables;
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -27,7 +28,7 @@ public class TranslationProcessor {
      * @return The processed string with placeholders replaced by translated values.
      * @since alpha.4
      */
-    public static String processTranslation(DiscordLocale locale, String old) {
+    public static @NonNull String processTranslation(@NonNull DiscordLocale locale, @NonNull String old) {
 
         String newText = old;
 
@@ -52,7 +53,7 @@ public class TranslationProcessor {
      * @return The translated string.
      * @since alpha.4
      */
-    public static String getTranslatedString(DiscordLocale locale, String key) {
+    public static @NonNull String getTranslatedString(@NonNull DiscordLocale locale, @NonNull String key) {
         Locale.setDefault(Locale.ENGLISH);
         TranslationProvider translationProvider = JDABootConfigurationManager.getTranslationProvider();
         String translation = "MISSING TRANSLATION";

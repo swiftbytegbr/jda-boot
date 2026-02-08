@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.variables;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -22,7 +24,7 @@ public class ResourceBundleTranslationProviderImpl implements TranslationProvide
      * @since alpha.4
      */
     @Override
-    public String getTranslation(String key, Locale locale) {
+    public @NonNull String getTranslation(@NonNull String key, @NonNull Locale locale) {
         ResourceBundle resourceBundle = PropertyResourceBundle.getBundle("messages", locale);
         return resourceBundle.getString(key);
     }

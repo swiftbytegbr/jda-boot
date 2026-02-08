@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.command;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +23,7 @@ public @interface SubcommandGroup {
      * @return The name of the subcommand group.
      * @since alpha.4
      */
-    String name();
+    @NonNull String name();
 
     /**
      * The description of the subcommand group.
@@ -29,7 +31,7 @@ public @interface SubcommandGroup {
      * @return The description of the subcommand group.
      * @since alpha.4
      */
-    String description();
+    @NonNull String description();
 
     /**
      * The subcommands in the subcommand group.
@@ -37,5 +39,5 @@ public @interface SubcommandGroup {
      * @return The subcommands in the subcommand group.
      * @since alpha.4
      */
-    Subcommand[] subcommands() default {};
+    @NonNull Subcommand @NonNull [] subcommands() default {};
 }

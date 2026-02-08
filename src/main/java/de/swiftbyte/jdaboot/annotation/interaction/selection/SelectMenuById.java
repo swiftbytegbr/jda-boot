@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.interaction.selection.StringSelectMenuExecutor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,6 +29,6 @@ public @interface SelectMenuById {
      *
      * @return The ID of the string select menu.
      */
-    String value();
+    @NonNull String value();
 
 }

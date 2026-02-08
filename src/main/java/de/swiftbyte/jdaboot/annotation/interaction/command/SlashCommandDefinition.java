@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot.annotation.interaction.command;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.IntegrationType;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +27,7 @@ public @interface SlashCommandDefinition {
      * @return The name of the command.
      * @since alpha.4
      */
-    String name();
+    @NonNull String name();
 
     /**
      * The description of the command in discord.
@@ -34,7 +35,7 @@ public @interface SlashCommandDefinition {
      * @return The description of the command.
      * @since alpha.4
      */
-    String description() default "DESCRIPTION MISSING";
+    @NonNull String description() default "DESCRIPTION MISSING";
 
     /**
      * The type of the command.
@@ -42,7 +43,7 @@ public @interface SlashCommandDefinition {
      * @return The type of the command.
      * @since alpha.4
      */
-    Type type();
+    @NonNull Type type();
 
     /**
      * The default needed Permission of the command.
@@ -50,18 +51,7 @@ public @interface SlashCommandDefinition {
      * @return The default needed Permission of the command.
      * @since alpha.4
      */
-    Permission enabledFor() default Permission.UNKNOWN;
-
-    /**
-     * Specifies whether the command should only be used on servers and not in private messages.
-     * This will override {@link SlashCommandDefinition#contexts()}
-     *
-     * @return True if the command should only be used on servers, false otherwise.
-     * @since alpha.4
-     * @deprecated will be replaced with {@link SlashCommandDefinition#contexts()}
-     */
-    @Deprecated(since = "1.0.0-alpha.13")
-    boolean guildOnly() default false;
+    @NonNull Permission enabledFor() default Permission.UNKNOWN;
 
     /**
      * Specifies whether the command should only be used on servers,
@@ -72,7 +62,7 @@ public @interface SlashCommandDefinition {
      * @return The contexts of the command
      * @since 1.0.0-alpha.13
      */
-    InteractionContextType[] contexts() default {InteractionContextType.GUILD, InteractionContextType.BOT_DM, InteractionContextType.PRIVATE_CHANNEL};
+    @NonNull InteractionContextType @NonNull [] contexts() default {InteractionContextType.GUILD, InteractionContextType.BOT_DM, InteractionContextType.PRIVATE_CHANNEL};
 
     /**
      * Specifies whether the command can be installed on guilds or users
@@ -81,7 +71,7 @@ public @interface SlashCommandDefinition {
      * @return The integration types of the command
      * @since 1.0.0-alpha.13
      */
-    IntegrationType[] integrationTypes() default {IntegrationType.GUILD_INSTALL};
+    @NonNull IntegrationType @NonNull [] integrationTypes() default {IntegrationType.GUILD_INSTALL};
 
     /**
      * Specifies whether the command should be global.
@@ -97,7 +87,7 @@ public @interface SlashCommandDefinition {
      * @return The options that the command should have.
      * @since alpha.4
      */
-    CommandOption[] options() default {};
+    @NonNull CommandOption @NonNull [] options() default {};
 
     /**
      * The subcommand groups that the command should have.
@@ -105,7 +95,7 @@ public @interface SlashCommandDefinition {
      * @return The subcommand groups that the command should have.
      * @since alpha.4
      */
-    SubcommandGroup[] subcommandGroups() default {};
+    @NonNull SubcommandGroup @NonNull [] subcommandGroups() default {};
 
     /**
      * The subcommands that the command should have.
@@ -113,7 +103,7 @@ public @interface SlashCommandDefinition {
      * @return The subcommands that the command should have.
      * @since alpha.4
      */
-    Subcommand[] subcommands() default {};
+    @NonNull Subcommand @NonNull [] subcommands() default {};
 
     /**
      * The different types of commands discord have.

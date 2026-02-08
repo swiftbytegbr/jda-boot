@@ -1,9 +1,9 @@
 package de.swiftbyte.jdaboot.cli;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.CustomLog;
+import org.jspecify.annotations.NonNull;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -13,11 +13,11 @@ import java.io.InputStreamReader;
  *
  * @since alpha.4
  */
-@Slf4j
+@CustomLog
 public class ConsoleThread extends Thread {
 
-    private ConsoleCommandManager consoleCommandManager;
-    private BufferedReader br;
+    private @NonNull ConsoleCommandManager consoleCommandManager;
+    private @NonNull BufferedReader br;
 
     /**
      * Constructs a new ConsoleThread with the provided ConsoleCommandManager.
@@ -25,7 +25,7 @@ public class ConsoleThread extends Thread {
      * @param consoleCommandManager The ConsoleCommandManager to use for executing commands.
      * @since alpha.4
      */
-    public ConsoleThread(ConsoleCommandManager consoleCommandManager) {
+    public ConsoleThread(@NonNull ConsoleCommandManager consoleCommandManager) {
 
         this.setName("ConsoleThread");
 
@@ -47,7 +47,7 @@ public class ConsoleThread extends Thread {
             while ((line = br.readLine()) != null) {
                 consoleCommandManager.runCommand(line);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error while reading console input!", e);
         }
 

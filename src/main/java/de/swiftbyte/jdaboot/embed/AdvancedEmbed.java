@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.embed;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
+import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.time.Instant;
@@ -27,14 +30,14 @@ import java.util.List;
 @Slf4j
 public class AdvancedEmbed {
 
-    private TemplateEmbed template;
+    private @NonNull TemplateEmbed template;
 
     @Getter
     @Setter
-    private DiscordLocale locale;
+    private @NonNull DiscordLocale locale;
 
-    private HashMap<String, String> variables = new HashMap<>();
-    private List<DynamicEmbedField> dynamicFields = new ArrayList<>();
+    private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
+    private @NonNull List<@NonNull DynamicEmbedField> dynamicFields = new ArrayList<>();
 
     /**
      * Constructor for AdvancedEmbed. Initializes the embed with the specified template, variables, and locale.
@@ -44,7 +47,7 @@ public class AdvancedEmbed {
      * @param locale    The locale to use for the embed.
      * @since alpha.4
      */
-    private AdvancedEmbed(TemplateEmbed template, HashMap<String, String> variables, DiscordLocale locale) {
+    private AdvancedEmbed(@NonNull TemplateEmbed template, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DiscordLocale locale) {
         this.template = template;
         this.variables = variables;
         this.locale = locale;
@@ -57,7 +60,7 @@ public class AdvancedEmbed {
      * @param locale   The locale to use for the embed.
      * @since alpha.4
      */
-    protected AdvancedEmbed(TemplateEmbed template, DiscordLocale locale) {
+    protected AdvancedEmbed(@NonNull TemplateEmbed template, @NonNull DiscordLocale locale) {
         this.template = template;
         this.locale = locale;
     }
@@ -71,7 +74,7 @@ public class AdvancedEmbed {
      * @throws NullPointerException If the variable key or value is null.
      * @since alpha.4
      */
-    public AdvancedEmbed setVariable(String variable, String value) {
+    public @NonNull AdvancedEmbed setVariable(@NonNull String variable, @NonNull String value) {
 
         if (variable == null || value == null) {
             throw new NullPointerException("Can not use null as variable key or value on variable " + variable);
@@ -88,7 +91,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    private AdvancedEmbed setVariables(HashMap<String, String> variables) {
+    private @NonNull AdvancedEmbed setVariables(@NonNull HashMap<@NonNull String, @NonNull String> variables) {
         this.variables = variables;
         return this;
     }
@@ -102,7 +105,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedEmbed addDynamicField(String title, String description, boolean inline) {
+    public @NonNull AdvancedEmbed addDynamicField(@NonNull String title, @NonNull String description, boolean inline) {
         dynamicFields.add(new DynamicEmbedField(title, description, inline));
         return this;
     }
@@ -114,7 +117,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedEmbed addDynamicField(DynamicEmbedField dynamicField) {
+    public @NonNull AdvancedEmbed addDynamicField(@NonNull DynamicEmbedField dynamicField) {
         dynamicFields.add(dynamicField);
         return this;
     }
@@ -126,7 +129,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedEmbed addDynamicFields(DynamicEmbedField... dynamicFields) {
+    public @NonNull AdvancedEmbed addDynamicFields(@NonNull DynamicEmbedField @NonNull ... dynamicFields) {
         this.dynamicFields.addAll(List.of(dynamicFields));
         return this;
     }
@@ -138,7 +141,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedEmbed addDynamicFields(List<DynamicEmbedField> dynamicFields) {
+    public @NonNull AdvancedEmbed addDynamicFields(@NonNull List<@NonNull DynamicEmbedField> dynamicFields) {
         this.dynamicFields.addAll(dynamicFields);
         return this;
     }
@@ -150,7 +153,7 @@ public class AdvancedEmbed {
      * @return The generated MessageEmbed.
      * @since alpha.4
      */
-    public MessageEmbed build() {
+    public @NonNull MessageEmbed build() {
         return build(null);
     }
 
@@ -161,7 +164,7 @@ public class AdvancedEmbed {
      * @return The generated MessageEmbed.
      * @since alpha.4
      */
-    public MessageEmbed build(Instant timestamp) {
+    public @NonNull MessageEmbed build(@Nullable Instant timestamp) {
 
         return generateEmbedBuilder(timestamp).build();
     }
@@ -173,16 +176,16 @@ public class AdvancedEmbed {
      * @return The generated EmbedBuilder.
      * @since 1.0.0-beta.1
      */
-    private EmbedBuilder generateEmbedBuilder(Instant timestamp) {
+    private @NonNull EmbedBuilder generateEmbedBuilder(@Nullable Instant timestamp) {
         EmbedBuilder builder = new EmbedBuilder();
         Embed embed = template.getEmbed();
 
         if (StringUtils.isNotBlank(embed.basedOn())) {
             TemplateEmbed basedOn = EmbedManager.getTemplateEmbed(embed.basedOn());
             if (basedOn != null) {
-                builder.copyFrom(EmbedManager.getTemplateEmbed(embed.basedOn()).advancedEmbed(locale).setVariables(variables).generateEmbedBuilder(timestamp));
+                builder.copyFrom(basedOn.advancedEmbed(locale).setVariables(variables).generateEmbedBuilder(timestamp));
             } else {
-                log.error("Embed with ID {} is based on an unknown embed with ID {}!", embed.id(), embed.basedOn());
+                throw new ElementNotFoundException(String.format("Could not base embed on embed with ID %s because it does not exist", embed.basedOn()), embed.id());
             }
         }
 
@@ -259,7 +262,7 @@ public class AdvancedEmbed {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    private String processVar(String old) {
+    private @NonNull String processVar(@NonNull String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getEmbed().defaultVars());
     }
 
@@ -268,7 +271,7 @@ public class AdvancedEmbed {
      *
      * @since 1.0.0-alpha.7
      */
-    public record DynamicEmbedField(String title, String description, boolean inline) {
+    public record DynamicEmbedField(@NonNull String title, @NonNull String description, boolean inline) {
 
     }
 }

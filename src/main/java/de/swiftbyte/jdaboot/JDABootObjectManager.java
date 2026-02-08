@@ -1,6 +1,9 @@
 package de.swiftbyte.jdaboot;
 
-import lombok.extern.slf4j.Slf4j;
+import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
+import lombok.CustomLog;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,10 +17,14 @@ import java.util.HashMap;
  *
  * @since 1.0.0-alpha.5
  */
-@Slf4j
-public class JDABootObjectManager {
+@CustomLog
+public final class JDABootObjectManager {
 
-    private static HashMap<Class<?>, Object> objectMap = new HashMap<>();
+    private JDABootObjectManager() {
+        // utility
+    }
+
+    private static @NonNull HashMap<@NonNull Class<?>, @NonNull Object> objectMap = new HashMap<>();
 
     /**
      * Initializes a new object of the specified class and adds it to the object map.
@@ -26,21 +33,19 @@ public class JDABootObjectManager {
      * @return The initialized object, or null if the object could not be initialized.
      * @since 1.0.0-alpha.5
      */
-    public static Object initialiseNewObject(Class<?> clazz) {
+    public static @NonNull Object initialiseNewObject(@NonNull Class<?> clazz) {
         try {
             Constructor<?> constructor = clazz.getDeclaredConstructor();
 
             if (constructor.getParameterCount() != 0) {
-                log.warn("Failed to initialise new object of class {} because it does not have a no-args constructor! Arg constructors are supported in another version!", clazz.getName());
-                return null;
+                throw new ObjectInitializationException("Failed to initialise new object because it does not have a no-args constructor! Arg constructors will be supported in an future version!", clazz);
             }
 
             Object object = clazz.getDeclaredConstructor().newInstance();
             objectMap.put(clazz, object);
             return object;
         } catch (Exception e) {
-            log.warn("Failed to initialise new object of class {}!", clazz.getName(), e);
-            return null;
+            throw new ObjectInitializationException("Failed to initialise new object", clazz, e);
         }
     }
 
@@ -51,7 +56,7 @@ public class JDABootObjectManager {
      * @return The object, or null if the object is not in the map.
      * @since 1.0.0-alpha.5
      */
-    public static Object getObject(Class<?> clazz) {
+    public static @Nullable Object getObject(@NonNull Class<?> clazz) {
         return objectMap.get(clazz);
     }
 
@@ -62,7 +67,7 @@ public class JDABootObjectManager {
      * @return The object, or null if the object could not be initialized.
      * @since 1.0.0-alpha.5
      */
-    public static Object getOrInitialiseObject(Class<?> clazz) {
+    public static @NonNull Object getOrInitialiseObject(@NonNull Class<?> clazz) {
         Object object = getObject(clazz);
         if (object == null) {
             object = initialiseNewObject(clazz);
@@ -78,7 +83,7 @@ public class JDABootObjectManager {
      * @param value The value to inject into the field.
      * @since 1.0.0-alpha.5
      */
-    public static void injectField(Class<?> clazz, Field field, Object value) {
+    public static void injectField(@NonNull Class<?> clazz, @NonNull Field field, @Nullable Object value) {
         try {
 
             if (Modifier.isStatic(field.getModifiers())) {
@@ -108,15 +113,20 @@ public class JDABootObjectManager {
      * @return The castet object
      * @since 1.0.0-alpha.12
      */
-    private static Object autoCast(Class<?> type, Object object) {
+    private static @Nullable Object autoCast(@NonNull Class<?> type, @Nullable Object object) {
+
+        if (object == null) {
+            return null;
+        }
+
         if (object instanceof String str) {
             return switch (type.getName()) {
-                case "int" -> Integer.valueOf(str);
-                case "long" -> Long.valueOf(str);
-                case "short" -> Short.valueOf(str);
-                case "double" -> Double.valueOf(str);
-                case "float" -> Float.valueOf(str);
-                case "byte" -> Byte.valueOf(str);
+                case "int" -> Integer.parseInt(str);
+                case "long" -> Long.parseLong(str);
+                case "short" -> Short.parseShort(str);
+                case "double" -> Double.parseDouble(str);
+                case "float" -> Float.parseFloat(str);
+                case "byte" -> Byte.parseByte(str);
                 case "boolean" -> Boolean.parseBoolean(str);
                 case "char" -> str.charAt(0);
                 default -> object;
@@ -148,7 +158,7 @@ public class JDABootObjectManager {
      * @return The return value of the method, or null if the method could not be run.
      * @since 1.0.0-alpha.5
      */
-    public static Object runMethod(Class<?> clazz, Method method) {
+    public static @Nullable Object runMethod(@NonNull Class<?> clazz, @NonNull Method method) {
         return runMethod(clazz, method, (Object[]) null);
     }
 
@@ -161,7 +171,7 @@ public class JDABootObjectManager {
      * @return The return value of the method, or null if the method could not be run.
      * @since 1.0.0-alpha.5
      */
-    public static Object runMethod(Class<?> clazz, Method method, Object... args) {
+    public static @Nullable Object runMethod(@NonNull Class<?> clazz, @NonNull Method method, @Nullable Object @Nullable ... args) {
         try {
             if (Modifier.isStatic(method.getModifiers())) {
                 if (!method.canAccess(null)) {

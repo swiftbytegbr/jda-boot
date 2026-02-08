@@ -5,21 +5,30 @@ import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.command.Subcommand;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SubcommandGroup;
+import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.interaction.command.*;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.*;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +43,12 @@ import java.util.List;
 @Slf4j
 public class CommandManager extends ListenerAdapter {
 
-    private HashMap<String, SlashCommandExecutor> commands = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull SlashCommandExecutor> commands = new HashMap<>();
 
-    private HashMap<String, ContextCommandExecutor<?>> contextCommands = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull ContextCommandExecutor<?>> contextCommands = new HashMap<>();
 
     @Getter
-    private HashMap<String, CommandData> commandData = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull CommandData> commandData = new HashMap<>();
 
     /**
      * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
@@ -49,7 +58,7 @@ public class CommandManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public CommandManager(JDA jda, Class<?> mainClass) {
+    public CommandManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(SlashCommandDefinition.class).forEach(clazz -> {
@@ -63,8 +72,7 @@ public class CommandManager extends ListenerAdapter {
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.SLASH)) {
-                    log.warn("Command {} is not a slash command but is a child of SlashCommand! Skipping...", name);
-                    return;
+                    throw new ElementRegistrationException("Could not register command because types do not match!", clazz);
                 }
                 commandData.put(data.getName(), data);
                 commands.put(data.getName(), cmd);
@@ -80,8 +88,7 @@ public class CommandManager extends ListenerAdapter {
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.USER)) {
-                    log.warn("Command {} is not a user context command but is a child of UserContextCommand! Skipping...", name);
-                    return;
+                    throw new ElementRegistrationException("Could not register command because types do not match!", clazz);
                 }
                 commandData.put(data.getName(), data);
                 contextCommands.put(data.getName(), cmd);
@@ -97,8 +104,7 @@ public class CommandManager extends ListenerAdapter {
 
                 CommandData data = buildCommand(annotation);
                 if (!data.getType().equals(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE)) {
-                    log.warn("Command {} is not a message context command but is a child of MessageContextCommand! Skipping...", name);
-                    return;
+                    throw new ElementRegistrationException("Could not register command because types do not match!", clazz);
                 }
                 commandData.put(data.getName(), data);
                 contextCommands.put(data.getName(), cmd);
@@ -109,7 +115,7 @@ public class CommandManager extends ListenerAdapter {
                 cmd.onEnable(data);
                 log.info("Registered message context command {}", clazz.getName());
             } else {
-                log.warn("Command {} is not a child of SlashCommand or ContextCommand! Skipping...", name);
+                throw new ElementRegistrationException("Could not register command because types do not match!", clazz);
             }
         });
 
@@ -124,7 +130,7 @@ public class CommandManager extends ListenerAdapter {
      * @since alpha.4
      */
     @Override
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@NonNull SlashCommandInteractionEvent event) {
         String name = event.getName();
         SlashCommandExecutor executor = commands.get(name);
         if (executor != null) {
@@ -141,7 +147,7 @@ public class CommandManager extends ListenerAdapter {
      * @since alpha.4
      */
     @Override
-    public void onCommandAutoCompleteInteraction(@Nonnull CommandAutoCompleteInteractionEvent event) {
+    public void onCommandAutoCompleteInteraction(@NonNull CommandAutoCompleteInteractionEvent event) {
         String name = event.getName();
         SlashCommandExecutor executor = commands.get(name);
         if (executor != null) {
@@ -157,7 +163,7 @@ public class CommandManager extends ListenerAdapter {
      * @since alpha.4
      */
     @Override
-    public void onUserContextInteraction(@Nonnull UserContextInteractionEvent event) {
+    public void onUserContextInteraction(@NonNull UserContextInteractionEvent event) {
         genericContextEvent(event);
     }
 
@@ -169,7 +175,7 @@ public class CommandManager extends ListenerAdapter {
      * @since alpha.4
      */
     @Override
-    public void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event) {
+    public void onMessageContextInteraction(@NonNull MessageContextInteractionEvent event) {
         genericContextEvent(event);
     }
 
@@ -180,7 +186,7 @@ public class CommandManager extends ListenerAdapter {
      * @param event The generic context interaction event.
      * @since alpha.4
      */
-    private void genericContextEvent(GenericContextInteractionEvent<?> event) {
+    private void genericContextEvent(@NonNull GenericContextInteractionEvent<?> event) {
         String name = event.getName();
         ContextCommandExecutor<?> executor = contextCommands.get(name);
 
@@ -203,7 +209,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildCommand(SlashCommandDefinition command) {
+    private @NonNull CommandData buildCommand(@NonNull SlashCommandDefinition command) {
 
         String id = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.name());
 
@@ -221,7 +227,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built SlashCommandData.
      * @since alpha.4
      */
-    private SlashCommandData buildSlashCommand(String id, SlashCommandDefinition command) {
+    private @NonNull SlashCommandData buildSlashCommand(@NonNull String id, @NonNull SlashCommandDefinition command) {
 
         String description = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, command.description());
         SlashCommandData data = Commands.slash(id, description);
@@ -231,11 +237,8 @@ public class CommandManager extends ListenerAdapter {
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         }
 
-        if (command.guildOnly()) {
-            data.setContexts(InteractionContextType.GUILD);
-        } else {
-            data.setContexts(command.contexts());
-        }
+        data.setContexts(command.contexts());
+
         data.setIntegrationTypes(command.integrationTypes());
 
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
@@ -268,7 +271,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private CommandData buildUserOrChatCommand(SlashCommandDefinition.Type type, String id, SlashCommandDefinition command) {
+    private @NonNull CommandData buildUserOrChatCommand(SlashCommandDefinition.@NonNull Type type, @NonNull String id, @NonNull SlashCommandDefinition command) {
 
         CommandData data = null;
 
@@ -276,17 +279,16 @@ public class CommandManager extends ListenerAdapter {
             data = Commands.user(id);
         } else if (type.equals(SlashCommandDefinition.Type.MESSAGE)) {
             data = Commands.message(id);
+        } else {
+            throw new IllegalArgumentException("Unsupported command type");
         }
 
         if (command.enabledFor() != Permission.UNKNOWN) {
             data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.enabledFor()));
         }
 
-        if (command.guildOnly()) {
-            data.setContexts(InteractionContextType.GUILD);
-        } else {
-            data.setContexts(command.contexts());
-        }
+        data.setContexts(command.contexts());
+
         data.setIntegrationTypes(command.integrationTypes());
 
         data.setNameLocalizations(generateDiscordLocalised(command.name()));
@@ -301,7 +303,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The map of localized strings.
      * @since alpha.4
      */
-    private HashMap<DiscordLocale, String> generateDiscordLocalised(String old) {
+    private @NonNull HashMap<@NonNull DiscordLocale, @NonNull String> generateDiscordLocalised(@NonNull String old) {
 
         HashMap<DiscordLocale, String> map = new HashMap<>();
 
@@ -321,7 +323,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The list of built OptionData objects.
      * @since alpha.4
      */
-    private List<OptionData> buildOptions(CommandOption[] options) {
+    private @NonNull List<@NonNull OptionData> buildOptions(@NonNull CommandOption @NonNull [] options) {
 
         List<OptionData> optionDataList = new ArrayList<>();
 
@@ -367,7 +369,7 @@ public class CommandManager extends ListenerAdapter {
      * @return The list of built SubcommandData objects.
      * @since alpha.4
      */
-    private List<SubcommandData> buildSubcommands(Subcommand[] subcommands) {
+    private @NonNull List<@NonNull SubcommandData> buildSubcommands(@NonNull Subcommand @NonNull [] subcommands) {
 
         List<SubcommandData> subcommandDataList = new ArrayList<>();
 

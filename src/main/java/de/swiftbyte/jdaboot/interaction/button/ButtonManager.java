@@ -4,14 +4,19 @@ import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonById;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
+import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
+import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -26,12 +31,12 @@ public class ButtonManager extends ListenerAdapter {
     /**
      * The map of button IDs to ButtonExecutor instances.
      */
-    private HashMap<String, ButtonExecutor> buttonExecutableList = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull ButtonExecutor> buttonExecutableList = new HashMap<>();
 
     /**
      * The map of classes to button IDs.
      */
-    private HashMap<Class<?>, String> classList = new HashMap<>();
+    private @NonNull HashMap<@NonNull Class<?>, @NonNull String> classList = new HashMap<>();
 
 
     /**
@@ -42,7 +47,7 @@ public class ButtonManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public ButtonManager(JDA jda, Class<?> mainClass) {
+    public ButtonManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(ButtonDefinition.class).forEach(clazz -> {
@@ -51,12 +56,10 @@ public class ButtonManager extends ListenerAdapter {
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
             if (id.contains(";")) {
-                log.error("Button ID cannot contain semicolons on button '{}'", clazz.getName());
-                return;
+                throw new ElementRegistrationException("Button ID cannot contain semicolons!", clazz);
             }
             if (id.length() >= 60) {
-                log.error("Button ID cannot be longer than 60 characters on button '{}'", clazz.getName());
-                return;
+                throw new ElementRegistrationException("Button ID cannot be longer than 60 characters!", clazz);
             }
 
             if (ButtonExecutor.class.isAssignableFrom(clazz)) {
@@ -71,11 +74,18 @@ public class ButtonManager extends ListenerAdapter {
 
         reflections.getFieldsAnnotatedWith(ButtonById.class).forEach(field -> {
             ButtonById annotation = field.getAnnotation(ButtonById.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getButton(annotation.value()));
+            TemplateButton button = getButton(annotation.value());
+            if (button == null) {
+                throw new ElementNotFoundException("Could not find button", annotation.value(), field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, annotation);
         });
         reflections.getFieldsAnnotatedWith(ButtonByClass.class).forEach(field -> {
-            ButtonByClass annotation = field.getAnnotation(ButtonByClass.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getButton(annotation.value()));
+            TemplateButton button = getButton(field.getAnnotation(ButtonByClass.class).value());
+            if (button == null) {
+                throw new ElementNotFoundException("Could not find button", field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, button);
         });
 
         jda.addEventListener(this);
@@ -88,7 +98,7 @@ public class ButtonManager extends ListenerAdapter {
      * @return The TemplateButton instance.
      * @since alpha.4
      */
-    public TemplateButton getButton(String id) {
+    public @Nullable TemplateButton getButton(@NonNull String id) {
         ButtonDefinition definition = buttonExecutableList.get(id).getClass().getAnnotation(ButtonDefinition.class);
         return new TemplateButton(definition, id);
     }
@@ -100,7 +110,7 @@ public class ButtonManager extends ListenerAdapter {
      * @return The TemplateButton instance.
      * @since alpha.4
      */
-    public <T extends ButtonExecutor> TemplateButton getButton(Class<T> clazz) {
+    public <T extends ButtonExecutor> @Nullable TemplateButton getButton(@NonNull Class<T> clazz) {
         String id = classList.get(clazz);
         return getButton(id);
     }
@@ -113,12 +123,12 @@ public class ButtonManager extends ListenerAdapter {
      * @since alpha.4
      */
     @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
+    public void onButtonInteraction(@NonNull ButtonInteractionEvent event) {
 
         String[] idParts = event.getComponentId().split(";");
 
         if (buttonExecutableList.containsKey(idParts[0])) {
-            buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? AdvancedButton.getVariablesFromId(idParts[1]) : new HashMap<>());
+            buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedButton.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 }

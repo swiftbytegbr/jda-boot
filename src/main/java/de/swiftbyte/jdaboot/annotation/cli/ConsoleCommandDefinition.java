@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.cli;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,7 +25,7 @@ public @interface ConsoleCommandDefinition {
      * @return The name of the console command.
      * @since alpha.4
      */
-    String name();
+    @NonNull String name();
 
     /**
      * The aliases of the console command.
@@ -32,5 +34,5 @@ public @interface ConsoleCommandDefinition {
      * @return The aliases of the console command.
      * @since alpha.4
      */
-    String[] aliases() default {};
+    @NonNull String @NonNull [] aliases() default {};
 }

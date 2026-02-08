@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.annotation.embed;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.embed.EmbedColor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +25,7 @@ public @interface Embed {
      * @return The ID of the embed.
      * @since 1.0.0.alpha.5
      */
-    String id() default "";
+    @NonNull String id() default "";
 
     /**
      * The ID of the embed that this embed is based on.
@@ -32,7 +33,7 @@ public @interface Embed {
      * @return The ID of the embed that this embed is based on.
      * @since 1.0.0.alpha.5
      */
-    String basedOn() default "";
+    @NonNull String basedOn() default "";
 
     /**
      * The URL of the embed.
@@ -40,7 +41,7 @@ public @interface Embed {
      * @return The URL of the embed.
      * @since alpha.4
      */
-    String url() default "";
+    @NonNull String url() default "";
 
     /**
      * The title of the embed.
@@ -48,7 +49,7 @@ public @interface Embed {
      * @return The title of the embed.
      * @since alpha.4
      */
-    String title() default "";
+    @NonNull String title() default "";
 
     /**
      * The description of the embed.
@@ -56,7 +57,7 @@ public @interface Embed {
      * @return The description of the embed.
      * @since alpha.4
      */
-    String description() default "";
+    @NonNull String description() default "";
 
     /**
      * The color of the embed.
@@ -64,7 +65,7 @@ public @interface Embed {
      * @return The color of the embed.
      * @since alpha.4
      */
-    EmbedColor color() default EmbedColor.NOT_DEFINED;
+    @NonNull EmbedColor color() default EmbedColor.NOT_DEFINED;
 
     /**
      * The hex color of the embed.
@@ -72,7 +73,7 @@ public @interface Embed {
      * @return The hex color of the embed.
      * @since alpha.4
      */
-    String hexColor() default "";
+    @NonNull String hexColor() default "";
 
     /**
      * The thumbnail URL of the embed.
@@ -80,7 +81,7 @@ public @interface Embed {
      * @return The thumbnail URL of the embed.
      * @since alpha.4
      */
-    String thumbnailUrl() default "";
+    @NonNull String thumbnailUrl() default "";
 
     /**
      * The author of the embed.
@@ -88,7 +89,7 @@ public @interface Embed {
      * @return The author of the embed.
      * @since alpha.4
      */
-    EmbedAuthor author() default @EmbedAuthor();
+    @NonNull EmbedAuthor author() default @EmbedAuthor();
 
     /**
      * The footer of the embed.
@@ -96,7 +97,7 @@ public @interface Embed {
      * @return The footer of the embed.
      * @since alpha.4
      */
-    EmbedFooter footer() default @EmbedFooter();
+    @NonNull EmbedFooter footer() default @EmbedFooter();
 
     /**
      * The image URL of the embed.
@@ -104,7 +105,7 @@ public @interface Embed {
      * @return The image URL of the embed.
      * @since alpha.4
      */
-    String imageUrl() default "";
+    @NonNull String imageUrl() default "";
 
     /**
      * The fields of the embed.
@@ -112,7 +113,7 @@ public @interface Embed {
      * @return The fields of the embed.
      * @since alpha.4
      */
-    EmbedField[] fields() default {};
+    @NonNull EmbedField @NonNull [] fields() default {};
 
     /**
      * The default variables of the embed.
@@ -120,6 +121,6 @@ public @interface Embed {
      * @return The default variables of the embed.
      * @since alpha.4
      */
-    DefaultVariable[] defaultVars() default {};
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 
 }

@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
 import de.swiftbyte.jdaboot.interaction.modal.ModalExecutor;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,6 +30,6 @@ public @interface ModalById {
      *
      * @return The unique ID of the modal.
      */
-    String value();
+    @NonNull String value();
 
 }

@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.embed;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * The EmbedField annotation is used to specify a field in an embed.
  * It includes properties to specify the title, description, and whether the field is inline.
@@ -14,7 +16,7 @@ public @interface EmbedField {
      * @return The title of the field.
      * @since alpha.4
      */
-    String title() default "";
+    @NonNull String title() default "";
 
     /**
      * The description of the field.
@@ -22,7 +24,7 @@ public @interface EmbedField {
      * @return The description of the field.
      * @since alpha.4
      */
-    String description() default "";
+    @NonNull String description() default "";
 
     /**
      * Specifies whether the field is inline.

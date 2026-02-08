@@ -1,6 +1,9 @@
 package de.swiftbyte.jdaboot.configuration;
 
-import lombok.extern.slf4j.Slf4j;
+import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
+import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +16,9 @@ import java.util.Properties;
  * @see ConfigProvider
  * @since alpha.4
  */
-@Slf4j
 public class PropertiesConfigProviderImpl extends ConfigProvider {
 
-    private Properties properties;
+    private @Nullable Properties properties;
 
     /**
      * Retrieves the value associated with the specified key.
@@ -28,10 +30,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public Object get(String key, Object defaultValue) {
+    public @NonNull Object get(@NonNull String key, @NonNull Object defaultValue) {
         if (!hasKey(key)) {
             return defaultValue;
         }
+        //noinspection DataFlowIssue
         return getString(key, null);
     }
 
@@ -45,7 +48,11 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public String getString(String key, String defaultValue) {
+    public @NonNull String getString(@NonNull String key, @SuppressWarnings("NullableProblems") @NonNull String defaultValue) {
+        if (properties == null) {
+            throw new StillInitializingException();
+        }
+
         if (properties.getProperty(key) == null) {
             return defaultValue;
         }
@@ -61,7 +68,15 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public int getInt(String key, int defaultValue) {
+    public int getInt(@NonNull String key, int defaultValue) {
+        if (properties == null) {
+            throw new StillInitializingException();
+        }
+
+        if (properties.getProperty(key) == null) {
+            return defaultValue;
+        }
+
         return Integer.parseInt(properties.getProperty(key));
     }
 
@@ -74,7 +89,16 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public boolean getBoolean(String key, boolean defaultValue) {
+    public boolean getBoolean(@NonNull String key, boolean defaultValue) {
+
+        if (properties == null) {
+            throw new StillInitializingException();
+        }
+
+        if (properties.getProperty(key) == null) {
+            return defaultValue;
+        }
+
         return Boolean.parseBoolean(properties.getProperty(key));
     }
 
@@ -86,7 +110,10 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
      * @since alpha.4
      */
     @Override
-    public boolean hasKey(String key) {
+    public boolean hasKey(@NonNull String key) {
+        if (properties == null) {
+            throw new StillInitializingException();
+        }
         return properties.containsKey(key);
     }
 
@@ -113,7 +140,7 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
                 properties.load(resourceStream);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ConfigurationException("Failed to load configuration", configFileName, e);
         }
     }
 }

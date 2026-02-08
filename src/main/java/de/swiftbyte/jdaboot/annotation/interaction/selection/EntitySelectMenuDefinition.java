@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.annotation.interaction.selection;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,7 +24,7 @@ public @interface EntitySelectMenuDefinition {
      * @return The id of the select menu.
      * @since 1.0.0-alpha.11
      */
-    String id() default "";
+    @NonNull String id() default "";
 
     /**
      * Indicates whether roles are enabled for the entity select menu.
@@ -55,7 +56,7 @@ public @interface EntitySelectMenuDefinition {
      * @return An array of ChannelType representing the enabled channel types.
      * @since 1.0.0-alpha.11
      */
-    ChannelType[] channelTypes() default {};
+    @NonNull ChannelType @NonNull [] channelTypes() default {};
 
     /**
      * The placeholder text for the select menu.
@@ -63,7 +64,7 @@ public @interface EntitySelectMenuDefinition {
      * @return The placeholder text.
      * @since 1.0.0-alpha.11
      */
-    String placeholder() default "";
+    @NonNull String placeholder() default "";
 
     /**
      * The minimum number of options that can be selected.
@@ -95,6 +96,6 @@ public @interface EntitySelectMenuDefinition {
      * @return An array of DefaultVariable.
      * @since 1.0.0-alpha.11
      */
-    DefaultVariable[] defaultVars() default {};
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 
 }

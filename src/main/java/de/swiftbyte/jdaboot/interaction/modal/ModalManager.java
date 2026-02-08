@@ -4,10 +4,14 @@ import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
+import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
+import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -26,12 +30,12 @@ public class ModalManager extends ListenerAdapter {
     /**
      * The map of modal IDs to ModalExecutor instances.
      */
-    private HashMap<String, ModalExecutor> modalExecutableList = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull ModalExecutor> modalExecutableList = new HashMap<>();
 
     /**
      * The map of classes to modal IDs.
      */
-    private HashMap<Class<?>, String> classList = new HashMap<>();
+    private HashMap<@NonNull Class<?>, @NonNull String> classList = new HashMap<>();
 
 
     /**
@@ -42,7 +46,7 @@ public class ModalManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since 1.0.0-alpha.7
      */
-    public ModalManager(JDA jda, Class<?> mainClass) {
+    public ModalManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(ModalDefinition.class).forEach(clazz -> {
@@ -52,13 +56,11 @@ public class ModalManager extends ListenerAdapter {
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
             if (id.contains(";")) {
-                log.error("Modal ID cannot contain semicolons on modal '{}'", clazz.getName());
-                return;
+                throw new ElementRegistrationException("Modal ID cannot contain semicolons!", clazz);
             }
 
             if (id.length() >= 60) {
-                log.error("Modal ID cannot be longer than 60 characters on modal '{}'", clazz.getName());
-                return;
+                throw new ElementRegistrationException("Modal ID cannot be longer than 60 characters!", clazz);
             }
 
             if (ModalExecutor.class.isAssignableFrom(clazz)) {
@@ -73,11 +75,18 @@ public class ModalManager extends ListenerAdapter {
 
         reflections.getFieldsAnnotatedWith(ModalById.class).forEach(field -> {
             ModalById annotation = field.getAnnotation(ModalById.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getModal(annotation.value()));
+            TemplateModal modal = getModal(annotation.value());
+            if (modal == null) {
+                throw new ElementNotFoundException("Could not found modal", annotation.value(), field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
         });
         reflections.getFieldsAnnotatedWith(ModalByClass.class).forEach(field -> {
-            ModalByClass annotation = field.getAnnotation(ModalByClass.class);
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, getModal(annotation.value()));
+            TemplateModal modal = getModal(field.getAnnotation(ModalByClass.class).value());
+            if (modal == null) {
+                throw new ElementNotFoundException("Could not found modal", field);
+            }
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
         });
 
         jda.addEventListener(this);
@@ -90,7 +99,7 @@ public class ModalManager extends ListenerAdapter {
      * @return The TemplateModal instance.
      * @since 1.0.0-alpha.7
      */
-    public TemplateModal getModal(String id) {
+    public @Nullable TemplateModal getModal(@NonNull String id) {
         ModalDefinition definition = modalExecutableList.get(id).getClass().getAnnotation(ModalDefinition.class);
         return new TemplateModal(definition, id);
     }
@@ -102,7 +111,7 @@ public class ModalManager extends ListenerAdapter {
      * @return The TemplateModal instance.
      * @since 1.0.0-alpha.7
      */
-    public <T extends ModalExecutor> TemplateModal getModal(Class<T> clazz) {
+    public <T extends ModalExecutor> @Nullable TemplateModal getModal(@NonNull Class<T> clazz) {
         String id = classList.get(clazz);
         return getModal(id);
     }
@@ -115,7 +124,7 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-alpha.7
      */
     @Override
-    public void onModalInteraction(ModalInteractionEvent event) {
+    public void onModalInteraction(@NonNull ModalInteractionEvent event) {
 
         String[] idParts = event.getModalId().split(";");
 

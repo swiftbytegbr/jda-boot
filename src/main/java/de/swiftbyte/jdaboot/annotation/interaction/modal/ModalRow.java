@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,7 +22,7 @@ public @interface ModalRow {
      * @return The id of the input.
      * @since 1.0.0-alpha.7
      */
-    String id();
+    @NonNull String id();
 
     /**
      * The label of the input.
@@ -28,7 +30,7 @@ public @interface ModalRow {
      * @return The label of the input.
      * @since 1.0.0-alpha.7
      */
-    String label();
+    @NonNull String label();
 
     /**
      * The style of the input.
@@ -36,7 +38,7 @@ public @interface ModalRow {
      * @return The style of the input.
      * @since 1.0.0-alpha.7
      */
-    InputStyle inputStyle();
+    @NonNull InputStyle inputStyle();
 
     /**
      * The placeholder of the input.
@@ -44,7 +46,7 @@ public @interface ModalRow {
      * @return The placeholder of the input.
      * @since 1.0.0-alpha.7
      */
-    String placeholder() default "";
+    @NonNull String placeholder() default "";
 
     /**
      * The default value of the input.
@@ -52,7 +54,7 @@ public @interface ModalRow {
      * @return The default value of the input.
      * @since 1.0.0-alpha.7
      */
-    String defaultValue() default "";
+    @NonNull String defaultValue() default "";
 
     /**
      * The minimum length of the input.

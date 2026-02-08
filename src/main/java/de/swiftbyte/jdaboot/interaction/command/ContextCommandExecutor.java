@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.interaction.command;
 
 import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The ContextCommandExecutor interface represents a command that operates within a certain context.
@@ -18,7 +19,7 @@ interface ContextCommandExecutor<T extends GenericContextInteractionEvent<?>> {
      * @param data The data of the context command.
      * @since alpha.4
      */
-    default void onEnable(CommandData data) {
+    default void onEnable(@NonNull CommandData data) {
     }
 
     /**
@@ -27,6 +28,6 @@ interface ContextCommandExecutor<T extends GenericContextInteractionEvent<?>> {
      * @param event The context of the command.
      * @since alpha.4
      */
-    void onCommand(T event);
+    void onCommand(@NonNull T event);
 
 }

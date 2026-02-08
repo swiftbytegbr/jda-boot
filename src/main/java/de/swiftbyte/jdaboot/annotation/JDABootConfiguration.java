@@ -6,6 +6,7 @@ import de.swiftbyte.jdaboot.variables.ResourceBundleTranslationProviderImpl;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,7 +31,7 @@ public @interface JDABootConfiguration {
      * @return The configuration provider chain.
      * @since 1.0.0-alpha.5
      */
-    Class<? extends ConfigProvider>[] additionalConfigProviders() default {};
+    @NonNull Class<? extends ConfigProvider> @NonNull [] additionalConfigProviders() default {};
 
     /**
      * Specifies the translation provider class to be used.
@@ -39,7 +40,7 @@ public @interface JDABootConfiguration {
      * @return The translation provider class.
      * @since alpha.4
      */
-    Class<? extends TranslationProvider> translationProvider() default ResourceBundleTranslationProviderImpl.class;
+    @NonNull Class<? extends TranslationProvider> translationProvider() default ResourceBundleTranslationProviderImpl.class;
 
     /**
      * Specifies the GatewayIntents that the JDA instance should be configured with.
@@ -48,7 +49,7 @@ public @interface JDABootConfiguration {
      * @return An array of GatewayIntents.
      * @since alpha.4
      */
-    GatewayIntent[] intents() default {};
+    @NonNull GatewayIntent @NonNull [] intents() default {};
 
     /**
      * Specifies the CacheFlags that should be enabled in the JDA instance.
@@ -57,7 +58,7 @@ public @interface JDABootConfiguration {
      * @return An array of CacheFlags to enable.
      * @since alpha.4
      */
-    CacheFlag[] enabledCacheFlags() default {};
+    @NonNull CacheFlag @NonNull [] enabledCacheFlags() default {};
 
     /**
      * Specifies the CacheFlags that should be disabled in the JDA instance.
@@ -66,7 +67,7 @@ public @interface JDABootConfiguration {
      * @return An array of CacheFlags to disable.
      * @since alpha.4
      */
-    CacheFlag[] disabledCacheFlags() default {};
+    @NonNull CacheFlag @NonNull [] disabledCacheFlags() default {};
 
     /**
      * Specifies the MemberCachePolicy that the JDA instance should use.
@@ -75,7 +76,7 @@ public @interface JDABootConfiguration {
      * @return The MemberCachePolicy to use.
      * @since alpha.4
      */
-    MemberCachePolicyConfiguration memberCachePolicy() default MemberCachePolicyConfiguration.DEFAULT;
+    @NonNull MemberCachePolicyConfiguration memberCachePolicy() default MemberCachePolicyConfiguration.DEFAULT;
 
     /**
      * Specifies whether console commands should be enabled.
@@ -93,6 +94,6 @@ public @interface JDABootConfiguration {
      * @return The profile to use for the configuration.
      * @since 1.0.0-alpha.5
      */
-    String configProfile() default "default";
+    @NonNull String configProfile() default "default";
 
 }

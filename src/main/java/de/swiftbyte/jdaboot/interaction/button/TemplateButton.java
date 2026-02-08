@@ -4,6 +4,7 @@ import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The TemplateButton class is responsible for generating advanced buttons based on a provided template.
@@ -15,10 +16,10 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 public class TemplateButton {
 
     @Getter(AccessLevel.PACKAGE)
-    private final ButtonDefinition definition;
+    private final @NonNull ButtonDefinition definition;
 
     @Getter(AccessLevel.PACKAGE)
-    private final String id;
+    private final @NonNull String id;
 
     /**
      * Constructor for TemplateButton. Initializes the template with the specified ButtonDefinition annotation.
@@ -26,7 +27,7 @@ public class TemplateButton {
      * @param buttonDefinition The ButtonDefinition annotation to use as a template.
      * @since 1.0.0-alpha.6
      */
-    protected TemplateButton(ButtonDefinition buttonDefinition, String id) {
+    protected TemplateButton(@NonNull ButtonDefinition buttonDefinition, @NonNull String id) {
         this.definition = buttonDefinition;
         this.id = id;
     }
@@ -38,7 +39,7 @@ public class TemplateButton {
      * @return The generated AdvancedButton.
      * @since 1.0.0-alpha.6
      */
-    public AdvancedButton advancedButton(DiscordLocale locale) {
+    public @NonNull AdvancedButton advancedButton(@NonNull DiscordLocale locale) {
         return new AdvancedButton(this, locale);
     }
 
@@ -48,7 +49,7 @@ public class TemplateButton {
      * @return The generated AdvancedButton.
      * @since 1.0.0-alpha.6
      */
-    public AdvancedButton advancedButton() {
+    public @NonNull AdvancedButton advancedButton() {
         return new AdvancedButton(this, DiscordLocale.ENGLISH_US);
     }
 }

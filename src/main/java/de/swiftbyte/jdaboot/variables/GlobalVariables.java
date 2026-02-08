@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.variables;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -16,7 +18,7 @@ public class GlobalVariables {
      *
      * @since 1.0.0-beta.1
      */
-    private static HashMap<String, Supplier<String>> variables = new HashMap<>();
+    private static @NonNull HashMap<@NonNull String, @NonNull Supplier<@NonNull String>> variables = new HashMap<>();
 
     /**
      * Retrieves the value of the specified variable.
@@ -25,7 +27,7 @@ public class GlobalVariables {
      * @return The value of the variable, or null if the variable does not exist.
      * @since 1.0.0-beta.1
      */
-    public static String get(String key) {
+    public static @NonNull String get(@NonNull String key) {
         return variables.get(key).get();
     }
 
@@ -37,7 +39,7 @@ public class GlobalVariables {
      * @param value The value to set.
      * @since 1.0.0-beta.1
      */
-    public static void set(String key, String value) {
+    public static void set(@NonNull String key, @NonNull String value) {
         variables.put(key, () -> value);
     }
 
@@ -49,7 +51,7 @@ public class GlobalVariables {
      * @param value The supplier providing the value.
      * @since 1.0.0-beta.1
      */
-    public static void setDynamicValue(String key, Supplier<String> value) {
+    public static void setDynamicValue(@NonNull String key, @NonNull Supplier<@NonNull String> value) {
         variables.put(key, value);
     }
 
@@ -60,7 +62,7 @@ public class GlobalVariables {
      * @return True if the variable exists, false otherwise.
      * @since 1.0.0-beta.1
      */
-    public static boolean hasVariable(String key) {
+    public static boolean hasVariable(@NonNull String key) {
         return variables.containsKey(key);
     }
 }

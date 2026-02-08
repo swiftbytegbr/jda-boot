@@ -4,9 +4,11 @@ import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.components.buttons.Button;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -19,14 +21,14 @@ import java.util.UUID;
  */
 public class AdvancedButton {
 
-    private TemplateButton template;
+    private @NonNull TemplateButton template;
 
     @Getter
     @Setter
-    private DiscordLocale locale;
+    private @NonNull DiscordLocale locale;
 
-    private HashMap<String, String> variables = new HashMap<>();
-    private static HashMap<String, HashMap<String, String>> variableTransfer = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
+    private static @NonNull HashMap<@NonNull String, @NonNull HashMap<@NonNull String, @NonNull String>> variableTransfer = new HashMap<>();
 
     /**
      * Constructor for AdvancedButton. Initializes the button with the specified template, variables, and locale.
@@ -35,7 +37,7 @@ public class AdvancedButton {
      * @param locale   The locale to use for the button.
      * @since 1.0.0-alpha.6
      */
-    protected AdvancedButton(TemplateButton template, DiscordLocale locale) {
+    protected AdvancedButton(@NonNull TemplateButton template, @NonNull DiscordLocale locale) {
         this.template = template;
         this.locale = locale;
     }
@@ -49,7 +51,7 @@ public class AdvancedButton {
      * @throws NullPointerException If the variable key or value is null.
      * @since 1.0.0-alpha.6
      */
-    public AdvancedButton setVariable(String key, String value) {
+    public @NonNull AdvancedButton setVariable(@NonNull String key, @NonNull String value) {
         variables.put(key, value);
         return this;
     }
@@ -60,7 +62,7 @@ public class AdvancedButton {
      * @return The generated Button.
      * @since 1.0.0-alpha.6
      */
-    public Button build() {
+    public @NonNull Button build() {
 
         String variableId = UUID.randomUUID().toString();
         variableTransfer.put(variableId, variables);
@@ -91,7 +93,7 @@ public class AdvancedButton {
      * @return The processed string with placeholders replaced by variable values.
      * @since 1.0.0-alpha.6
      */
-    private String processVar(String old) {
+    private @NonNull String processVar(@NonNull String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
     }
 
@@ -102,7 +104,7 @@ public class AdvancedButton {
      * @return The variables associated with the ID.
      * @since 1.0.0-alpha.9
      */
-    public static HashMap<String, String> getVariablesFromId(String id) {
+    public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
         return variableTransfer.get(id);
     }
 

@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.embed;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * The EmbedAuthor annotation is used to specify the author of an embed.
  * It includes properties to specify the name, URL, and icon URL of the author.
@@ -14,7 +16,7 @@ public @interface EmbedAuthor {
      * @return The name of the author.
      * @since alpha.4
      */
-    String name() default "";
+    @NonNull String name() default "";
 
     /**
      * The URL of the author.
@@ -22,7 +24,7 @@ public @interface EmbedAuthor {
      * @return The URL of the author.
      * @since alpha.4
      */
-    String url() default "";
+    @NonNull String url() default "";
 
     /**
      * The icon URL of the author.
@@ -30,6 +32,6 @@ public @interface EmbedAuthor {
      * @return The icon URL of the author.
      * @since alpha.4
      */
-    String iconUrl() default "";
+    @NonNull String iconUrl() default "";
 
 }

@@ -233,8 +233,8 @@ public class ConfigClass {
     - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Updated and improved docs
 - 🚧 Support for Components V2
-- ⛔ Improved Kotlin friendliness
+- 🚧 Improved Kotlin friendliness
 - ⛔ Database ORM System
-- ⛔ Better error handling
+- 🚧 Better error handling
 
 

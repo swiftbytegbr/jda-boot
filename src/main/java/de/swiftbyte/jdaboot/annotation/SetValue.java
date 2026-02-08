@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,5 +23,5 @@ public @interface SetValue {
      * @return The key used to retrieve the value.
      * @since alpha.4
      */
-    String value();
+    @NonNull String value();
 }

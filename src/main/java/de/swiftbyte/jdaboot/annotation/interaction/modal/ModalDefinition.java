@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,7 +23,7 @@ public @interface ModalDefinition {
      * @return The title of the modal.
      * @since 1.0.0-alpha.7
      */
-    String title();
+    @NonNull String title();
 
     /**
      * The id of the modal.
@@ -30,9 +31,9 @@ public @interface ModalDefinition {
      * @return The id of the modal.
      * @since 1.0.0-alpha.7
      */
-    String id() default "";
+    @NonNull String id() default "";
 
-    ModalRow[] rows() default {};
+    @NonNull ModalRow @NonNull [] rows() default {};
 
     /**
      * The default variables of the modal.
@@ -40,6 +41,6 @@ public @interface ModalDefinition {
      * @return The default variables of the modal.
      * @since 1.0.0-alpha.7
      */
-    DefaultVariable[] defaultVars() default {};
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 
 }

@@ -3,9 +3,11 @@ package de.swiftbyte.jdaboot;
 
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
+import de.swiftbyte.jdaboot.exceptions.JDABootInitializationException;
+import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
 import lombok.AccessLevel;
+import lombok.CustomLog;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,10 +16,13 @@ import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The JDABoot class is responsible for initializing and starting the Discord bot.
@@ -25,22 +30,21 @@ import java.util.List;
  *
  * @since alpha.4
  */
-@Slf4j
 @JDABootConfiguration
-public class JDABoot {
+@CustomLog
+public final class JDABoot {
 
     @Getter
-    private static JDABoot instance;
+    private static @NonNull JDABoot instance;
 
     @Getter(AccessLevel.PROTECTED)
-    private static HashMap<String, String> startupArgs;
+    private static @NonNull HashMap<@NonNull String, @NonNull String> startupArgs = new HashMap<>();
 
-    @Getter
-    private JDA jda;
+    private @Nullable JDA jda;
 
-    private Class<?> mainClass;
+    private @NonNull Class<?> mainClass;
 
-    private ConfigProvider configProvider;
+    private @NonNull ConfigProvider configProvider;
 
     /**
      * Protected constructor for JDABoot. Initializes the bot with the specified settings.
@@ -49,7 +53,7 @@ public class JDABoot {
      * @param args      The command line arguments.
      * @since alpha.4
      */
-    protected JDABoot(Class<?> mainClass, String[] args) {
+    private JDABoot(@NonNull Class<?> mainClass, @NonNull String @NonNull [] args) {
         this.mainClass = mainClass;
         init(args);
     }
@@ -61,8 +65,13 @@ public class JDABoot {
      * @param args      The command line arguments.
      * @since alpha.4
      */
-    public static void run(Class<?> mainClass, String[] args) {
-        new JDABoot(mainClass, args);
+    public static void run(@NonNull Class<?> mainClass, @NonNull String @NonNull [] args) {
+        try {
+            new JDABoot(mainClass, args);
+        } catch (Exception e) {
+            log.error("An error occurred while starting jda-boot. The system will now exit", e);
+            System.exit(1);
+        }
     }
 
     /**
@@ -72,18 +81,24 @@ public class JDABoot {
      * @since alpha.2
      */
     public void updateCommands() {
-        jda.updateCommands().queue();
+        getJda().updateCommands().queue();
     }
 
     /**
      * Updates the commands for a specific guild.
      *
      * @param guildId The ID of the guild to update commands for.
+     * @return true if the guild was found and the update was initiated, false otherwise.
      * @see Guild#updateCommands()
      * @since alpha.2
      */
-    public void updateCommands(String guildId) {
-        jda.getGuildById(guildId).updateCommands().queue();
+    public boolean updateCommands(@NonNull String guildId) {
+        Guild guild = getJda().getGuildById(guildId);
+        if (guild == null) {
+            return false;
+        }
+        guild.updateCommands().queue();
+        return true;
     }
 
     /**
@@ -91,11 +106,18 @@ public class JDABoot {
      *
      * @param guildId   The ID of the guild to register the command for.
      * @param commandId The ID of the command to register.
+     * @return true if the guild was found and the update was initiated, false otherwise.
      * @see Guild#upsertCommand(CommandData)
      * @since alpha.2
      */
-    public void registerCommand(String guildId, String commandId) {
-        jda.getGuildById(guildId).upsertCommand(JDABootConfigurationManager.getCommandManager().getCommandData().get(commandId)).queue();
+    public boolean registerCommand(@NonNull String guildId, @NonNull String commandId) {
+        Guild guild = getJda().getGuildById(guildId);
+        CommandData commandData = JDABootConfigurationManager.getCommandManager().getCommandData().get(commandId);
+        if (guild == null || commandData == null) {
+            return false;
+        }
+        guild.upsertCommand(commandData).queue();
+        return true;
     }
 
     /**
@@ -104,14 +126,13 @@ public class JDABoot {
      * @param args The command line arguments.
      * @since alpha.4
      */
-    private void init(String[] args) {
+    private void init(@NonNull String @NonNull [] args) {
 
         instance = this;
-        startupArgs = new HashMap<>();
         for (String arg : args) {
             String[] split = arg.replace("-", "").split("=");
             if (split.length == 2) {
-                startupArgs.put(split[0], split[1]);
+                startupArgs.put(Objects.requireNonNull(split[0]), Objects.requireNonNull(split[1]));
             } else {
                 startupArgs.put(arg, arg);
             }
@@ -124,14 +145,11 @@ public class JDABoot {
         try {
             discordLogin();
         } catch (InterruptedException e) {
-            log.error("Error while logging in to Discord. " + "\nThe system will now exit.", e);
-            System.exit(1);
+            throw new JDABootInitializationException("Error while logging in to Discord", e);
         } catch (InvalidTokenException e) {
-            log.error("There is an invalid token in the config provided. You can create a token here: https://discord.com/developers/applications", e);
-            System.exit(1);
-        } catch (IllegalArgumentException e) {
-            log.error("An error occurred while logging in to Discord!", e);
-            System.exit(1);
+            throw new JDABootInitializationException("There is an invalid token provided in the config. You can create a token here: https://discord.com/developers/applications", e);
+        } catch (Exception e) {
+            throw new JDABootInitializationException("An error occurred while logging in to Discord!", e);
         }
         log.info("JDABoot initialized!");
     }
@@ -195,5 +213,12 @@ public class JDABoot {
                 JDABootObjectManager.runMethod(mainClass, declaredMethod);
             }
         }
+    }
+
+    public @NonNull JDA getJda() {
+        if (jda == null) {
+            throw new StillInitializingException();
+        }
+        return jda;
     }
 }

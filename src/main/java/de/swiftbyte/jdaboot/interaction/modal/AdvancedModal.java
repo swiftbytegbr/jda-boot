@@ -8,14 +8,18 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.modals.Modal;
+import org.jspecify.annotations.NonNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The AdvancedModal class is responsible for generating advanced modals based on a provided TemplateModal.
@@ -25,15 +29,15 @@ import java.util.*;
  */
 public class AdvancedModal {
 
-    private TemplateModal template;
+    private @NonNull TemplateModal template;
 
     @Getter
     @Setter
-    private DiscordLocale locale;
+    private @NonNull DiscordLocale locale;
 
-    private HashMap<String, String> variables = new HashMap<>();
-    private List<DynamicModalRow> dynamicRows = new ArrayList<>();
-    private static HashMap<String, HashMap<String, String>> variableTransfer = new HashMap<>();
+    private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
+    private @NonNull List<@NonNull DynamicModalRow> dynamicRows = new ArrayList<>();
+    private static @NonNull HashMap<@NonNull String, @NonNull HashMap<@NonNull String, @NonNull String>> variableTransfer = new HashMap<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -42,7 +46,7 @@ public class AdvancedModal {
      * @param locale   The locale to use for the modal.
      * @since 1.0.0-alpha.7
      */
-    protected AdvancedModal(TemplateModal template, DiscordLocale locale) {
+    protected AdvancedModal(@NonNull TemplateModal template, @NonNull DiscordLocale locale) {
         this.template = template;
         this.locale = locale;
     }
@@ -56,7 +60,7 @@ public class AdvancedModal {
      * @throws NullPointerException If the variable key or value is null.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal setVariable(String key, String value) {
+    public @NonNull AdvancedModal setVariable(@NonNull String key, @NonNull String value) {
         variables.put(key, value);
         return this;
     }
@@ -68,7 +72,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal addDynamicRow(DynamicModalRow dynamicModalRow) {
+    public @NonNull AdvancedModal addDynamicRow(@NonNull DynamicModalRow dynamicModalRow) {
         dynamicRows.add(dynamicModalRow);
         return this;
     }
@@ -87,7 +91,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal addDynamicModalRow(String id, String label, TextInputStyle style, String placeholder, boolean required, int maxLength, int minLength, String defaultValue) {
+    public @NonNull AdvancedModal addDynamicModalRow(@NonNull String id, @NonNull String label, @NonNull TextInputStyle style, @NonNull String placeholder, boolean required, int maxLength, int minLength, @NonNull String defaultValue) {
         dynamicRows.add(new DynamicModalRow(id, label, style, placeholder, required, maxLength, minLength, defaultValue));
         return this;
     }
@@ -99,7 +103,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal addDynamicRows(DynamicModalRow... dynamicModalRow) {
+    public @NonNull AdvancedModal addDynamicRows(@NonNull DynamicModalRow @NonNull ... dynamicModalRow) {
         dynamicRows.addAll(List.of(dynamicModalRow));
         return this;
     }
@@ -111,7 +115,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public AdvancedModal addDynamicRows(Collection<DynamicModalRow> dynamicModalRow) {
+    public @NonNull AdvancedModal addDynamicRows(@NonNull Collection<@NonNull DynamicModalRow> dynamicModalRow) {
         dynamicRows.addAll(dynamicModalRow);
         return this;
     }
@@ -122,7 +126,7 @@ public class AdvancedModal {
      * @return The generated Modal.
      * @since 1.0.0-alpha.7
      */
-    public Modal build() {
+    public @NonNull Modal build() {
 
         String variableId = UUID.randomUUID().toString();
         variableTransfer.put(variableId, variables);
@@ -195,7 +199,7 @@ public class AdvancedModal {
      * @return The processed string with placeholders replaced by variable values.
      * @since 1.0.0-alpha.7
      */
-    private String processVar(String old) {
+    private @NonNull String processVar(@NonNull String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
     }
 
@@ -209,16 +213,16 @@ public class AdvancedModal {
     @Data
     public static class DynamicModalRow {
 
-        private String id;
-        private String label;
-        private TextInputStyle style;
-        private String placeholder = "";
+        private @NonNull String id;
+        private @NonNull String label;
+        private @NonNull TextInputStyle style;
+        private @NonNull String placeholder = "";
         private boolean required;
         private int maxLength;
         private int minLength;
-        private String defaultValue = "";
+        private @NonNull String defaultValue = "";
 
-        public DynamicModalRow(String id, String label, TextInputStyle style) {
+        public DynamicModalRow(@NonNull String id, @NonNull String label, @NonNull TextInputStyle style) {
             this.id = id;
             this.label = label;
             this.style = style;
@@ -232,7 +236,7 @@ public class AdvancedModal {
      * @return The variables from the given ID.
      * @since 1.0.0-alpha.9
      */
-    public static HashMap<String, String> getVariablesFromId(String id) {
+    public static @NonNull HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
         return variableTransfer.get(id);
     }
 }

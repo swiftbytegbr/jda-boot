@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot;
 
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The MemberCachePolicyConfiguration enum is used to map the JDA's MemberCachePolicy options to enum constants.
@@ -22,7 +23,7 @@ public enum MemberCachePolicyConfiguration {
      *
      * @return The corresponding JDA's MemberCachePolicy.
      */
-    public MemberCachePolicy getJDAUtilsMemberCachePolicy() {
+    public @Nullable MemberCachePolicy getJDAUtilsMemberCachePolicy() {
         return switch (this) {
             case ALL -> MemberCachePolicy.ALL;
             case ONLINE -> MemberCachePolicy.ONLINE;

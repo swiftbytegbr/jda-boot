@@ -3,7 +3,7 @@ package de.swiftbyte.jdaboot.configuration;
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.SetValue;
-import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -15,7 +15,6 @@ import org.reflections.scanners.Scanners;
  * @see JDABootConfigurationManager
  * @since alpha.4
  */
-@Slf4j
 public class ConfigValueManager {
 
     /**
@@ -24,12 +23,17 @@ public class ConfigValueManager {
      * @param mainClass The main class of the application.
      * @since alpha.4
      */
-    public ConfigValueManager(Class<?> mainClass) {
+    public ConfigValueManager(@NonNull Class<?> mainClass) {
 
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
-        reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> JDABootObjectManager.injectField(field.getDeclaringClass(),
-                field, JDABootConfigurationManager.getConfigProviderChain().get(field.getAnnotation(SetValue.class).value())));
+        reflections.getFieldsAnnotatedWith(SetValue.class).forEach(field -> JDABootObjectManager.injectField(
+                field.getDeclaringClass(),
+                field,
+                JDABootConfigurationManager.getConfigProviderChain().get(
+                        field.getAnnotation(SetValue.class).value()
+                )
+        ));
     }
 
 }

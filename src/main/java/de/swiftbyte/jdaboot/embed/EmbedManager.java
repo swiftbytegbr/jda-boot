@@ -4,6 +4,8 @@ import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -18,7 +20,7 @@ import java.util.HashMap;
 @Slf4j
 public class EmbedManager {
 
-    private static HashMap<String, TemplateEmbed> templateEmbeds = new HashMap<>();
+    private static @NonNull HashMap<@NonNull String, @NonNull TemplateEmbed> templateEmbeds = new HashMap<>();
 
     /**
      * Constructor for EmbedManager. Initializes the manager with the specified main class.
@@ -26,7 +28,7 @@ public class EmbedManager {
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public EmbedManager(Class<?> mainClass) {
+    public EmbedManager(@NonNull Class<?> mainClass) {
 
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated);
 
@@ -53,7 +55,7 @@ public class EmbedManager {
      * @return The TemplateEmbed with the specified ID.
      * @since 1.0.0.alpha.5
      */
-    public static TemplateEmbed getTemplateEmbed(String id) {
+    public static @Nullable TemplateEmbed getTemplateEmbed(@NonNull String id) {
         return templateEmbeds.get(id);
     }
 }

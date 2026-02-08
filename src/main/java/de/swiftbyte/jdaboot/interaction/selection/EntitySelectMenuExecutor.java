@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.selection;
 
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 
@@ -19,6 +20,6 @@ public interface EntitySelectMenuExecutor {
      * @param variables The variables set in the advanced select menu, empty when fix id is used and select menu was created before a restart.
      * @since 1.0.0-alpha.11
      */
-    void onSelectMenuSubmit(EntitySelectInteractionEvent event, HashMap<String, String> variables);
+    void onSelectMenuSubmit(@NonNull EntitySelectInteractionEvent event, @NonNull HashMap<@NonNull String, @NonNull String> variables);
 
 }
