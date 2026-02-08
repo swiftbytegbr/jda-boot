@@ -78,7 +78,7 @@ public class ButtonManager extends ListenerAdapter {
             if (button == null) {
                 throw new ElementNotFoundException("Could not find button", annotation.value(), field);
             }
-            JDABootObjectManager.injectField(field.getDeclaringClass(), field, annotation);
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, button);
         });
         reflections.getFieldsAnnotatedWith(ButtonByClass.class).forEach(field -> {
             TemplateButton button = getButton(field.getAnnotation(ButtonByClass.class).value());
