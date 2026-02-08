@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The AdvancedModal class is responsible for generating advanced modals based on a provided TemplateModal.
@@ -38,7 +40,7 @@ public class AdvancedModal {
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
     private @NonNull List<@NonNull DynamicModalRow> dynamicRows = new ArrayList<>();
-    private static @NonNull HashMap<@NonNull String, @NonNull HashMap<@NonNull String, @NonNull String>> variableTransfer = new HashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -130,7 +132,7 @@ public class AdvancedModal {
     public @NonNull Modal build() {
 
         String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, variables);
+        variableTransfer.put(variableId, Map.copyOf(variables));
 
         String id = template.getId() + ";" + variableId;
         String title = processVar(template.getDefinition().title());
@@ -238,6 +240,10 @@ public class AdvancedModal {
      * @since 1.0.0-alpha.9
      */
     public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
-        return variableTransfer.get(id);
+        Map<String, String> storedVariables = variableTransfer.get(id);
+        if (storedVariables == null) {
+            return null;
+        }
+        return new HashMap<>(storedVariables);
     }
 }

@@ -11,7 +11,9 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The AdvancedButton class is responsible for generating advanced buttons based on a provided TemplateButton.
@@ -28,7 +30,7 @@ public class AdvancedButton {
     private @NonNull DiscordLocale locale;
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
-    private static @NonNull HashMap<@NonNull String, @NonNull HashMap<@NonNull String, @NonNull String>> variableTransfer = new HashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     /**
      * Constructor for AdvancedButton. Initializes the button with the specified template, variables, and locale.
@@ -65,7 +67,7 @@ public class AdvancedButton {
     public @NonNull Button build() {
 
         String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, variables);
+        variableTransfer.put(variableId, Map.copyOf(variables));
 
         ButtonDefinition definition = template.getDefinition();
         String id = template.getId() + ";" + variableId;
@@ -105,7 +107,11 @@ public class AdvancedButton {
      * @since 1.0.0-alpha.9
      */
     public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
-        return variableTransfer.get(id);
+        Map<String, String> storedVariables = variableTransfer.get(id);
+        if (storedVariables == null) {
+            return null;
+        }
+        return new HashMap<>(storedVariables);
     }
 
 }

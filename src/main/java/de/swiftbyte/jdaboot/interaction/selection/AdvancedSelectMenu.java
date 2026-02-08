@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The AdvancedSelectMenu class is responsible for generating advanced select menus based on a provided TemplateSelectMenu.
@@ -37,7 +39,7 @@ public class AdvancedSelectMenu {
     private @NonNull DiscordLocale locale;
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
-    private static @NonNull HashMap<@NonNull String, @NonNull HashMap<@NonNull String, @NonNull String>> variableTransfer = new HashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     private @NonNull List<EntitySelectMenu.@NonNull DefaultValue> defaultValues = new ArrayList<>();
 
@@ -172,7 +174,7 @@ public class AdvancedSelectMenu {
     public @NonNull EntitySelectMenu buildEntitySelectMenu(@NonNull EntitySelectMenuDefinition definition) {
 
         String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, variables);
+        variableTransfer.put(variableId, Map.copyOf(variables));
 
         String id = template.getId() + ";" + variableId;
 
@@ -226,7 +228,7 @@ public class AdvancedSelectMenu {
     public @NonNull StringSelectMenu buildStringSelectMenu(@NonNull StringSelectMenuDefinition definition) {
 
         String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, variables);
+        variableTransfer.put(variableId, Map.copyOf(variables));
 
         String id = template.getId() + ";" + variableId;
 
@@ -317,7 +319,11 @@ public class AdvancedSelectMenu {
      * @since 1.0.0-alpha.11
      */
     public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
-        return variableTransfer.get(id);
+        Map<String, String> storedVariables = variableTransfer.get(id);
+        if (storedVariables == null) {
+            return null;
+        }
+        return new HashMap<>(storedVariables);
     }
 
     /**
