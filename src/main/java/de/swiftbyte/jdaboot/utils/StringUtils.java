@@ -7,7 +7,11 @@ import org.jspecify.annotations.Nullable;
  *
  * @since 1.0.0.alpha.5
  */
-public class StringUtils {
+public final class StringUtils {
+
+    private StringUtils() {
+        //utility
+    }
 
     /**
      * Checks if the specified string is blank.
