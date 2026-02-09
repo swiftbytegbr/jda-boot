@@ -10,6 +10,7 @@ import de.swiftbyte.jdaboot.event.EventManager;
 import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
 import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
 import de.swiftbyte.jdaboot.interaction.button.ButtonManager;
+import de.swiftbyte.jdaboot.interaction.component.v2.ComponentV2Manager;
 import de.swiftbyte.jdaboot.interaction.command.CommandManager;
 import de.swiftbyte.jdaboot.interaction.modal.ModalManager;
 import de.swiftbyte.jdaboot.interaction.selection.SelectMenuManager;
@@ -85,6 +86,9 @@ public final class JDABootConfigurationManager {
     @Getter(AccessLevel.PUBLIC)
     private static @Nullable SelectMenuManager selectMenuManager;
 
+    @Getter(AccessLevel.PUBLIC)
+    private static @Nullable ComponentV2Manager componentV2Manager;
+
     private static boolean consoleCommandsEnabled;
 
     private JDABootConfigurationManager() {
@@ -150,6 +154,7 @@ public final class JDABootConfigurationManager {
         buttonManager = new ButtonManager(jda, mainClass);
         selectMenuManager = new SelectMenuManager(jda, mainClass);
         modalManager = new ModalManager(jda, mainClass);
+        componentV2Manager = new ComponentV2Manager(mainClass);
 
         new EventManager(jda, mainClass);
         //noinspection InstantiationOfUtilityClass

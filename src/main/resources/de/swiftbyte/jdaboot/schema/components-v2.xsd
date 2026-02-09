@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://jda-boot.swiftbyte.de/schema/components-v2"
+           xmlns="https://jda-boot.swiftbyte.de/schema/components-v2"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="idType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="59"/>
+            <xs:pattern value="[^;]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="spacingType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SMALL"/>
+            <xs:enumeration value="LARGE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="defaultVarType">
+        <xs:attribute name="variable" type="nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="textDisplayType">
+        <xs:attribute name="content" type="nonEmptyString" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="separatorType">
+        <xs:attribute name="divider" type="xs:boolean"/>
+        <xs:attribute name="spacing" type="spacingType"/>
+    </xs:complexType>
+
+    <xs:complexType name="buttonRefType">
+        <xs:attribute name="id" type="idType"/>
+        <xs:attribute name="class" type="nonEmptyString"/>
+    </xs:complexType>
+
+    <xs:complexType name="stringSelectRefType">
+        <xs:attribute name="id" type="idType"/>
+        <xs:attribute name="class" type="nonEmptyString"/>
+    </xs:complexType>
+
+    <xs:complexType name="entitySelectRefType">
+        <xs:attribute name="id" type="idType"/>
+        <xs:attribute name="class" type="nonEmptyString"/>
+    </xs:complexType>
+
+    <xs:complexType name="thumbnailType">
+        <xs:attribute name="url" type="nonEmptyString" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="spoiler" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="fileDisplayType">
+        <xs:attribute name="file-name" type="nonEmptyString" use="required"/>
+        <xs:attribute name="spoiler" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="mediaGalleryItemType">
+        <xs:attribute name="url" type="nonEmptyString" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="spoiler" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="mediaGalleryType">
+        <xs:sequence>
+            <xs:element name="item" type="mediaGalleryItemType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="actionRowType">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="button-ref" type="buttonRefType" maxOccurs="5"/>
+            </xs:sequence>
+            <xs:element name="string-select-ref" type="stringSelectRefType"/>
+            <xs:element name="entity-select-ref" type="entitySelectRefType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="sectionContentType">
+        <xs:sequence>
+            <xs:element name="text-display" type="textDisplayType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="sectionAccessoryType">
+        <xs:choice>
+            <xs:element name="button-ref" type="buttonRefType"/>
+            <xs:element name="thumbnail" type="thumbnailType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="sectionType">
+        <xs:sequence>
+            <xs:element name="content" type="sectionContentType"/>
+            <xs:element name="accessory" type="sectionAccessoryType"/>
+        </xs:sequence>
+        <xs:attribute name="disabled" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:group name="containerChildren">
+        <xs:choice>
+            <xs:element name="text-display" type="textDisplayType"/>
+            <xs:element name="separator" type="separatorType"/>
+            <xs:element name="file-display" type="fileDisplayType"/>
+            <xs:element name="media-gallery" type="mediaGalleryType"/>
+            <xs:element name="action-row" type="actionRowType"/>
+            <xs:element name="section" type="sectionType"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="containerType">
+        <xs:group ref="containerChildren" maxOccurs="unbounded"/>
+        <xs:attribute name="accent-color" type="xs:string"/>
+        <xs:attribute name="spoiler" type="xs:boolean"/>
+        <xs:attribute name="disabled" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:group name="messageChildren">
+        <xs:choice>
+            <xs:element name="text-display" type="textDisplayType"/>
+            <xs:element name="separator" type="separatorType"/>
+            <xs:element name="file-display" type="fileDisplayType"/>
+            <xs:element name="media-gallery" type="mediaGalleryType"/>
+            <xs:element name="action-row" type="actionRowType"/>
+            <xs:element name="container" type="containerType"/>
+            <xs:element name="section" type="sectionType"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="layoutType">
+        <xs:sequence>
+            <xs:element name="default-var" type="defaultVarType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:group ref="messageChildren" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="idType" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="components-v2">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="layout" type="layoutType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

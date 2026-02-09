@@ -6,12 +6,14 @@ import de.swiftbyte.jdaboot.annotation.embed.EmbedField;
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.command.CommandOption;
 import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinition;
+import de.swiftbyte.jdaboot.annotation.interaction.component.ComponentByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
 import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
+import de.swiftbyte.jdaboot.interaction.component.v2.TemplateComponentV2;
 import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -49,6 +51,9 @@ public class TestCommand extends SlashCommandExecutor {
     )
     private TemplateEmbed embed;
 
+    @ComponentByPath("test.xml")
+    private TemplateComponentV2 component;
+
     @ButtonByClass(TestButton.class)
     public TemplateButton button;
 
@@ -61,7 +66,7 @@ public class TestCommand extends SlashCommandExecutor {
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
 
-        AdvancedEmbed advancedEmbed = embed.advancedEmbed();
+        /*AdvancedEmbed advancedEmbed = embed.advancedEmbed();
         advancedEmbed.setVariable("test", "Test");
         advancedEmbed.setVariable("credits", "1");
         advancedEmbed.setVariable("test4", "test4");
@@ -78,7 +83,12 @@ public class TestCommand extends SlashCommandExecutor {
                                 .addDynamicOption("Dynamic Option", "Dynamic Option")
                                 .build()),
                         ActionRow.of(menu2.advancedSelectMenu().build())
-                ).queue();
+                ).queue();*/
+        event.replyComponents(
+                component.advancedComponent(event.getUserLocale())
+                        .setVariable("imageUrl", "https://picsum.photos/200/300")
+                        .build()
+        ).useComponentsV2().setEphemeral(true).queue();
 
     }
 
