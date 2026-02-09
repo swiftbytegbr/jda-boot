@@ -9,13 +9,11 @@ import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinitio
 import de.swiftbyte.jdaboot.annotation.interaction.component.ComponentByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
-import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
 import de.swiftbyte.jdaboot.interaction.component.v2.TemplateComponentV2;
 import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
-import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;

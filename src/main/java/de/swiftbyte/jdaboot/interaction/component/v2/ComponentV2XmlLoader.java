@@ -43,7 +43,7 @@ public final class ComponentV2XmlLoader {
     }
 
     public static @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition> load(@NonNull Class<?> mainClass,
-                                                                                             @NonNull String resourcePath) {
+                                                                                           @NonNull String resourcePath) {
         if (resourcePath.isBlank()) {
             return Map.of();
         }
@@ -111,7 +111,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static @NonNull ComponentV2LayoutDefinition parseLayout(@NonNull Element layoutElement,
-                                                                     @NonNull String resourcePath) {
+                                                                    @NonNull String resourcePath) {
         String id = requiredAttribute(layoutElement, "id", resourcePath);
 
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
@@ -154,7 +154,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
-                                                                                     @NonNull String resourcePath) {
+                                                                                    @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
         for (Element child : childElements(element)) {
             String nodeName = nodeName(child);
@@ -177,7 +177,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.MessageTopLevelNode parseMessageNode(@NonNull Element element,
-                                                                          @NonNull String resourcePath) {
+                                                                         @NonNull String resourcePath) {
         String nodeName = nodeName(element);
         return switch (nodeName) {
             case "text-display" -> new ComponentV2Nodes.TextDisplayNode(
@@ -199,7 +199,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.ActionRowNode parseActionRowNode(@NonNull Element element,
-                                                                      @NonNull String resourcePath) {
+                                                                     @NonNull String resourcePath) {
         List<ComponentV2Nodes.ActionRowChildNode> children = new ArrayList<>();
         int buttonCount = 0;
         int stringSelectCount = 0;
@@ -256,19 +256,19 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.StringSelectRefNode parseStringSelectRefNode(@NonNull Element element,
-                                                                                  @NonNull String resourcePath) {
+                                                                                 @NonNull String resourcePath) {
         RefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.StringSelectRefNode(target.id, target.className);
     }
 
     private static ComponentV2Nodes.EntitySelectRefNode parseEntitySelectRefNode(@NonNull Element element,
-                                                                                  @NonNull String resourcePath) {
+                                                                                 @NonNull String resourcePath) {
         RefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.EntitySelectRefNode(target.id, target.className);
     }
 
     private static ComponentV2Nodes.ContainerNode parseContainerNode(@NonNull Element element,
-                                                                      @NonNull String resourcePath) {
+                                                                     @NonNull String resourcePath) {
         List<ComponentV2Nodes.ContainerChildNode> children = new ArrayList<>();
         for (Element child : childElements(element)) {
             children.add(parseContainerChildNode(child, resourcePath));
@@ -287,7 +287,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.ContainerChildNode parseContainerChildNode(@NonNull Element element,
-                                                                                @NonNull String resourcePath) {
+                                                                               @NonNull String resourcePath) {
         String nodeName = nodeName(element);
         return switch (nodeName) {
             case "text-display" -> new ComponentV2Nodes.TextDisplayNode(
@@ -308,7 +308,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.FileDisplayNode parseFileDisplayNode(@NonNull Element element,
-                                                                          @NonNull String resourcePath) {
+                                                                         @NonNull String resourcePath) {
         return new ComponentV2Nodes.FileDisplayNode(
                 requiredAttribute(element, "file-name", resourcePath),
                 booleanAttribute(element, "spoiler", false)
@@ -316,7 +316,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.MediaGalleryNode parseMediaGalleryNode(@NonNull Element element,
-                                                                            @NonNull String resourcePath) {
+                                                                           @NonNull String resourcePath) {
         List<ComponentV2Nodes.MediaGalleryItemNode> items = new ArrayList<>();
 
         for (Element child : childElements(element)) {
@@ -344,7 +344,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.SectionNode parseSectionNode(@NonNull Element element,
-                                                                  @NonNull String resourcePath) {
+                                                                 @NonNull String resourcePath) {
         Element contentElement = null;
         Element accessoryElement = null;
 
@@ -382,7 +382,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static @NonNull List<ComponentV2Nodes.SectionContentNode> parseSectionContent(@NonNull Element contentElement,
-                                                                                           @NonNull String resourcePath) {
+                                                                                          @NonNull String resourcePath) {
         List<ComponentV2Nodes.SectionContentNode> content = new ArrayList<>();
         for (Element child : childElements(contentElement)) {
             String nodeName = nodeName(child);
@@ -401,7 +401,7 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.SectionAccessoryNode parseSectionAccessory(@NonNull Element accessoryElement,
-                                                                                @NonNull String resourcePath) {
+                                                                               @NonNull String resourcePath) {
         List<Element> children = childElements(accessoryElement);
         if (children.size() != 1) {
             throw new ConfigurationException("<accessory> must contain exactly one child element", resourcePath);

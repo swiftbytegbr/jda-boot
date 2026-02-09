@@ -52,7 +52,8 @@ public final class ComponentV2Nodes {
             implements MessageTopLevelNode {
     }
 
-    public record SectionNode(@NonNull List<@NonNull SectionContentNode> content, @NonNull SectionAccessoryNode accessory,
+    public record SectionNode(@NonNull List<@NonNull SectionContentNode> content,
+                              @NonNull SectionAccessoryNode accessory,
                               boolean disabled)
             implements MessageTopLevelNode, ContainerChildNode {
     }
@@ -68,7 +69,8 @@ public final class ComponentV2Nodes {
     public record MediaGalleryItemNode(@NonNull String url, @NonNull String description, boolean spoiler) {
     }
 
-    public record ButtonRefNode(@Nullable String id, @Nullable String className) implements ActionRowChildNode, SectionAccessoryNode {
+    public record ButtonRefNode(@Nullable String id,
+                                @Nullable String className) implements ActionRowChildNode, SectionAccessoryNode {
     }
 
     public record StringSelectRefNode(@Nullable String id, @Nullable String className) implements ActionRowChildNode {

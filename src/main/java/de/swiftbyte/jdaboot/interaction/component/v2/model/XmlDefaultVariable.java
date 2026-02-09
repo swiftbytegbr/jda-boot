@@ -7,4 +7,5 @@ import org.jspecify.annotations.NonNull;
  *
  * @since 1.0.0-beta.2
  */
-public record XmlDefaultVariable(@NonNull String key, @NonNull String value) {}
+public record XmlDefaultVariable(@NonNull String key, @NonNull String value) {
+}

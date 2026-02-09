@@ -237,6 +237,7 @@ public class ConfigClass {
   - 🚧Message Components
   - ⛔Modal Components
   - ⛔Conditional Cases, Loops and other advanced features
+  - ⛔allow to design buttons and select menus in xml
 - 🚧 Improved Kotlin friendliness
 - ⛔ Support for audio module config
 - ⛔ Database ORM System

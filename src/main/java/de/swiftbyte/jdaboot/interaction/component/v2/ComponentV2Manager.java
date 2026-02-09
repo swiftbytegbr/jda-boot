@@ -73,8 +73,8 @@ public class ComponentV2Manager {
     /**
      * Retrieves a Component V2 layout template by XML file path and layout id.
      *
-     * @param path      XML path.
-     * @param layoutId  Layout id.
+     * @param path     XML path.
+     * @param layoutId Layout id.
      * @return Template or null when not found.
      * @since 1.0.0-beta.2
      */
@@ -114,7 +114,7 @@ public class ComponentV2Manager {
     }
 
     private @NonNull TemplateComponentV2 resolveComponentForField(@NonNull Field field, @NonNull String xmlPath,
-                                                                   @NonNull String layoutId) {
+                                                                  @NonNull String layoutId) {
         Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(xmlPath);
 
         if (layoutId.isBlank()) {
