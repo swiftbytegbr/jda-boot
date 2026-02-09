@@ -128,7 +128,7 @@ public class VariableProcessor {
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         HashMap<String, String> defaultVariables = new HashMap<>();
         for (XmlDefaultVariable variable : defaultVariable) {
-            defaultVariables.put(variable.variable(), variable.value());
+            defaultVariables.put(variable.key(), variable.value());
         }
         return defaultVariables;
     }

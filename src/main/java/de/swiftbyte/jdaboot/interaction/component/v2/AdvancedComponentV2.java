@@ -9,6 +9,7 @@ import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
 import de.swiftbyte.jdaboot.interaction.button.ButtonManager;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.ComponentV2Nodes;
+import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import de.swiftbyte.jdaboot.interaction.selection.AdvancedSelectMenu;
 import de.swiftbyte.jdaboot.interaction.selection.EntitySelectMenuExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.SelectMenuManager;
@@ -316,6 +317,9 @@ public class AdvancedComponentV2 {
     }
 
     private void applyVariables(@NonNull VariableReceiver receiver) {
+        for (XmlDefaultVariable defaultVar : template.getDefinition().defaultVars()) {
+            receiver.accept(defaultVar.key(), defaultVar.value());
+        }
         for (Map.Entry<String, String> entry : variables.entrySet()) {
             receiver.accept(entry.getKey(), entry.getValue());
         }

@@ -3,8 +3,10 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="https://jda-boot.swiftbyte.de/schema/components-v2 components-v2.xsd">
     <layout id="test_component_v2">
-        <default-var variable="title" value="Test Component V2"/>
-        <default-var variable="test" value="Test Var"/>
+        <default-variables>
+            <variable key="title" value="Test Component V2"/>
+            <variable key="test" value="Test Var"/>
+        </default-variables>
         <container accent-color="#2ecc71">
             <text-display content="**${title}**"/>
             <section>

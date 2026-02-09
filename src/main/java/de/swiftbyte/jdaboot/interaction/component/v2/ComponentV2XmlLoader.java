@@ -58,7 +58,7 @@ public final class ComponentV2XmlLoader {
             Element root = document.getDocumentElement();
             if (!"components-v2".equals(nodeName(root))) {
                 throw new ConfigurationException(String.format(
-                        "Invalid root element '%s's. Expected 'components-v2'",
+                        "Invalid root element '%s'. Expected 'components-v2'",
                         nodeName(root)), resourcePath);
             }
 
@@ -116,15 +116,26 @@ public final class ComponentV2XmlLoader {
 
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
         List<ComponentV2Nodes.MessageTopLevelNode> components = new ArrayList<>();
+        boolean hasDefaultVariablesBlock = false;
+        boolean hasComponentNodes = false;
 
         for (Element child : childElements(layoutElement)) {
             String nodeName = nodeName(child);
 
-            if ("default-var".equals(nodeName)) {
-                defaultVars.add(parseDefaultVar(child, resourcePath));
+            if ("default-variables".equals(nodeName)) {
+                if (hasDefaultVariablesBlock) {
+                    throw new ConfigurationException("<layout> can contain <default-variables> only once", resourcePath);
+                }
+                if (hasComponentNodes) {
+                    throw new ConfigurationException("<default-variables> must be defined before component nodes", resourcePath);
+                }
+
+                defaultVars.addAll(parseDefaultVariables(child, resourcePath));
+                hasDefaultVariablesBlock = true;
                 continue;
             }
 
+            hasComponentNodes = true;
             components.add(parseMessageNode(child, resourcePath));
         }
 
@@ -142,10 +153,27 @@ public final class ComponentV2XmlLoader {
         );
     }
 
-    private static @NonNull XmlDefaultVariable parseDefaultVar(@NonNull Element element, @NonNull String resourcePath) {
-        String variable = requiredAttribute(element, "variable", resourcePath);
-        String value = requiredAttribute(element, "value", resourcePath);
-        return new XmlDefaultVariable(variable, value);
+    private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
+                                                                                     @NonNull String resourcePath) {
+        List<XmlDefaultVariable> defaultVars = new ArrayList<>();
+        for (Element child : childElements(element)) {
+            String nodeName = nodeName(child);
+            if (!"variable".equals(nodeName)) {
+                throw new ConfigurationException(String.format(
+                        "Unsupported <%s> child <%s>. Only <variable> is allowed",
+                        nodeName(element), nodeName), resourcePath);
+            }
+
+            String key = requiredAttribute(child, "key", resourcePath);
+            String value = requiredAttribute(child, "value", resourcePath);
+            defaultVars.add(new XmlDefaultVariable(key, value));
+        }
+
+        if (defaultVars.isEmpty()) {
+            throw new ConfigurationException("<default-variables> must contain at least one <variable>", resourcePath);
+        }
+
+        return defaultVars;
     }
 
     private static ComponentV2Nodes.MessageTopLevelNode parseMessageNode(@NonNull Element element,

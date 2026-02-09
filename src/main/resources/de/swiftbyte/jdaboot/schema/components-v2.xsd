@@ -26,8 +26,14 @@
     </xs:simpleType>
 
     <xs:complexType name="defaultVarType">
-        <xs:attribute name="variable" type="nonEmptyString" use="required"/>
+        <xs:attribute name="key" type="nonEmptyString" use="required"/>
         <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="defaultVariablesType">
+        <xs:sequence>
+            <xs:element name="variable" type="defaultVarType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="textDisplayType">
@@ -140,7 +146,7 @@
 
     <xs:complexType name="layoutType">
         <xs:sequence>
-            <xs:element name="default-var" type="defaultVarType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="default-variables" type="defaultVariablesType" minOccurs="0" maxOccurs="1"/>
             <xs:group ref="messageChildren" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="id" type="idType" use="required"/>
