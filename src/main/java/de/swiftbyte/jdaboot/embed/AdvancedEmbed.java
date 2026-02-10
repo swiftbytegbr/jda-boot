@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The AdvancedEmbed class is responsible for generating advanced embeds based on a provided TemplateEmbed.
@@ -85,14 +86,14 @@ public class AdvancedEmbed {
     }
 
     /**
-     * Sets the variables to be used in the embed.
+     * Appends multiple variables to be used in the embed.
      *
-     * @param variables The variables to use in the embed.
+     * @param variables The variables to append.
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    private @NonNull AdvancedEmbed setVariables(@NonNull HashMap<@NonNull String, @NonNull String> variables) {
-        this.variables = variables;
+    public @NonNull AdvancedEmbed setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
         return this;
     }
 

@@ -78,6 +78,18 @@ public class AdvancedModal {
     }
 
     /**
+     * Appends multiple variables to be used in the modal.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedModal setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    /**
      * Add a row to the modal at runtime.
      *
      * @param dynamicModalRow The row to add.

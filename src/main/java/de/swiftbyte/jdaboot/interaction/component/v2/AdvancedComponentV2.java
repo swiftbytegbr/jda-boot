@@ -70,6 +70,18 @@ public class AdvancedComponentV2 {
         return this;
     }
 
+    /**
+     * Appends multiple variables used for component rendering.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedComponentV2 instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedComponentV2 setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
     public @NonNull List<@NonNull MessageTopLevelComponent> build() {
         try {
             List<MessageTopLevelComponent> components = new ArrayList<>();

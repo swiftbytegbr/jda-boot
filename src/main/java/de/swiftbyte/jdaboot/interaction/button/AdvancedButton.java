@@ -59,6 +59,18 @@ public class AdvancedButton {
     }
 
     /**
+     * Appends multiple variables to be used in the button.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedButton instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedButton setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    /**
      * Generates a Button based on the template and the set variables.
      *
      * @return The generated Button.
