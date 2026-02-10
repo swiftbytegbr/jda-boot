@@ -45,10 +45,10 @@ The `@EntitySelectMenuDefinition` annotation is used to define a select menu for
 
 If the select menu class implements the appropriate executor interface, the corresponding method must be implemented:
 
-- For string select menus: `onSelectMenuSubmit(StringSelectInteractionEvent event, HashMap<String, String> variables)`
-- For entity select menus: `onSelectMenuSubmit(EntitySelectInteractionEvent event, HashMap<String, String> variables)`
+- For string select menus: `onSelectMenuSubmit(StringSelectInteractionEvent event, Map<String, String> variables)`
+- For entity select menus: `onSelectMenuSubmit(EntitySelectInteractionEvent event, Map<String, String> variables)`
 
-The `event` parameter provides access to the interaction event, and the `variables` parameter is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during menu initialization can then be found in this HashMap.
+The `event` parameter provides access to the interaction event, and the `variables` parameter is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during menu initialization can then be found in this map.
 
 !!! example
     === "Java"
@@ -64,7 +64,7 @@ The `event` parameter provides access to the interaction event, and the `variabl
         public class ExampleStringSelectMenu implements StringSelectMenuExecutor {
         
             @Override
-            public void onSelectMenuSubmit(StringSelectInteractionEvent event, HashMap<String, String> variables) {
+            public void onSelectMenuSubmit(StringSelectInteractionEvent event, Map<String, String> variables) {
                 String selectedValue = event.getSelectedOptions().get(0).getValue();
                 event.reply("You selected: " + selectedValue).queue();
             }
@@ -79,9 +79,40 @@ The `event` parameter provides access to the interaction event, and the `variabl
         public class ExampleEntitySelectMenu implements EntitySelectMenuExecutor {
 
             @Override
-            public void onSelectMenuSubmit(EntitySelectInteractionEvent event, HashMap<String, String> variables) {
+            public void onSelectMenuSubmit(EntitySelectInteractionEvent event, Map<String, String> variables) {
                 String selectedChannel = event.getValues().get(0).getName();
                 event.reply("You selected the channel: " + selectedChannel).queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        @StringSelectMenuDefinition(
+            options = [
+                StringSelectOption(label = "Option 1", value = "Value1"),
+                StringSelectOption(label = "Option 2", value = "Value2")
+            ],
+            placeholder = "Choose an option",
+            maxOptions = 1
+        )
+        class ExampleStringSelectMenu : StringSelectMenuExecutor {
+
+            override fun onSelectMenuSubmit(event: StringSelectInteractionEvent, variables: Map<String, String>) {
+                val selectedValue = event.selectedOptions[0].value
+                event.reply("You selected: $selectedValue").queue()
+            }
+        }
+        ```
+        ```kotlin
+        @EntitySelectMenuDefinition(
+            placeholder = "Select a channel",
+            enableChannel = true
+        )
+        class ExampleEntitySelectMenu : EntitySelectMenuExecutor {
+
+            override fun onSelectMenuSubmit(event: EntitySelectInteractionEvent, variables: Map<String, String>) {
+                val selectedChannel = event.values[0].name
+                event.reply("You selected the channel: $selectedChannel").queue()
             }
         }
         ```
@@ -109,13 +140,40 @@ An `AdvancedSelectMenu` can be created from the `TemplateSelectMenu` using the `
             private TemplateSelectMenu entityMenu;
 
             @Override
-            public void onCommand() {
+            public void onCommand(SlashCommandInteractionEvent event) {
                 event.reply("Choose an option:")
                         .addActionRow(stringMenu.advancedSelectMenu()
                                 .addDynamicOption("Dynamic Option", "DynamicValue")
                                 .build())
                         .addActionRow(entityMenu.advancedSelectMenu().build())
                         .queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        @SlashCommandDefinition(
+            name = "selectmenu",
+            description = "Demonstrates select menus",
+            type = SlashCommandDefinition.Type.SLASH
+        )
+        class SelectMenuCommand : SlashCommandExecutor() {
+
+            @field:StringSelectMenuByClass(ExampleStringSelectMenu::class)
+            lateinit var stringMenu: TemplateSelectMenu
+
+            @field:EntitySelectMenuByClass(ExampleEntitySelectMenu::class)
+            lateinit var entityMenu: TemplateSelectMenu
+
+            override fun onCommand(event: SlashCommandInteractionEvent) {
+                event.reply("Choose an option:")
+                    .addActionRow(
+                        stringMenu.advancedSelectMenu()
+                            .addDynamicOption("Dynamic Option", "DynamicValue")
+                            .build()
+                    )
+                    .addActionRow(entityMenu.advancedSelectMenu().build())
+                    .queue()
             }
         }
         ```
