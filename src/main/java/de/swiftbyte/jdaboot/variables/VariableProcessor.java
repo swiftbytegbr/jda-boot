@@ -146,9 +146,10 @@ public class VariableProcessor {
         while (matcher.find()) {
             String token = matcher.group();
             String key = matcher.group(1);
-            String replacement = defaultVariables.containsKey(key)
-                    ? defaultVariables.get(key)
-                    : getVariable(key, variables);
+            String replacement = getVariable(key, variables);
+            if (replacement == null && defaultVariables.containsKey(key)) {
+                replacement = defaultVariables.get(key);
+            }
 
             if (replacement == null) {
                 unknownVariables.add(token);
