@@ -32,7 +32,7 @@ The `@ModalRow` annotation is used to define individual input fields within the 
 
 ## Modal Execution
 
-If the modal class implements the `ModalExecutor` interface, the `onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables)` method must be implemented. This method is executed when the modal is submitted by a user. The `event` parameter provides access to the interaction event, and the `variables` parameter contains any variables passed to the modal on creation.
+If the modal class implements the `ModalExecutor` interface, the `onModalSubmit(ModalInteractionEvent event, Map<String, String> variables)` method must be implemented. This method is executed when the modal is submitted by a user. The `event` parameter provides access to the interaction event, and the `variables` parameter contains any variables passed to the modal on creation.
 
 !!! example
     === "Java"
@@ -60,7 +60,7 @@ If the modal class implements the `ModalExecutor` interface, the `onModalSubmit(
         public class ExampleModal implements ModalExecutor {
         
             @Override
-            public void onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables) {
+            public void onModalSubmit(ModalInteractionEvent event, Map<String, String> variables) {
                 String name = event.getValue("name").getAsString();
                 String feedback = event.getValue("feedback").getAsString();
 
@@ -68,31 +68,76 @@ If the modal class implements the `ModalExecutor` interface, the `onModalSubmit(
             }
         }
         ```
+    === "Kotlin"
+        ```kotlin
+        @ModalDefinition(
+            title = "Example Modal",
+            rows = [
+                ModalRow(
+                    id = "name",
+                    label = "Your Name",
+                    placeholder = "Enter your name",
+                    inputStyle = ModalRow.InputStyle.SHORT,
+                    required = true
+                ),
+                ModalRow(
+                    id = "feedback",
+                    label = "Your Feedback",
+                    placeholder = "Enter your feedback",
+                    inputStyle = ModalRow.InputStyle.PARAGRAPH,
+                    minLength = 10,
+                    maxLength = 200
+                )
+            ]
+        )
+        class ExampleModal : ModalExecutor {
+
+            override fun onModalSubmit(event: ModalInteractionEvent, variables: Map<String, String>) {
+                val name = event.getValue("name")!!.asString
+                val feedback = event.getValue("feedback")!!.asString
+                event.reply("Thank you, $name, for your feedback: $feedback").setEphemeral(true).queue()
+            }
+        }
+        ```
 
 ## Using Modals
 
-To use a modal, it must be triggered by an interaction, such as a button or a command. The modal can be created and displayed using the `event.replyModal()` method. Variables can be passed to the modal using the `setVariable(key, value)` method of the `AdvancedModal`.
+To use a modal, it must be triggered by an interaction, such as a button or a command. The modal can be created and displayed using the `event.replyModal()` method. Variables can be passed to the modal using the `setVariable(key, value)` method of the `AdvancedModal`. In Kotlin, use `@field:...` and `lateinit var` for injected template fields.
 
 !!! example
     === "Java"
         ```java
-        public class CommandClass {
-
+        @SlashCommandDefinition(
+                name = "openmodal",
+                description = "Opens a modal",
+                type = SlashCommandDefinition.Type.SLASH
+        )
+        public class OpenModalCommand extends SlashCommandExecutor {
             @ModalByClass(ExampleModal.class)
             public TemplateModal templateModal;
-            
-            @SlashCommandDefinition(
-                    name = "openmodal",
-                    description = "Opens a modal",
-                    type = SlashCommandDefinition.Type.SLASH
-            )
-            public class OpenModalCommand extends SlashCommandExecutor {
-    
-                @Override
-                public void onCommand() {
-                    AdvancedModal modal = templateModal.advancedModal();
-                    event.replyModal(modal.build()).queue();
-                }
+
+            @Override
+            public void onCommand(SlashCommandInteractionEvent event) {
+                AdvancedModal modal = templateModal.advancedModal();
+                event.replyModal(modal.build()).queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        @SlashCommandDefinition(
+            name = "openmodal",
+            description = "Opens a modal",
+            type = SlashCommandDefinition.Type.SLASH
+        )
+        class OpenModalCommand : SlashCommandExecutor() {
+
+            @field:ModalByClass(ExampleModal::class)
+            lateinit var templateModal: TemplateModal
+
+            override fun onCommand(event: SlashCommandInteractionEvent) {
+                val modal = templateModal.advancedModal()
+                event.replyModal(modal.build()).queue()
             }
         }
         ```

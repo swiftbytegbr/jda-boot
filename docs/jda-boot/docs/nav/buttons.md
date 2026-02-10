@@ -17,7 +17,7 @@ The fields `label` and `type` are required. If the `id` field is not set, JDA-Bo
 | `defaultVars`    | The default variables of the button | DefaultVariable[] |
 
 ## Button Execution
-If the button class implements the `ButtonExecutor` interface, the method `onButtonClick(ButtonInteractionEvent event, HashMap<String, String> variables)` must be implemented. `event` is the triggered ButtonInteractionEvent and `variables` is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during button initialization can then be found in this HashMap.
+If the button class implements the `ButtonExecutor` interface, the method `onButtonClick(ButtonInteractionEvent event, Map<String, String> variables)` must be implemented. `event` is the triggered ButtonInteractionEvent and `variables` is responsible for the variable transfer. The variable transfer only works with randomly generated IDs and only if the button was generated after the last restart. The variables specified during button initialization can then be found in this map.
 
 !!! example
     === "Java"
@@ -29,8 +29,22 @@ If the button class implements the `ButtonExecutor` interface, the method `onBut
         )
         public class TestButton implements ButtonExecutor {
 
-            public void onButtonClick(ButtonInteractionEvent event, HashMap<String, String> variables) {
+            public void onButtonClick(ButtonInteractionEvent event, Map<String, String> variables) {
                 event.reply("Button clicked!").queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        @ButtonDefinition(
+            label = "Test",
+            id = "test_button",
+            type = ButtonDefinition.Type.PRIMARY
+        )
+        class TestButton : ButtonExecutor {
+
+            override fun onButtonClick(event: ButtonInteractionEvent, variables: Map<String, String>) {
+                event.reply("Button clicked!").queue()
             }
         }
         ```
@@ -41,21 +55,36 @@ To be able to use the previously created button, we need to embed it in other pa
 !!! example
     === "Java"
         ```java
-
-        @ButtonByClass(TestButton.class)
-        public TemplateButton button;
-
         @SlashCommandDefinition(
                 name = "test",
                 type = SlashCommandDefinition.Type.SLASH
         )
         public class TestCommand extends SlashCommandExecutor {
 
+            @ButtonByClass(TestButton.class)
+            public TemplateButton button;
+
             @Override
-            public void onCommand() {
-
+            public void onCommand(SlashCommandInteractionEvent event) {
                 event.reply("Test").addActionRow(button.advancedButton().build()).queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        @SlashCommandDefinition(
+            name = "test",
+            type = SlashCommandDefinition.Type.SLASH
+        )
+        class TestCommand : SlashCommandExecutor() {
 
+            @field:ButtonByClass(TestButton::class)
+            lateinit var button: TemplateButton
+
+            override fun onCommand(event: SlashCommandInteractionEvent) {
+                event.reply("Test")
+                    .addActionRow(button.advancedButton().build())
+                    .queue()
             }
         }
         ```

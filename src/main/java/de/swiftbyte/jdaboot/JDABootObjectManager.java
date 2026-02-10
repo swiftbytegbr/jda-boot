@@ -99,7 +99,7 @@ public final class JDABootObjectManager {
                 field.set(object, autoCast(field.getType(), value));
             }
         } catch (Exception e) {
-            log.warn("Failed to inject field {} into class {}!", field.getName(), clazz.getName(), e);
+            throw new ObjectInitializationException("Failed to inject field", field, e);
         }
     }
 

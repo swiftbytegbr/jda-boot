@@ -15,6 +15,7 @@ import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -73,6 +74,7 @@ public class ButtonManager extends ListenerAdapter {
         });
 
         reflections.getFieldsAnnotatedWith(ButtonById.class).forEach(field -> {
+            checkTemplateButtonFieldType(field, ButtonById.class.getSimpleName());
             ButtonById annotation = field.getAnnotation(ButtonById.class);
             TemplateButton button = getButton(annotation.value());
             if (button == null) {
@@ -81,6 +83,7 @@ public class ButtonManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, button);
         });
         reflections.getFieldsAnnotatedWith(ButtonByClass.class).forEach(field -> {
+            checkTemplateButtonFieldType(field, ButtonByClass.class.getSimpleName());
             TemplateButton button = getButton(field.getAnnotation(ButtonByClass.class).value());
             if (button == null) {
                 throw new ElementNotFoundException("Could not find button", field);
@@ -133,6 +136,15 @@ public class ButtonManager extends ListenerAdapter {
 
         if (buttonExecutableList.containsKey(idParts[0])) {
             buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedButton.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
+        }
+    }
+
+    private void checkTemplateButtonFieldType(@NonNull Field field, @NonNull String annotationName) {
+        if (!TemplateButton.class.isAssignableFrom(field.getType())) {
+            throw new ElementRegistrationException(
+                    String.format("Fields annotated with @%s must be of type TemplateButton", annotationName),
+                    field
+            );
         }
     }
 }

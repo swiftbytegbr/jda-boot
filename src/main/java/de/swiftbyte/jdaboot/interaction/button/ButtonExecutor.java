@@ -3,7 +3,7 @@ package de.swiftbyte.jdaboot.interaction.button;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The ButtonExecutor interface represents a bot button in the application.
@@ -20,6 +20,6 @@ public interface ButtonExecutor {
      * @param variables The variables set in the advanced button, empty when fix id is used and button was created before a restart.
      * @since alpha.4
      */
-    void onButtonClick(@NonNull ButtonInteractionEvent event, @NonNull HashMap<@NonNull String, @NonNull String> variables);
+    void onButtonClick(@NonNull ButtonInteractionEvent event, @NonNull Map<@NonNull String, @NonNull String> variables);
 
 }

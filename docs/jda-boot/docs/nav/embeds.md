@@ -105,6 +105,44 @@ To use an embed, you can create an `AdvancedEmbed` from a `TemplateEmbed` using 
             }
         }
         ```
+    === "Kotlin"
+        ```kotlin
+        class EmbedClass {
+
+            @field:Embed(
+                id = "exampleEmbed",
+                title = "Example Title",
+                description = "This is an example embed.",
+                color = EmbedColor.BLUE,
+                author = EmbedAuthor(
+                    name = "Author Name",
+                    iconUrl = "https://example.com/icon.png"
+                ),
+                footer = EmbedFooter(
+                    text = "Footer Text"
+                ),
+                fields = [
+                    EmbedField(
+                        title = "Field 1",
+                        description = "Field 1 Description",
+                        inline = true
+                    ),
+                    EmbedField(
+                        title = "Field 2",
+                        description = "Field 2 Description",
+                        inline = false
+                    )
+                ]
+            )
+            lateinit var exampleEmbed: TemplateEmbed
+
+            fun sendEmbed(event: SlashCommandInteractionEvent) {
+                val advancedEmbed = exampleEmbed.advancedEmbed()
+                advancedEmbed.addDynamicField("Dynamic Field", "Dynamic Description", false)
+                event.replyEmbeds(advancedEmbed.build()).queue()
+            }
+        }
+        ```
 
 ## Inheriting Embeds
 
@@ -130,6 +168,25 @@ Embeds can inherit properties from another embed using the `basedOn` field. This
             public static TemplateEmbed childEmbed;
         }
         ```
+    === "Kotlin"
+        ```kotlin
+        class EmbedClass {
+
+            @field:Embed(
+                id = "baseEmbed",
+                color = EmbedColor.GREEN
+            )
+            lateinit var baseEmbed: TemplateEmbed
+
+            @field:Embed(
+                basedOn = "baseEmbed",
+                id = "childEmbed",
+                title = "Child Embed Title",
+                description = "This embed inherits from the base embed."
+            )
+            lateinit var childEmbed: TemplateEmbed
+        }
+        ```
 
 ## Dynamic Variables
 
@@ -150,6 +207,24 @@ Embeds support dynamic variables, which can be replaced at runtime. Variables ar
                 AdvancedEmbed advancedEmbed = exampleEmbed.advancedEmbed();
                 advancedEmbed.setVariable("description", "Example Description");
                 event.replyEmbeds(advancedEmbed.build()).queue();
+            }
+        }
+        ```
+    === "Kotlin"
+        ```kotlin
+        class EmbedClass {
+
+            @field:Embed(
+                id = "exampleEmbed",
+                title = "Example Title",
+                description = "\${description}"
+            )
+            lateinit var exampleEmbed: TemplateEmbed
+
+            fun sendEmbed(event: SlashCommandInteractionEvent) {
+                val advancedEmbed = exampleEmbed.advancedEmbed()
+                advancedEmbed.setVariable("description", "Example Description")
+                event.replyEmbeds(advancedEmbed.build()).queue()
             }
         }
         ```

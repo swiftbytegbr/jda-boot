@@ -18,6 +18,7 @@ import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -93,6 +94,7 @@ public class SelectMenuManager extends ListenerAdapter {
         });
 
         reflections.getFieldsAnnotatedWith(SelectMenuById.class).forEach(field -> {
+            checkTemplateSelectMenuFieldType(field, SelectMenuById.class.getSimpleName());
             SelectMenuById annotation = field.getAnnotation(SelectMenuById.class);
             TemplateSelectMenu selectMenu = getSelectMenu(annotation.value());
             if (selectMenu == null) {
@@ -101,6 +103,7 @@ public class SelectMenuManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
         reflections.getFieldsAnnotatedWith(StringSelectMenuByClass.class).forEach(field -> {
+            checkTemplateSelectMenuFieldType(field, StringSelectMenuByClass.class.getSimpleName());
             TemplateSelectMenu selectMenu = getStringSelectMenu(field.getAnnotation(StringSelectMenuByClass.class).value());
             if (selectMenu == null) {
                 throw new ElementNotFoundException("Could not found select menu", field);
@@ -108,6 +111,7 @@ public class SelectMenuManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
         reflections.getFieldsAnnotatedWith(EntitySelectMenuByClass.class).forEach(field -> {
+            checkTemplateSelectMenuFieldType(field, EntitySelectMenuByClass.class.getSimpleName());
             TemplateSelectMenu selectMenu = getEntitySelectMenu(field.getAnnotation(EntitySelectMenuByClass.class).value());
             if (selectMenu == null) {
                 throw new ElementNotFoundException("Could not found select menu", field);
@@ -124,6 +128,15 @@ public class SelectMenuManager extends ListenerAdapter {
         }
         if (id.length() >= 60) {
             throw new ElementRegistrationException("SelectMenu ID cannot be longer than 60 characters", clazz);
+        }
+    }
+
+    private void checkTemplateSelectMenuFieldType(@NonNull Field field, @NonNull String annotationName) {
+        if (!TemplateSelectMenu.class.isAssignableFrom(field.getType())) {
+            throw new ElementRegistrationException(
+                    String.format("Fields annotated with @%s must be of type TemplateSelectMenu", annotationName),
+                    field
+            );
         }
     }
 
