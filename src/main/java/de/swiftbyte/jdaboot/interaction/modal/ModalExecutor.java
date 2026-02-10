@@ -3,7 +3,7 @@ package de.swiftbyte.jdaboot.interaction.modal;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The ModalExecutor interface represents a bot modal in the application.
@@ -19,6 +19,6 @@ public interface ModalExecutor {
      * @param event The modal interaction event.
      * @since 1.0.0-alpha.7
      */
-    void onModalSubmit(@NonNull ModalInteractionEvent event, @NonNull HashMap<@NonNull String, @NonNull String> variables);
+    void onModalSubmit(@NonNull ModalInteractionEvent event, @NonNull Map<@NonNull String, @NonNull String> variables);
 
 }

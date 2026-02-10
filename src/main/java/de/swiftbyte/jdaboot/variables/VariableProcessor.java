@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,15 +36,15 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
-    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
-    private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull HashMap<@NonNull String, @NonNull String> defaultVariables) {
+    private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
         List<String> unknownVariables = new ArrayList<>();
         String newText = old;
 
@@ -68,15 +69,15 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
+    public static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
         return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
     }
 
-    public static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
+    public static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
         return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
     }
 
-    private static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull HashMap<@NonNull String, @NonNull String> defaultVariables, @NonNull List<@NonNull String> unknownVariables) {
+    private static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull List<@NonNull String> unknownVariables) {
         String newText = old;
 
         for (var entry : defaultVariables.entrySet()) {
@@ -159,7 +160,7 @@ public class VariableProcessor {
         return false;
     }
 
-    private static @Nullable String getVariable(@NonNull String key, @NonNull HashMap<@NonNull String, @NonNull String> variables) {
+    private static @Nullable String getVariable(@NonNull String key, @NonNull Map<@NonNull String, @NonNull String> variables) {
         if (variables.containsKey(key)) {
             return variables.get(key);
         } else if (GlobalVariables.hasVariable(key)) {

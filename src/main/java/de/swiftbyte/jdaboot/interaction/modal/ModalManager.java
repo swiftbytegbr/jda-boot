@@ -88,6 +88,7 @@ public class ModalManager extends ListenerAdapter {
         });
 
         reflections.getFieldsAnnotatedWith(ModalById.class).forEach(field -> {
+            checkTemplateModalFieldType(field, ModalById.class.getSimpleName());
             ModalById annotation = field.getAnnotation(ModalById.class);
             TemplateModal modal = getModal(annotation.value());
             if (modal == null) {
@@ -96,6 +97,7 @@ public class ModalManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
         });
         reflections.getFieldsAnnotatedWith(ModalByClass.class).forEach(field -> {
+            checkTemplateModalFieldType(field, ModalByClass.class.getSimpleName());
             TemplateModal modal = getModal(field.getAnnotation(ModalByClass.class).value());
             if (modal == null) {
                 throw new ElementNotFoundException("Could not found modal", field);
@@ -213,6 +215,15 @@ public class ModalManager extends ListenerAdapter {
             throw new ElementNotFoundException("Could not find XML modal layout", layoutId, field);
         }
         return modal;
+    }
+
+    private void checkTemplateModalFieldType(@NonNull Field field, @NonNull String annotationName) {
+        if (!TemplateModal.class.isAssignableFrom(field.getType())) {
+            throw new ElementRegistrationException(
+                    String.format("Fields annotated with @%s must be of type TemplateModal", annotationName),
+                    field
+            );
+        }
     }
 
     private @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> getOrLoadXmlFile(@NonNull String xmlPath) {

@@ -5,8 +5,9 @@ import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
 import de.swiftbyte.jdaboot.interaction.modal.ModalExecutor;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @ModalDefinition(
         title = "${title} Modal",
@@ -39,7 +40,7 @@ import java.util.HashMap;
 public class TestModal implements ModalExecutor {
 
     @Override
-    public void onModalSubmit(ModalInteractionEvent event, HashMap<String, String> variables) {
+    public void onModalSubmit(@NonNull ModalInteractionEvent event, @NonNull Map<String, String> variables) {
         event.reply("Test Modal Submitted! Command run by " + variables.get("user")).setEphemeral(true).queue();
     }
 }

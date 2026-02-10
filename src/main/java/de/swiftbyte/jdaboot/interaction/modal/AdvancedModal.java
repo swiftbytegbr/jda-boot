@@ -375,7 +375,7 @@ public class AdvancedModal {
      * @return The variables from the given ID.
      * @since 1.0.0-alpha.9
      */
-    public static @Nullable HashMap<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
+    public static @Nullable Map<@NonNull String, @NonNull String> getVariablesFromId(@NonNull String id) {
         Map<String, String> storedVariables = variableTransfer.get(id);
         if (storedVariables == null) {
             return null;

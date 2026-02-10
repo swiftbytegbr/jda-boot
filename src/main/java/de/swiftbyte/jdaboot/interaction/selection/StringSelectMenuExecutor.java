@@ -3,7 +3,7 @@ package de.swiftbyte.jdaboot.interaction.selection;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The StringSelectMenuExecutor interface represents a string select menu in the application.
@@ -20,6 +20,6 @@ public interface StringSelectMenuExecutor {
      * @param variables The variables set in the advanced select menu, empty when fix id is used and select menu was created before a restart.
      * @since 1.0.0-alpha.11
      */
-    void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull HashMap<@NonNull String, @NonNull String> variables);
+    void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull Map<@NonNull String, @NonNull String> variables);
 
 }
