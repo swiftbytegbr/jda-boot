@@ -6,10 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +40,8 @@ public class TranslationProcessor {
 
         String newText = old;
         HashMap<String, String> translationCache = new HashMap<>();
-        HashSet<String> seenStates = new HashSet<>();
+        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
+        List<String> stateHistory = new ArrayList<>();
 
         for (int i = 0; i < MAX_PROCESSING_PASSES; i++) {
             Matcher matcher = TRANSLATION_PATTERN.matcher(newText);
@@ -62,12 +66,27 @@ public class TranslationProcessor {
                 return newText;
             }
 
-            if (!changed || !seenStates.add(newText)) {
-                throw new TranslationCycleException("Detected cyclic translation references while processing placeholders");
+            if (!changed) {
+                throw new TranslationCycleException(
+                        "Detected cyclic translation references while processing placeholders",
+                        getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+                );
             }
+
+            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
+            if (firstSeenStateIndex != null) {
+                throw new TranslationCycleException(
+                        "Detected cyclic translation references while processing placeholders",
+                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
+                );
+            }
+            stateHistory.add(newText);
         }
 
-        throw new TranslationCycleException(String.format("Translation processing reached the safety iteration limit of %d passes", MAX_PROCESSING_PASSES));
+        throw new TranslationCycleException(
+                String.format("Translation processing reached the safety iteration limit of %d passes", MAX_PROCESSING_PASSES),
+                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+        );
     }
 
     /**
@@ -94,6 +113,30 @@ public class TranslationProcessor {
                 log.warn("Translation key '{}' was not found for locale '{}' or fallback locale 'en'", key, locale.getLocale(), e);
                 return "MISSING TRANSLATION";
             }
+        }
+    }
+
+    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
+        Set<String> loopKeys = new LinkedHashSet<>();
+
+        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
+        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
+
+        for (int i = safeStart; i < safeEnd; i++) {
+            collectLoopKeys(stateHistory.get(i), loopKeys);
+        }
+        collectLoopKeys(currentText, loopKeys);
+
+        if (loopKeys.isEmpty()) {
+            return "unknown";
+        }
+        return String.join(", ", loopKeys);
+    }
+
+    private static void collectLoopKeys(@NonNull String text, @NonNull Set<@NonNull String> loopKeys) {
+        Matcher matcher = TRANSLATION_PATTERN.matcher(text);
+        while (matcher.find()) {
+            loopKeys.add(matcher.group(1));
         }
     }
 

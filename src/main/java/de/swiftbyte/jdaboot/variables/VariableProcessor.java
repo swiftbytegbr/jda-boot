@@ -9,9 +9,10 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -56,7 +57,8 @@ public class VariableProcessor {
 
     private static @NonNull String processVariableInternal(@Nullable DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull Set<@NonNull String> unknownVariables) {
         String newText = old;
-        Set<String> seenStates = new HashSet<>();
+        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
+        List<String> stateHistory = new ArrayList<>();
 
         for (int pass = 0; pass < MAX_PROCESSING_PASSES; pass++) {
             boolean changed = false;
@@ -85,12 +87,20 @@ public class VariableProcessor {
                 return newText;
             }
 
-            if (!seenStates.add(newText)) {
-                throw new VariableCycleException("Detected cyclic variable references while processing placeholders");
+            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
+            if (firstSeenStateIndex != null) {
+                throw new VariableCycleException(
+                        "Detected cyclic variable references while processing placeholders",
+                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
+                );
             }
+            stateHistory.add(newText);
         }
 
-        throw new VariableCycleException(String.format("Variable processing reached the safety iteration limit of %d passes.", MAX_PROCESSING_PASSES));
+        throw new VariableCycleException(
+                String.format("Variable processing reached the safety iteration limit of %d passes.", MAX_PROCESSING_PASSES),
+                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+        );
     }
 
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull DefaultVariable @NonNull [] defaultVariable) {
@@ -195,6 +205,35 @@ public class VariableProcessor {
             return GlobalVariables.get(key);
         } else {
             return null;
+        }
+    }
+
+    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
+        Set<String> loopTokens = new LinkedHashSet<>();
+
+        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
+        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
+
+        for (int i = safeStart; i < safeEnd; i++) {
+            collectLoopTokens(stateHistory.get(i), VARIABLE_PATTERN, loopTokens);
+            collectLoopTokens(stateHistory.get(i), CONFIG_PATTERN, loopTokens);
+            collectLoopTokens(stateHistory.get(i), LANGUAGE_PATTERN, loopTokens);
+        }
+
+        collectLoopTokens(currentText, VARIABLE_PATTERN, loopTokens);
+        collectLoopTokens(currentText, CONFIG_PATTERN, loopTokens);
+        collectLoopTokens(currentText, LANGUAGE_PATTERN, loopTokens);
+
+        if (loopTokens.isEmpty()) {
+            return "unknown";
+        }
+        return String.join(", ", loopTokens);
+    }
+
+    private static void collectLoopTokens(@NonNull String text, @NonNull Pattern pattern, @NonNull Set<@NonNull String> loopTokens) {
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            loopTokens.add(matcher.group(1));
         }
     }
 
