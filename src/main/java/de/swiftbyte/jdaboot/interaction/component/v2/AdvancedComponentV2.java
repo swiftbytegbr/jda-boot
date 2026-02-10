@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.component.v2;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.exceptions.ElementBuildException;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
 import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
@@ -70,11 +71,15 @@ public class AdvancedComponentV2 {
     }
 
     public @NonNull List<@NonNull MessageTopLevelComponent> build() {
-        List<MessageTopLevelComponent> components = new ArrayList<>();
-        for (ComponentV2Nodes.MessageTopLevelNode node : template.getDefinition().components()) {
-            components.add(buildMessageComponent(node));
+        try {
+            List<MessageTopLevelComponent> components = new ArrayList<>();
+            for (ComponentV2Nodes.MessageTopLevelNode node : template.getDefinition().components()) {
+                components.add(buildMessageComponent(node));
+            }
+            return components;
+        } catch (Exception e) {
+            throw new ElementBuildException("Failed to build component layout", sourceReference(), e);
         }
-        return components;
     }
 
     private @NonNull MessageTopLevelComponent buildMessageComponent(ComponentV2Nodes.MessageTopLevelNode node) {
