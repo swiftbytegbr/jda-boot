@@ -74,8 +74,8 @@ public final class XmlLoaderSupport {
     }
 
     public static @NonNull String requiredAttribute(@NonNull Element element,
-                                                     @NonNull String attributeName,
-                                                     @NonNull String resourcePath) {
+                                                    @NonNull String attributeName,
+                                                    @NonNull String resourcePath) {
         String value = element.getAttribute(attributeName);
         if (value == null || value.isBlank()) {
             throw new ConfigurationException(String.format(
@@ -86,7 +86,7 @@ public final class XmlLoaderSupport {
     }
 
     public static @NonNull String optionalAttribute(@NonNull Element element,
-                                                     @NonNull String attributeName) {
+                                                    @NonNull String attributeName) {
         String value = element.getAttribute(attributeName);
         return value == null || value.isBlank() ? "" : value;
     }
@@ -120,7 +120,7 @@ public final class XmlLoaderSupport {
     }
 
     public static @NonNull List<@NonNull XmlVariableDefinition> parseDefaultVariables(@NonNull Element element,
-                                                                                        @NonNull String resourcePath) {
+                                                                                      @NonNull String resourcePath) {
         List<XmlVariableDefinition> variables = new ArrayList<>();
         for (Element child : childElements(element)) {
             String childName = nodeName(child);
@@ -143,7 +143,7 @@ public final class XmlLoaderSupport {
     }
 
     public static @NonNull XmlRefTarget parseRefTarget(@NonNull Element element,
-                                                        @NonNull String resourcePath) {
+                                                       @NonNull String resourcePath) {
         String id = optionalAttribute(element, "id");
         String className = optionalAttribute(element, "class");
 
