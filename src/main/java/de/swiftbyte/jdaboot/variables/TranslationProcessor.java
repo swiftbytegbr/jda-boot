@@ -1,10 +1,13 @@
 package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.exceptions.TranslationCycleException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.regex.Matcher;
@@ -18,6 +21,8 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class TranslationProcessor {
+    private static final Pattern TRANSLATION_PATTERN = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
+    private static final int MAX_PROCESSING_PASSES = 64;
 
     /**
      * Processes the translations in the given string using the provided locale.
@@ -31,18 +36,38 @@ public class TranslationProcessor {
     public static @NonNull String processTranslation(@NonNull DiscordLocale locale, @NonNull String old) {
 
         String newText = old;
+        HashMap<String, String> translationCache = new HashMap<>();
+        HashSet<String> seenStates = new HashSet<>();
 
-        Pattern p = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
-        Matcher m = p.matcher(newText);
+        for (int i = 0; i < MAX_PROCESSING_PASSES; i++) {
+            Matcher matcher = TRANSLATION_PATTERN.matcher(newText);
+            StringBuilder result = new StringBuilder(newText.length());
+            boolean changed = false;
 
-        while (m.find()) {
-            if (getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")) != null) {
-                newText = newText.replace(m.group(), getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")));
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String replacement = translationCache.computeIfAbsent(key, cachedKey -> getTranslatedString(locale, cachedKey));
+                String token = matcher.group();
+
+                if (!replacement.equals(token)) {
+                    changed = true;
+                }
+                matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+            }
+
+            matcher.appendTail(result);
+            newText = result.toString();
+
+            if (!TRANSLATION_PATTERN.matcher(newText).find()) {
+                return newText;
+            }
+
+            if (!changed || !seenStates.add(newText)) {
+                throw new TranslationCycleException("Detected cyclic translation references while processing placeholders");
             }
         }
 
-        return newText;
-
+        throw new TranslationCycleException(String.format("Translation processing reached the safety iteration limit of %d passes", MAX_PROCESSING_PASSES));
     }
 
     /**
