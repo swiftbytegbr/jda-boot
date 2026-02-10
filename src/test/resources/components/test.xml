@@ -4,11 +4,10 @@
                xsi:schemaLocation="https://jda-boot.swiftbyte.de/schema/components-v2 components-v2.xsd">
     <layout id="test_component_v2">
         <default-variables>
-            <variable key="title" value="Test Component V2"/>
             <variable key="test" value="Test Var"/>
         </default-variables>
         <container accent-color="#2ecc71">
-            <text-display content="**${title}**"/>
+            <text-display content="**#{test.component.title}**"/>
             <section>
                 <content>
                     <text-display content="#{command.test.description}"/>
