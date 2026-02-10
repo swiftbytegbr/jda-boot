@@ -4,29 +4,28 @@ import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.ComponentV2LayoutDefinition;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.ComponentV2Nodes;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
+import de.swiftbyte.jdaboot.xml.XmlLoaderSupport;
 import lombok.CustomLog;
 import net.dv8tion.jda.api.components.separator.Separator;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.booleanAttribute;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.childElements;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.nodeName;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.optionalAttribute;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.parseRefTarget;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.requiredAttribute;
 
 /**
  * Loads Component V2 layouts from an XML resource and validates against the bundled XSD.
@@ -37,6 +36,10 @@ import java.util.Map;
 public final class ComponentV2XmlLoader {
 
     private static final @NonNull String XSD_RESOURCE = "de/swiftbyte/jdaboot/schema/components-v2.xsd";
+    private static final @NonNull Schema SCHEMA = XmlLoaderSupport.loadBundledSchema(
+            XSD_RESOURCE,
+            ComponentV2XmlLoader.class.getClassLoader()
+    );
 
     private ComponentV2XmlLoader() {
         // utility
@@ -54,7 +57,7 @@ public final class ComponentV2XmlLoader {
                 return Map.of();
             }
 
-            Document document = parseDocument(xmlStream);
+            Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
             if (!"components-v2".equals(nodeName(root))) {
                 throw new ConfigurationException(String.format(
@@ -85,28 +88,6 @@ public final class ComponentV2XmlLoader {
             throw e;
         } catch (Exception e) {
             throw new ConfigurationException("Failed to load Component V2 XML", resourcePath, e);
-        }
-    }
-
-    private static @NonNull Document parseDocument(@NonNull InputStream xmlStream)
-            throws IOException, SAXException, ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        factory.setSchema(loadSchema());
-
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(xmlStream);
-    }
-
-    private static @NonNull Schema loadSchema() {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        try (InputStream xsdStream = ComponentV2XmlLoader.class.getClassLoader().getResourceAsStream(XSD_RESOURCE)) {
-            if (xsdStream == null) {
-                throw new ConfigurationException("Missing bundled Component V2 XSD", XSD_RESOURCE);
-            }
-            return schemaFactory.newSchema(new javax.xml.transform.stream.StreamSource(xsdStream));
-        } catch (SAXException | IOException e) {
-            throw new ConfigurationException("Failed to load Component V2 XSD", XSD_RESOURCE, e);
         }
     }
 
@@ -156,23 +137,9 @@ public final class ComponentV2XmlLoader {
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
-        for (Element child : childElements(element)) {
-            String nodeName = nodeName(child);
-            if (!"variable".equals(nodeName)) {
-                throw new ConfigurationException(String.format(
-                        "Unsupported <%s> child <%s>. Only <variable> is allowed",
-                        nodeName(element), nodeName), resourcePath);
-            }
-
-            String key = requiredAttribute(child, "key", resourcePath);
-            String value = requiredAttribute(child, "value", resourcePath);
-            defaultVars.add(new XmlDefaultVariable(key, value));
+        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element, resourcePath)) {
+            defaultVars.add(new XmlDefaultVariable(variableDefinition.key(), variableDefinition.value()));
         }
-
-        if (defaultVars.isEmpty()) {
-            throw new ConfigurationException("<default-variables> must contain at least one <variable>", resourcePath);
-        }
-
         return defaultVars;
     }
 
@@ -251,20 +218,20 @@ public final class ComponentV2XmlLoader {
     }
 
     private static ComponentV2Nodes.ButtonRefNode parseButtonRefNode(@NonNull Element element, @NonNull String resourcePath) {
-        RefTarget target = parseRefTarget(element, resourcePath);
-        return new ComponentV2Nodes.ButtonRefNode(target.id, target.className);
+        XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
+        return new ComponentV2Nodes.ButtonRefNode(target.id(), target.className());
     }
 
     private static ComponentV2Nodes.StringSelectRefNode parseStringSelectRefNode(@NonNull Element element,
                                                                                  @NonNull String resourcePath) {
-        RefTarget target = parseRefTarget(element, resourcePath);
-        return new ComponentV2Nodes.StringSelectRefNode(target.id, target.className);
+        XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
+        return new ComponentV2Nodes.StringSelectRefNode(target.id(), target.className());
     }
 
     private static ComponentV2Nodes.EntitySelectRefNode parseEntitySelectRefNode(@NonNull Element element,
                                                                                  @NonNull String resourcePath) {
-        RefTarget target = parseRefTarget(element, resourcePath);
-        return new ComponentV2Nodes.EntitySelectRefNode(target.id, target.className);
+        XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
+        return new ComponentV2Nodes.EntitySelectRefNode(target.id(), target.className());
     }
 
     private static ComponentV2Nodes.ContainerNode parseContainerNode(@NonNull Element element,
@@ -464,62 +431,4 @@ public final class ComponentV2XmlLoader {
         }
     }
 
-    private static boolean booleanAttribute(@NonNull Element element, @NonNull String attributeName, boolean fallback) {
-        String value = optionalAttribute(element, attributeName);
-        if (value.isBlank()) {
-            return fallback;
-        }
-        return Boolean.parseBoolean(value.trim());
-    }
-
-    private static @NonNull String requiredAttribute(@NonNull Element element, @NonNull String attributeName,
-                                                     @NonNull String resourcePath) {
-        String value = element.getAttribute(attributeName);
-        if (value == null || value.isBlank()) {
-            throw new ConfigurationException(String.format(
-                    "Missing required attribute '%s' on <%s>",
-                    attributeName, nodeName(element)), resourcePath);
-        }
-        return value;
-    }
-
-    private static @NonNull String optionalAttribute(@NonNull Element element, @NonNull String attributeName) {
-        String value = element.getAttribute(attributeName);
-        return value == null || value.isBlank() ? "" : value;
-    }
-
-    private static @NonNull RefTarget parseRefTarget(@NonNull Element element, @NonNull String resourcePath) {
-        String id = optionalAttribute(element, "id");
-        String className = optionalAttribute(element, "class");
-
-        boolean hasId = !id.isBlank();
-        boolean hasClass = !className.isBlank();
-
-        if (hasId == hasClass) {
-            throw new ConfigurationException(String.format(
-                    "<%s> must define exactly one of attributes 'id' or 'class'",
-                    nodeName(element)), resourcePath);
-        }
-
-        return new RefTarget(hasId ? id : null, hasClass ? className : null);
-    }
-
-    private static @NonNull List<@NonNull Element> childElements(@NonNull Element parent) {
-        List<Element> elements = new ArrayList<>();
-        NodeList children = parent.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
-            if (child instanceof Element element) {
-                elements.add(element);
-            }
-        }
-        return elements;
-    }
-
-    private static @NonNull String nodeName(@NonNull Element element) {
-        return element.getLocalName() != null ? element.getLocalName() : element.getTagName();
-    }
-
-    private record RefTarget(@Nullable String id, @Nullable String className) {
-    }
 }

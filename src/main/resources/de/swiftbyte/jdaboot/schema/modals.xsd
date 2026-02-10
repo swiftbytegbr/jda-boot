@@ -2,21 +2,10 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="https://jda-boot.swiftbyte.de/schema/modals"
            xmlns="https://jda-boot.swiftbyte.de/schema/modals"
+           xmlns:c="https://jda-boot.swiftbyte.de/schema/common"
            elementFormDefault="qualified">
 
-    <xs:simpleType name="nonEmptyString">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="idType">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-            <xs:maxLength value="59"/>
-            <xs:pattern value="[^;]+"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:import namespace="https://jda-boot.swiftbyte.de/schema/common" schemaLocation="common-types.xsd"/>
 
     <xs:simpleType name="inputStyleType">
         <xs:restriction base="xs:string">
@@ -25,19 +14,14 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="defaultVarType">
-        <xs:attribute name="key" type="nonEmptyString" use="required"/>
-        <xs:attribute name="value" type="xs:string" use="required"/>
-    </xs:complexType>
-
     <xs:complexType name="defaultVariablesType">
         <xs:sequence>
-            <xs:element name="variable" type="defaultVarType" maxOccurs="unbounded"/>
+            <xs:element name="variable" type="c:defaultVarType" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="stringInputType">
-        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="style" type="inputStyleType"/>
         <xs:attribute name="placeholder" type="xs:string"/>
         <xs:attribute name="required" type="xs:boolean"/>
@@ -47,15 +31,15 @@
     </xs:complexType>
 
     <xs:complexType name="fileInputType">
-        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="required" type="xs:boolean"/>
         <xs:attribute name="max-values" type="xs:int"/>
         <xs:attribute name="min-values" type="xs:int"/>
     </xs:complexType>
 
     <xs:complexType name="stringSelectOptionType">
-        <xs:attribute name="label" type="nonEmptyString" use="required"/>
-        <xs:attribute name="value" type="nonEmptyString" use="required"/>
+        <xs:attribute name="label" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="c:nonEmptyString" use="required"/>
         <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="default" type="xs:boolean"/>
     </xs:complexType>
@@ -64,7 +48,7 @@
         <xs:sequence>
             <xs:element name="option" type="stringSelectOptionType" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="placeholder" type="xs:string"/>
         <xs:attribute name="required" type="xs:boolean"/>
         <xs:attribute name="max-values" type="xs:int"/>
@@ -85,7 +69,7 @@
     </xs:complexType>
 
     <xs:complexType name="entitySelectChannelTypeType">
-        <xs:attribute name="value" type="nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="c:nonEmptyString" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="entitySelectType">
@@ -95,7 +79,7 @@
                 <xs:element name="channel-type" type="entitySelectChannelTypeType"/>
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="placeholder" type="xs:string"/>
         <xs:attribute name="required" type="xs:boolean"/>
         <xs:attribute name="max-values" type="xs:int"/>
@@ -110,7 +94,7 @@
             <xs:element name="string-select" type="stringSelectType"/>
             <xs:element name="entity-select" type="entitySelectType"/>
         </xs:choice>
-        <xs:attribute name="text" type="nonEmptyString" use="required"/>
+        <xs:attribute name="text" type="c:nonEmptyString" use="required"/>
         <xs:attribute name="description" type="xs:string"/>
     </xs:complexType>
 
@@ -119,10 +103,10 @@
             <xs:element name="default-variables" type="defaultVariablesType" minOccurs="0"/>
             <xs:element name="label" type="labelType" maxOccurs="5"/>
         </xs:sequence>
-        <xs:attribute name="id" type="idType" use="required"/>
-        <xs:attribute name="modal-id" type="idType"/>
-        <xs:attribute name="modal-class" type="nonEmptyString"/>
-        <xs:attribute name="title" type="nonEmptyString" use="required"/>
+        <xs:attribute name="id" type="c:idType" use="required"/>
+        <xs:attribute name="modal-id" type="c:idType"/>
+        <xs:attribute name="modal-class" type="c:nonEmptyString"/>
+        <xs:attribute name="title" type="c:nonEmptyString" use="required"/>
     </xs:complexType>
 
     <xs:element name="modals">

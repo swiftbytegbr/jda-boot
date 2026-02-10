@@ -4,6 +4,7 @@ import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalNodes;
+import de.swiftbyte.jdaboot.xml.XmlLoaderSupport;
 import lombok.CustomLog;
 import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
@@ -11,17 +12,8 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import org.jspecify.annotations.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.booleanAttribute;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.childElements;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.intAttribute;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.nodeName;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.optionalAttribute;
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.requiredAttribute;
 
 /**
  * Loads modal layouts from an XML resource and validates against the bundled XSD.
@@ -39,6 +38,10 @@ import java.util.Set;
 public final class ModalXmlLoader {
 
     private static final @NonNull String XSD_RESOURCE = "de/swiftbyte/jdaboot/schema/modals.xsd";
+    private static final @NonNull Schema SCHEMA = XmlLoaderSupport.loadBundledSchema(
+            XSD_RESOURCE,
+            ModalXmlLoader.class.getClassLoader()
+    );
 
     private ModalXmlLoader() {
         // utility
@@ -56,7 +59,7 @@ public final class ModalXmlLoader {
                 return Map.of();
             }
 
-            Document document = parseDocument(xmlStream);
+            Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
             if (!"modals".equals(nodeName(root))) {
                 throw new ConfigurationException(String.format(
@@ -87,28 +90,6 @@ public final class ModalXmlLoader {
             throw e;
         } catch (Exception e) {
             throw new ConfigurationException("Failed to load modal XML", resourcePath, e);
-        }
-    }
-
-    private static @NonNull Document parseDocument(@NonNull InputStream xmlStream)
-            throws IOException, SAXException, ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        factory.setSchema(loadSchema());
-
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(xmlStream);
-    }
-
-    private static @NonNull Schema loadSchema() {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        try (InputStream xsdStream = ModalXmlLoader.class.getClassLoader().getResourceAsStream(XSD_RESOURCE)) {
-            if (xsdStream == null) {
-                throw new ConfigurationException("Missing bundled modal XSD", XSD_RESOURCE);
-            }
-            return schemaFactory.newSchema(new javax.xml.transform.stream.StreamSource(xsdStream));
-        } catch (SAXException | IOException e) {
-            throw new ConfigurationException("Failed to load modal XSD", XSD_RESOURCE, e);
         }
     }
 
@@ -187,23 +168,9 @@ public final class ModalXmlLoader {
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
-        for (Element child : childElements(element)) {
-            String nodeName = nodeName(child);
-            if (!"variable".equals(nodeName)) {
-                throw new ConfigurationException(String.format(
-                        "Unsupported <%s> child <%s>. Only <variable> is allowed",
-                        nodeName(element), nodeName), resourcePath);
-            }
-
-            String key = requiredAttribute(child, "key", resourcePath);
-            String value = requiredAttribute(child, "value", resourcePath);
-            defaultVars.add(new XmlDefaultVariable(key, value));
+        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element, resourcePath)) {
+            defaultVars.add(new XmlDefaultVariable(variableDefinition.key(), variableDefinition.value()));
         }
-
-        if (defaultVars.isEmpty()) {
-            throw new ConfigurationException("<default-variables> must contain at least one <variable>", resourcePath);
-        }
-
         return defaultVars;
     }
 
@@ -238,7 +205,7 @@ public final class ModalXmlLoader {
         String id = requiredAttribute(element, "id", resourcePath);
         String styleValue = optionalAttribute(element, "style");
         String placeholder = optionalAttribute(element, "placeholder");
-        boolean required = booleanAttribute(element, "required");
+        boolean required = booleanAttribute(element, "required", false);
         int maxLength = intAttribute(element, "max-length", 0, resourcePath);
         int minLength = intAttribute(element, "min-length", 0, resourcePath);
         String defaultValue = optionalAttribute(element, "value");
@@ -285,7 +252,7 @@ public final class ModalXmlLoader {
     private static XmlModalNodes.FileInputNode parseFileInputNode(@NonNull Element element,
                                                                   @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
-        boolean required = booleanAttribute(element, "required");
+        boolean required = booleanAttribute(element, "required", false);
         int minValues = intAttribute(element, "min-values", required ? 1 : 0, resourcePath);
         int maxValues = intAttribute(element, "max-values", 1, resourcePath);
 
@@ -323,7 +290,7 @@ public final class ModalXmlLoader {
                     requiredAttribute(child, "label", resourcePath),
                     requiredAttribute(child, "value", resourcePath),
                     optionalAttribute(child, "description"),
-                    booleanAttribute(child, "default")
+                    booleanAttribute(child, "default", false)
             ));
         }
 
@@ -405,10 +372,10 @@ public final class ModalXmlLoader {
     private static @NonNull SelectSettings parseSelectSettings(@NonNull Element element, @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
         String placeholder = optionalAttribute(element, "placeholder");
-        boolean required = booleanAttribute(element, "required");
+        boolean required = booleanAttribute(element, "required", false);
         int minValues = intAttribute(element, "min-values", required ? 1 : 0, resourcePath);
         int maxValues = intAttribute(element, "max-values", 1, resourcePath);
-        boolean disabled = booleanAttribute(element, "disabled");
+        boolean disabled = booleanAttribute(element, "disabled", false);
 
         if (minValues < 0) {
             throw new ConfigurationException(String.format("<%s> min-values cannot be negative", nodeName(element)), resourcePath);
@@ -424,62 +391,6 @@ public final class ModalXmlLoader {
         }
 
         return new SelectSettings(id, placeholder, required, minValues, maxValues, disabled);
-    }
-
-    private static int intAttribute(@NonNull Element element, @NonNull String attributeName, int fallback,
-                                    @NonNull String resourcePath) {
-        String value = optionalAttribute(element, attributeName);
-        if (value.isBlank()) {
-            return fallback;
-        }
-        try {
-            return Integer.parseInt(value.trim());
-        } catch (NumberFormatException e) {
-            throw new ConfigurationException(String.format(
-                    "Invalid integer value '%s' for attribute '%s' on <%s>",
-                    value, attributeName, nodeName(element)
-            ), resourcePath, e);
-        }
-    }
-
-    private static boolean booleanAttribute(@NonNull Element element, @NonNull String attributeName) {
-        String value = optionalAttribute(element, attributeName);
-        if (value.isBlank()) {
-            return false;
-        }
-        return Boolean.parseBoolean(value.trim());
-    }
-
-    private static @NonNull String requiredAttribute(@NonNull Element element, @NonNull String attributeName,
-                                                     @NonNull String resourcePath) {
-        String value = element.getAttribute(attributeName);
-        if (value == null || value.isBlank()) {
-            throw new ConfigurationException(String.format(
-                    "Missing required attribute '%s' on <%s>",
-                    attributeName, nodeName(element)), resourcePath);
-        }
-        return value;
-    }
-
-    private static @NonNull String optionalAttribute(@NonNull Element element, @NonNull String attributeName) {
-        String value = element.getAttribute(attributeName);
-        return value == null || value.isBlank() ? "" : value;
-    }
-
-    private static @NonNull List<@NonNull Element> childElements(@NonNull Element parent) {
-        List<Element> elements = new ArrayList<>();
-        NodeList children = parent.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
-            if (child instanceof Element element) {
-                elements.add(element);
-            }
-        }
-        return elements;
-    }
-
-    private static @NonNull String nodeName(@NonNull Element element) {
-        return element.getLocalName() != null ? element.getLocalName() : element.getTagName();
     }
 
     private record SelectSettings(
