@@ -142,10 +142,12 @@ An `AdvancedSelectMenu` can be created from the `TemplateSelectMenu` using the `
             @Override
             public void onCommand(SlashCommandInteractionEvent event) {
                 event.reply("Choose an option:")
-                        .addActionRow(stringMenu.advancedSelectMenu()
-                                .addDynamicOption("Dynamic Option", "DynamicValue")
-                                .build())
-                        .addActionRow(entityMenu.advancedSelectMenu().build())
+                        .addComponents(
+                                ActionRow.of(stringMenu.advancedSelectMenu()
+                                        .addDynamicOption("Dynamic Option", "DynamicValue")
+                                        .build()),
+                                ActionRow.of(entityMenu.advancedSelectMenu().build())
+                        )
                         .queue();
             }
         }
@@ -167,12 +169,14 @@ An `AdvancedSelectMenu` can be created from the `TemplateSelectMenu` using the `
 
             override fun onCommand(event: SlashCommandInteractionEvent) {
                 event.reply("Choose an option:")
-                    .addActionRow(
-                        stringMenu.advancedSelectMenu()
-                            .addDynamicOption("Dynamic Option", "DynamicValue")
-                            .build()
+                    .addComponents(
+                        ActionRow.of(
+                            stringMenu.advancedSelectMenu()
+                                .addDynamicOption("Dynamic Option", "DynamicValue")
+                                .build()
+                        ),
+                        ActionRow.of(entityMenu.advancedSelectMenu().build())
                     )
-                    .addActionRow(entityMenu.advancedSelectMenu().build())
                     .queue()
             }
         }

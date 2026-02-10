@@ -66,7 +66,9 @@ To be able to use the previously created button, we need to embed it in other pa
 
             @Override
             public void onCommand(SlashCommandInteractionEvent event) {
-                event.reply("Test").addActionRow(button.advancedButton().build()).queue();
+                event.reply("Test")
+                        .addComponents(ActionRow.of(button.advancedButton().build()))
+                        .queue();
             }
         }
         ```
@@ -83,7 +85,7 @@ To be able to use the previously created button, we need to embed it in other pa
 
             override fun onCommand(event: SlashCommandInteractionEvent) {
                 event.reply("Test")
-                    .addActionRow(button.advancedButton().build())
+                    .addComponents(ActionRow.of(button.advancedButton().build()))
                     .queue()
             }
         }
