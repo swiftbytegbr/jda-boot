@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components-v2 xmlns="https://jda-boot.swiftbyte.de/schema/components-v2"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://jda-boot.swiftbyte.de/schema/components-v2 components-v2.xsd">
+    <layout id="test_component_v2">
+        <default-variables>
+            <variable key="title" value="Test Component V2"/>
+            <variable key="test" value="Test Var"/>
+        </default-variables>
+        <container accent-color="#2ecc71">
+            <text-display content="**${title}**"/>
+            <section>
+                <content>
+                    <text-display content="#{command.test.description}"/>
+                </content>
+                <accessory>
+                    <button-ref class="de.swiftbyte.test.TestButton"/>
+                </accessory>
+            </section>
+            <separator spacing="LARGE"/>
+            <section>
+                <content>
+                    <text-display content="This is another section"/>
+                </content>
+                <accessory>
+                    <thumbnail url="${imageUrl}" description="Example Image" spoiler="false"/>
+                </accessory>
+            </section>
+            <separator/>
+        </container>
+        <separator/>
+        <text-display content="This is a top level label"/>
+        <container>
+            <text-display content="?{app.test}"/>
+            <action-row>
+                <button-ref id="test_button"/>
+                <button-ref id="test_button"/>
+            </action-row>
+        </container>
+        <action-row>
+            <entity-select-ref class="de.swiftbyte.test.TestEntitySelectMenu"/>
+        </action-row>
+        <action-row>
+            <string-select-ref class="de.swiftbyte.test.TestStringSelectMenu"/>
+        </action-row>
+        <media-gallery>
+            <item url="https://picsum.photos/200/300"/>
+            <item url="https://picsum.photos/200/300"/>
+            <item url="https://picsum.photos/200/300"/>
+            <item url="https://picsum.photos/200/300"/>
+        </media-gallery>
+    </layout>
+</components-v2>

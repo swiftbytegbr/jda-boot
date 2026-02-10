@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://jda-boot.swiftbyte.de/schema/common"
+           xmlns="https://jda-boot.swiftbyte.de/schema/common"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="idType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="59"/>
+            <xs:pattern value="[^;]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="defaultVarType">
+        <xs:attribute name="key" type="nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="refType">
+        <xs:attribute name="id" type="idType"/>
+        <xs:attribute name="class" type="nonEmptyString"/>
+    </xs:complexType>
+
+</xs:schema>

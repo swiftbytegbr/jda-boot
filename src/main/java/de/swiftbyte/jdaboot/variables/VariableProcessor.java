@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import lombok.CustomLog;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
@@ -35,15 +36,22 @@ public class VariableProcessor {
      * @since alpha.4
      */
     public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
+        return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
+    }
 
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
+        return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
+    }
+
+    private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull HashMap<@NonNull String, @NonNull String> defaultVariables) {
         List<String> unknownVariables = new ArrayList<>();
         String newText = old;
 
         newText = TranslationProcessor.processTranslation(locale, newText);
-        newText = processVariable(newText, variables, defaultVariable, unknownVariables);
+        newText = processVariable(newText, variables, defaultVariables, unknownVariables);
 
         if (isIncompletelyProcessed(newText, true, unknownVariables)) {
-            newText = processVariable(locale, newText, variables, defaultVariable);
+            newText = processVariable(locale, newText, variables, defaultVariables);
         }
 
         return newText;
@@ -61,11 +69,18 @@ public class VariableProcessor {
      * @since alpha.4
      */
     public static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
+        return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
+    }
 
+    public static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
+        return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
+    }
+
+    private static @NonNull String processVariable(@NonNull String old, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull HashMap<@NonNull String, @NonNull String> defaultVariables, @NonNull List<@NonNull String> unknownVariables) {
         String newText = old;
 
-        for (DefaultVariable variable : defaultVariable) {
-            newText = newText.replace("${" + variable.variable() + "}", variable.value());
+        for (var entry : defaultVariables.entrySet()) {
+            newText = newText.replace("${" + entry.getKey() + "}", entry.getValue());
         }
 
         Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
@@ -96,10 +111,26 @@ public class VariableProcessor {
         }
 
         if (isIncompletelyProcessed(newText, false, unknownVariables)) {
-            newText = processVariable(newText, variables, defaultVariable, unknownVariables);
+            newText = processVariable(newText, variables, defaultVariables, unknownVariables);
         }
 
         return newText;
+    }
+
+    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull DefaultVariable @NonNull [] defaultVariable) {
+        HashMap<String, String> defaultVariables = new HashMap<>();
+        for (DefaultVariable variable : defaultVariable) {
+            defaultVariables.put(variable.variable(), variable.value());
+        }
+        return defaultVariables;
+    }
+
+    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
+        HashMap<String, String> defaultVariables = new HashMap<>();
+        for (XmlDefaultVariable variable : defaultVariable) {
+            defaultVariables.put(variable.key(), variable.value());
+        }
+        return defaultVariables;
     }
 
     private static boolean isIncompletelyProcessed(@NonNull String newText, boolean withLanguage, @NonNull List<@NonNull String> ignoredVariables) {

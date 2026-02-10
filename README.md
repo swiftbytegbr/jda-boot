@@ -230,11 +230,15 @@ public class ConfigClass {
 - ✅ Scheduler System
 - ✅ Functionality to set a voice dispatch interceptor
 - ✅ Variable transfer between commands, buttons, and modals
-    - ⛔ Options to save variables and random command ids between bot restarts
+  - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Updated and improved docs
+- ✅ Better error handling
+- 🚧 Rework variable system to allow more complex variable types
 - 🚧 Support for Components V2
+  - ✅Message Components
+  - ✅Modal Components
+  - ⛔Conditional Cases, Loops and other advanced features
+  - ⛔allow to design buttons and select menus in xml
 - 🚧 Improved Kotlin friendliness
+- ⛔ Support for audio module config
 - ⛔ Database ORM System
-- 🚧 Better error handling
-
-

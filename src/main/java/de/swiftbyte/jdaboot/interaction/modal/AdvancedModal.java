@@ -1,6 +1,9 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
+import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
+import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
+import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalNodes;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.AllArgsConstructor;
@@ -8,7 +11,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.dv8tion.jda.api.components.attachmentupload.AttachmentUpload;
 import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.components.label.LabelChildComponent;
+import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
+import net.dv8tion.jda.api.components.selections.SelectOption;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -132,37 +140,51 @@ public class AdvancedModal {
     public @NonNull Modal build() {
 
         String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, Map.copyOf(variables));
+        variableTransfer.put(variableId, Map.copyOf(getTransferredVariables()));
 
         String id = template.getId() + ";" + variableId;
-        String title = processVar(template.getDefinition().title());
+        String title = processVar(getTitle());
 
         Modal.Builder modal = Modal.create(id, title);
 
-        for (ModalRow inputDefinition : template.getDefinition().rows()) {
-            String inputId = processVar(inputDefinition.id());
-            String placeholder = processVar(inputDefinition.placeholder());
-            String label = processVar(inputDefinition.label());
-            TextInputStyle style = switch (inputDefinition.inputStyle()) {
-                case PARAGRAPH -> TextInputStyle.PARAGRAPH;
-                case SHORT -> TextInputStyle.SHORT;
-            };
+        if (template.getDefinition() != null) {
+            for (ModalRow inputDefinition : template.getDefinition().rows()) {
+                String inputId = processVar(inputDefinition.id());
+                String placeholder = processVar(inputDefinition.placeholder());
+                String label = processVar(inputDefinition.label());
+                TextInputStyle style = switch (inputDefinition.inputStyle()) {
+                    case PARAGRAPH -> TextInputStyle.PARAGRAPH;
+                    case SHORT -> TextInputStyle.SHORT;
+                };
 
-            TextInput.Builder input = TextInput.create(inputId, style);
-            if (StringUtils.isNotBlank(placeholder)) {
-                input.setPlaceholder(placeholder);
+                TextInput.Builder input = TextInput.create(inputId, style);
+                if (StringUtils.isNotBlank(placeholder)) {
+                    input.setPlaceholder(placeholder);
+                }
+                input.setRequired(inputDefinition.required());
+                if (inputDefinition.maxLength() > 0) {
+                    input.setMaxLength(inputDefinition.maxLength());
+                }
+                if (inputDefinition.minLength() > 0) {
+                    input.setMinLength(inputDefinition.minLength());
+                }
+                if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
+                    input.setValue(processVar(inputDefinition.defaultValue()));
+                }
+                modal.addComponents(Label.of(label, input.build()));
             }
-            input.setRequired(inputDefinition.required());
-            if (inputDefinition.maxLength() > 0) {
-                input.setMaxLength(inputDefinition.maxLength());
+        } else if (template.getXmlDefinition() != null) {
+            for (XmlModalNodes.LabelNode labelNode : template.getXmlDefinition().labels()) {
+                String label = processVar(labelNode.text());
+                String description = processVar(labelNode.description());
+                LabelChildComponent child = buildLabelChild(labelNode.child());
+
+                if (StringUtils.isNotBlank(description)) {
+                    modal.addComponents(Label.of(label, description, child));
+                } else {
+                    modal.addComponents(Label.of(label, child));
+                }
             }
-            if (inputDefinition.minLength() > 0) {
-                input.setMinLength(inputDefinition.minLength());
-            }
-            if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
-                input.setValue(processVar(inputDefinition.defaultValue()));
-            }
-            modal.addComponents(Label.of(label, input.build()));
         }
 
         for (DynamicModalRow inputDefinition : dynamicRows) {
@@ -195,6 +217,78 @@ public class AdvancedModal {
         return modal.build();
     }
 
+    private @NonNull LabelChildComponent buildLabelChild(XmlModalNodes.LabelChildNode childNode) {
+        if (childNode instanceof XmlModalNodes.StringInputNode inputNode) {
+            TextInput.Builder input = TextInput.create(processVar(inputNode.id()), inputNode.style());
+            if (StringUtils.isNotBlank(inputNode.placeholder())) {
+                input.setPlaceholder(processVar(inputNode.placeholder()));
+            }
+            input.setRequired(inputNode.required());
+            if (inputNode.maxLength() > 0) {
+                input.setMaxLength(inputNode.maxLength());
+            }
+            if (inputNode.minLength() > 0) {
+                input.setMinLength(inputNode.minLength());
+            }
+            if (StringUtils.isNotBlank(inputNode.defaultValue())) {
+                input.setValue(processVar(inputNode.defaultValue()));
+            }
+            return input.build();
+        }
+
+        if (childNode instanceof XmlModalNodes.FileInputNode inputNode) {
+            AttachmentUpload.Builder input = AttachmentUpload.create(processVar(inputNode.id()));
+            input.setRequired(inputNode.required());
+            input.setRequiredRange(inputNode.minValues(), inputNode.maxValues());
+            return input.build();
+        }
+
+        if (childNode instanceof XmlModalNodes.StringSelectNode inputNode) {
+            StringSelectMenu.Builder input = StringSelectMenu.create(processVar(inputNode.id()));
+            if (StringUtils.isNotBlank(inputNode.placeholder())) {
+                input.setPlaceholder(processVar(inputNode.placeholder()));
+            }
+
+            List<SelectOption> options = new ArrayList<>();
+            for (XmlModalNodes.StringSelectOptionNode optionNode : inputNode.options()) {
+                SelectOption option = SelectOption.of(
+                        processVar(optionNode.label()),
+                        processVar(optionNode.value())
+                );
+                if (StringUtils.isNotBlank(optionNode.description())) {
+                    option = option.withDescription(processVar(optionNode.description()));
+                }
+                if (optionNode.defaultOption()) {
+                    option = option.withDefault(true);
+                }
+                options.add(option);
+            }
+
+            input.addOptions(options);
+            input.setRequired(inputNode.required());
+            input.setRequiredRange(inputNode.minValues(), inputNode.maxValues());
+            input.setDisabled(inputNode.disabled());
+            return input.build();
+        }
+
+        if (childNode instanceof XmlModalNodes.EntitySelectNode inputNode) {
+            EntitySelectMenu.Builder input = EntitySelectMenu.create(processVar(inputNode.id()), inputNode.targets());
+            if (StringUtils.isNotBlank(inputNode.placeholder())) {
+                input.setPlaceholder(processVar(inputNode.placeholder()));
+            }
+            if (!inputNode.channelTypes().isEmpty()) {
+                input.setChannelTypes(inputNode.channelTypes());
+            }
+
+            input.setRequired(inputNode.required());
+            input.setRequiredRange(inputNode.minValues(), inputNode.maxValues());
+            input.setDisabled(inputNode.disabled());
+            return input.build();
+        }
+
+        throw new IllegalStateException("Unsupported XML modal label child: " + childNode.getClass().getName());
+    }
+
     /**
      * Processes the variables in the given string.
      *
@@ -203,7 +297,49 @@ public class AdvancedModal {
      * @since 1.0.0-alpha.7
      */
     private @NonNull String processVar(@NonNull String old) {
-        return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+        if (template.getDefinition() != null) {
+            return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+        }
+
+        XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
+        if (xmlDefinition != null) {
+            return VariableProcessor.processVariable(locale, old, variables, xmlDefinition.defaultVars());
+        }
+
+        return old;
+    }
+
+    private @NonNull String getTitle() {
+        if (template.getDefinition() != null) {
+            return template.getDefinition().title();
+        }
+
+        XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
+        if (xmlDefinition != null) {
+            return xmlDefinition.title();
+        }
+
+        return "";
+    }
+
+    private @NonNull HashMap<@NonNull String, @NonNull String> getTransferredVariables() {
+        HashMap<String, String> transferred = new HashMap<>();
+
+        if (template.getDefinition() != null) {
+            for (var defaultVar : template.getDefinition().defaultVars()) {
+                transferred.put(defaultVar.variable(), defaultVar.value());
+            }
+        }
+
+        XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
+        if (xmlDefinition != null) {
+            for (XmlDefaultVariable defaultVar : xmlDefinition.defaultVars()) {
+                transferred.put(defaultVar.key(), defaultVar.value());
+            }
+        }
+
+        transferred.putAll(variables);
+        return transferred;
     }
 
     /**

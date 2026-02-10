@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modals xmlns="https://jda-boot.swiftbyte.de/schema/modals"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jda-boot.swiftbyte.de/schema/modals modals.xsd">
+    <layout id="test_modal_layout" modal-class="de.swiftbyte.test.TestModal" title="${title} Modal">
+        <default-variables>
+            <variable key="title" value="Test XML"/>
+        </default-variables>
+
+        <label text="Test">
+            <string-input id="test" style="SHORT" placeholder="This is a test modal." required="true"/>
+        </label>
+        <label text="Test2">
+            <string-input id="test2" style="PARAGRAPH" placeholder="This is a test modal 2." min-length="5"
+                          max-length="10"/>
+        </label>
+        <label text="Upload" description="Optional file upload">
+            <file-input id="upload" required="false" min-values="0" max-values="1"/>
+        </label>
+        <label text="Category">
+            <string-select id="category" placeholder="Choose a category" min-values="1" max-values="1">
+                <option label="Bug" value="bug"/>
+                <option label="Feedback" value="feedback" default="true"/>
+            </string-select>
+        </label>
+        <label text="Target User">
+            <entity-select id="target_user" placeholder="Select a user" min-values="1" max-values="1" required="true">
+                <target type="USER"/>
+            </entity-select>
+        </label>
+    </layout>
+</modals>
