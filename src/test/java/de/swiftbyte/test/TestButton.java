@@ -1,11 +1,9 @@
 package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
-import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
+import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByPath;
 import de.swiftbyte.jdaboot.interaction.button.ButtonExecutor;
-import de.swiftbyte.jdaboot.interaction.modal.AdvancedModal;
 import de.swiftbyte.jdaboot.interaction.modal.TemplateModal;
-import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.HashMap;
@@ -18,13 +16,13 @@ import java.util.HashMap;
 )
 public class TestButton implements ButtonExecutor {
 
-    @ModalByClass(TestModal.class)
+    @ModalByPath("test.xml")
     private TemplateModal modal;
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event, HashMap<String, String> variables) {
         System.out.println(variables.get("test"));
-        event.replyModal(modal.advancedModal().setVariable("title", variables.get("test")).setVariable("user", variables.get("user")).addDynamicRow(new AdvancedModal.DynamicModalRow("dynamic_test", "Dynamic Test", TextInputStyle.SHORT)).build()).queue();
+        event.replyModal(modal.advancedModal().build()).queue();
     }
 
 }

@@ -234,8 +234,8 @@ public class ConfigClass {
 - ✅ Updated and improved docs
 - ✅ Better error handling
 - 🚧 Support for Components V2
-  - 🚧Message Components
-  - ⛔Modal Components
+  - ✅Message Components
+  - 🚧Modal Components
   - ⛔Conditional Cases, Loops and other advanced features
   - ⛔allow to design buttons and select menus in xml
 - 🚧 Improved Kotlin friendliness

@@ -3,9 +3,13 @@ package de.swiftbyte.jdaboot.interaction.modal;
 import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
+import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
+import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
+import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
+import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -15,7 +19,9 @@ import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,6 +34,8 @@ import java.util.UUID;
 @Slf4j
 public class ModalManager extends ListenerAdapter {
 
+    private static final @NonNull String MODALS_DIR = "modals/";
+
     /**
      * The map of modal IDs to ModalExecutor instances.
      */
@@ -37,6 +45,10 @@ public class ModalManager extends ListenerAdapter {
      * The map of classes to modal IDs.
      */
     private HashMap<@NonNull Class<?>, @NonNull String> classList = new HashMap<>();
+
+    private final @NonNull Class<?> mainClass;
+
+    private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition>> xmlFileCache = new HashMap<>();
 
 
     /**
@@ -48,6 +60,7 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-alpha.7
      */
     public ModalManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+        this.mainClass = mainClass;
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(ModalDefinition.class).forEach(clazz -> {
@@ -89,6 +102,17 @@ public class ModalManager extends ListenerAdapter {
             }
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
         });
+        reflections.getFieldsAnnotatedWith(ModalByPath.class).forEach(field -> {
+            if (!TemplateModal.class.isAssignableFrom(field.getType())) {
+                throw new ElementRegistrationException("Fields annotated with @ModalByPath must be of type TemplateModal", field);
+            }
+
+            ModalByPath annotation = field.getAnnotation(ModalByPath.class);
+            String xmlPath = normalizePath(annotation.value());
+            TemplateModal modal = resolveXmlModalForField(field, xmlPath, annotation.layoutId());
+            JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
+            log.info("Registered XML modal field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(), xmlPath);
+        });
 
         jda.addEventListener(this);
     }
@@ -122,6 +146,39 @@ public class ModalManager extends ListenerAdapter {
     }
 
     /**
+     * Retrieves an XML modal template by XML file path and layout id.
+     *
+     * @param path     XML path.
+     * @param layoutId Layout id.
+     * @return Template or null when the layout id is unknown.
+     * @since 1.0.0-beta.2
+     */
+    public @Nullable TemplateModal getModalByPath(@NonNull String path, @NonNull String layoutId) {
+        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizePath(path));
+        XmlModalLayoutDefinition definition = layouts.get(layoutId);
+        if (definition == null) {
+            return null;
+        }
+        return toTemplate(definition);
+    }
+
+    /**
+     * Retrieves an XML modal template by XML file path.
+     * The XML must define exactly one layout.
+     *
+     * @param path XML path.
+     * @return Template or null when no single layout is resolvable.
+     * @since 1.0.0-beta.2
+     */
+    public @Nullable TemplateModal getModalByPath(@NonNull String path) {
+        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizePath(path));
+        if (layouts.size() != 1) {
+            return null;
+        }
+        return toTemplate(layouts.values().iterator().next());
+    }
+
+    /**
      * Handles modal interaction events. When a modal is submitted, this method finds the corresponding
      * ModalExecutor instance and delegates the event to it.
      *
@@ -136,5 +193,87 @@ public class ModalManager extends ListenerAdapter {
         if (modalExecutableList.containsKey(idParts[0])) {
             modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedModal.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
+    }
+
+    private @NonNull TemplateModal resolveXmlModalForField(@NonNull Field field, @NonNull String xmlPath,
+                                                           @NonNull String layoutId) {
+        if (layoutId.isBlank()) {
+            TemplateModal modal = getModalByPath(xmlPath);
+            if (modal == null) {
+                throw new ElementRegistrationException(
+                        String.format("Modal XML '%s' must contain exactly one layout or set layoutId in @ModalByPath", xmlPath),
+                        field
+                );
+            }
+            return modal;
+        }
+
+        TemplateModal modal = getModalByPath(xmlPath, layoutId);
+        if (modal == null) {
+            throw new ElementNotFoundException("Could not find XML modal layout", layoutId, field);
+        }
+        return modal;
+    }
+
+    private @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> getOrLoadXmlFile(@NonNull String xmlPath) {
+        if (!xmlFileCache.containsKey(xmlPath)) {
+            Map<String, XmlModalLayoutDefinition> parsed = ModalXmlLoader.load(mainClass, xmlPath);
+            if (parsed.isEmpty()) {
+                throw new ConfigurationException("No modal layouts found in XML", xmlPath);
+            }
+            xmlFileCache.put(xmlPath, parsed);
+        }
+        return xmlFileCache.get(xmlPath);
+    }
+
+    private @NonNull TemplateModal toTemplate(@NonNull XmlModalLayoutDefinition definition) {
+        String source = definition.sourcePath() + ", layout: " + definition.id();
+        String modalId = definition.modalId();
+        if (modalId != null) {
+            if (!modalExecutableList.containsKey(modalId)) {
+                throw new ConfigurationException(
+                        String.format("Could not find modal id '%s' referenced by XML layout '%s'", modalId, definition.id()),
+                        definition.sourcePath(),
+                        "/layout[@id='" + definition.id() + "']"
+                );
+            }
+            return new TemplateModal(definition, modalId);
+        }
+
+        String modalClassName = Objects.requireNonNull(definition.modalClassName());
+        try {
+            Class<?> rawClass = Class.forName(modalClassName, true, mainClass.getClassLoader());
+            if (!ModalExecutor.class.isAssignableFrom(rawClass)) {
+                throw new ObjectInitializationException(
+                        String.format("Referenced modal class '%s' does not implement %s", modalClassName, ModalExecutor.class.getName()),
+                        rawClass,
+                        source
+                );
+            }
+
+            String id = classList.get(rawClass);
+            if (id == null || !modalExecutableList.containsKey(id)) {
+                throw new ConfigurationException(
+                        String.format("Could not find registered modal for class '%s' referenced by XML layout '%s'", modalClassName, definition.id()),
+                        definition.sourcePath(),
+                        "/layout[@id='" + definition.id() + "']"
+                );
+            }
+
+            return new TemplateModal(definition, id);
+        } catch (ClassNotFoundException e) {
+            throw new ObjectInitializationException("Could not load modal class: " + modalClassName, source, e);
+        }
+    }
+
+    private @NonNull String normalizePath(@NonNull String path) {
+        String normalized = path.trim();
+        if (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+        if (!normalized.startsWith(MODALS_DIR)) {
+            normalized = MODALS_DIR + normalized;
+        }
+        return normalized;
     }
 }

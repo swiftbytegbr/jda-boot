@@ -1,10 +1,12 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
+import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The TemplateModal class is responsible for generating advanced modals based on a provided template.
@@ -16,7 +18,10 @@ import org.jspecify.annotations.NonNull;
 public class TemplateModal {
 
     @Getter(AccessLevel.PACKAGE)
-    private final @NonNull ModalDefinition definition;
+    private final @Nullable ModalDefinition definition;
+
+    @Getter(AccessLevel.PACKAGE)
+    private final @Nullable XmlModalLayoutDefinition xmlDefinition;
 
     @Getter(AccessLevel.PACKAGE)
     private final @NonNull String id;
@@ -29,6 +34,20 @@ public class TemplateModal {
      */
     protected TemplateModal(@NonNull ModalDefinition modalDefinition, @NonNull String id) {
         this.definition = modalDefinition;
+        this.xmlDefinition = null;
+        this.id = id;
+    }
+
+    /**
+     * Constructor for an XML modal template definition.
+     *
+     * @param xmlDefinition Parsed XML modal definition.
+     * @param id            Resolved modal id.
+     * @since 1.0.0-beta.2
+     */
+    protected TemplateModal(@NonNull XmlModalLayoutDefinition xmlDefinition, @NonNull String id) {
+        this.definition = null;
+        this.xmlDefinition = xmlDefinition;
         this.id = id;
     }
 

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://jda-boot.swiftbyte.de/schema/modals"
+           xmlns="https://jda-boot.swiftbyte.de/schema/modals"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="idType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="59"/>
+            <xs:pattern value="[^;]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="inputStyleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SHORT"/>
+            <xs:enumeration value="PARAGRAPH"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="defaultVarType">
+        <xs:attribute name="key" type="nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="defaultVariablesType">
+        <xs:sequence>
+            <xs:element name="variable" type="defaultVarType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="stringInputType">
+        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="style" type="inputStyleType"/>
+        <xs:attribute name="placeholder" type="xs:string"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+        <xs:attribute name="max-length" type="xs:int"/>
+        <xs:attribute name="min-length" type="xs:int"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="fileInputType">
+        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+        <xs:attribute name="max-values" type="xs:int"/>
+        <xs:attribute name="min-values" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:complexType name="stringSelectOptionType">
+        <xs:attribute name="label" type="nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="nonEmptyString" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="default" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="stringSelectType">
+        <xs:sequence>
+            <xs:element name="option" type="stringSelectOptionType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="placeholder" type="xs:string"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+        <xs:attribute name="max-values" type="xs:int"/>
+        <xs:attribute name="min-values" type="xs:int"/>
+        <xs:attribute name="disabled" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:simpleType name="selectTargetType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="USER"/>
+            <xs:enumeration value="ROLE"/>
+            <xs:enumeration value="CHANNEL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="entitySelectTargetType">
+        <xs:attribute name="type" type="selectTargetType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="entitySelectChannelTypeType">
+        <xs:attribute name="value" type="nonEmptyString" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="entitySelectType">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="target" type="entitySelectTargetType"/>
+                <xs:element name="channel-type" type="entitySelectChannelTypeType"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="placeholder" type="xs:string"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+        <xs:attribute name="max-values" type="xs:int"/>
+        <xs:attribute name="min-values" type="xs:int"/>
+        <xs:attribute name="disabled" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="labelType">
+        <xs:choice>
+            <xs:element name="string-input" type="stringInputType"/>
+            <xs:element name="file-input" type="fileInputType"/>
+            <xs:element name="string-select" type="stringSelectType"/>
+            <xs:element name="entity-select" type="entitySelectType"/>
+        </xs:choice>
+        <xs:attribute name="text" type="nonEmptyString" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="layoutType">
+        <xs:sequence>
+            <xs:element name="default-variables" type="defaultVariablesType" minOccurs="0"/>
+            <xs:element name="label" type="labelType" maxOccurs="5"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="idType" use="required"/>
+        <xs:attribute name="modal-id" type="idType"/>
+        <xs:attribute name="modal-class" type="nonEmptyString"/>
+        <xs:attribute name="title" type="nonEmptyString" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="modals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="layout" type="layoutType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
