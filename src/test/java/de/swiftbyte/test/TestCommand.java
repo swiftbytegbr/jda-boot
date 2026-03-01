@@ -84,6 +84,7 @@ public class TestCommand extends SlashCommandExecutor {
                 ).queue();*/
         event.replyComponents(
                 component.advancedComponent(event.getUserLocale())
+                        .setVariable("title", "${imageUrl}")
                         .setVariable("imageUrl", "https://picsum.photos/200/300")
                         .build()
         ).useComponentsV2().setEphemeral(true).queue();

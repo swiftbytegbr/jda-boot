@@ -1,12 +1,18 @@
 package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.exceptions.TranslationCycleException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +24,8 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class TranslationProcessor {
+    private static final Pattern TRANSLATION_PATTERN = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
+    private static final int MAX_PROCESSING_PASSES = 64;
 
     /**
      * Processes the translations in the given string using the provided locale.
@@ -31,18 +39,54 @@ public class TranslationProcessor {
     public static @NonNull String processTranslation(@NonNull DiscordLocale locale, @NonNull String old) {
 
         String newText = old;
+        HashMap<String, String> translationCache = new HashMap<>();
+        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
+        List<String> stateHistory = new ArrayList<>();
 
-        Pattern p = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
-        Matcher m = p.matcher(newText);
+        for (int i = 0; i < MAX_PROCESSING_PASSES; i++) {
+            Matcher matcher = TRANSLATION_PATTERN.matcher(newText);
+            StringBuilder result = new StringBuilder(newText.length());
+            boolean changed = false;
 
-        while (m.find()) {
-            if (getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")) != null) {
-                newText = newText.replace(m.group(), getTranslatedString(locale, m.group().replace("#{", "").replace("}", "")));
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String replacement = translationCache.computeIfAbsent(key, cachedKey -> getTranslatedString(locale, cachedKey));
+                String token = matcher.group();
+
+                if (!replacement.equals(token)) {
+                    changed = true;
+                }
+                matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
             }
+
+            matcher.appendTail(result);
+            newText = result.toString();
+
+            if (!TRANSLATION_PATTERN.matcher(newText).find()) {
+                return newText;
+            }
+
+            if (!changed) {
+                throw new TranslationCycleException(
+                        "Detected cyclic translation references while processing placeholders",
+                        getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+                );
+            }
+
+            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
+            if (firstSeenStateIndex != null) {
+                throw new TranslationCycleException(
+                        "Detected cyclic translation references while processing placeholders",
+                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
+                );
+            }
+            stateHistory.add(newText);
         }
 
-        return newText;
-
+        throw new TranslationCycleException(
+                String.format("Translation processing reached the safety iteration limit of %d passes", MAX_PROCESSING_PASSES),
+                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+        );
     }
 
     /**
@@ -69,6 +113,30 @@ public class TranslationProcessor {
                 log.warn("Translation key '{}' was not found for locale '{}' or fallback locale 'en'", key, locale.getLocale(), e);
                 return "MISSING TRANSLATION";
             }
+        }
+    }
+
+    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
+        Set<String> loopKeys = new LinkedHashSet<>();
+
+        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
+        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
+
+        for (int i = safeStart; i < safeEnd; i++) {
+            collectLoopKeys(stateHistory.get(i), loopKeys);
+        }
+        collectLoopKeys(currentText, loopKeys);
+
+        if (loopKeys.isEmpty()) {
+            return "unknown";
+        }
+        return String.join(", ", loopKeys);
+    }
+
+    private static void collectLoopKeys(@NonNull String text, @NonNull Set<@NonNull String> loopKeys) {
+        Matcher matcher = TRANSLATION_PATTERN.matcher(text);
+        while (matcher.find()) {
+            loopKeys.add(matcher.group(1));
         }
     }
 

@@ -2,6 +2,7 @@ package de.swiftbyte.jdaboot.variables;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+import de.swiftbyte.jdaboot.exceptions.VariableCycleException;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import lombok.CustomLog;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -10,8 +11,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,10 @@ import java.util.regex.Pattern;
  */
 @CustomLog
 public class VariableProcessor {
+    private static final Pattern LANGUAGE_PATTERN = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
+    private static final Pattern CONFIG_PATTERN = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
+    private static final int MAX_PROCESSING_PASSES = 64;
 
     /**
      * Processes the variables in the given string using the provided locale, variable map, and default variables.
@@ -45,81 +52,59 @@ public class VariableProcessor {
     }
 
     private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
-        List<String> unknownVariables = new ArrayList<>();
+        return processVariableInternal(locale, old, variables, defaultVariables, new LinkedHashSet<>());
+    }
+
+    private static @NonNull String processVariableInternal(@Nullable DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull Set<@NonNull String> unknownVariables) {
         String newText = old;
+        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
+        List<String> stateHistory = new ArrayList<>();
 
-        newText = TranslationProcessor.processTranslation(locale, newText);
-        newText = processVariable(newText, variables, defaultVariables, unknownVariables);
+        for (int pass = 0; pass < MAX_PROCESSING_PASSES; pass++) {
+            boolean changed = false;
 
-        if (isIncompletelyProcessed(newText, true, unknownVariables)) {
-            newText = processVariable(locale, newText, variables, defaultVariables);
-        }
-
-        return newText;
-    }
-
-    /**
-     * Processes the variables in the given string using the provided variables map, and default variables.
-     * Replaces placeholders in the string with the corresponding values.
-     *
-     * @param old              The original string with placeholders.
-     * @param variables        The map of variables to replace in the string.
-     * @param defaultVariable  The array of default variables to replace in the string.
-     * @param unknownVariables The list of already unknown variables.
-     * @return The processed string with placeholders replaced by variable values.
-     * @since alpha.4
-     */
-    public static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
-        return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
-    }
-
-    public static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable, @NonNull List<@NonNull String> unknownVariables) {
-        return processVariable(old, variables, toDefaultMap(defaultVariable), unknownVariables);
-    }
-
-    private static @NonNull String processVariable(@NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull List<@NonNull String> unknownVariables) {
-        String newText = old;
-
-        for (var entry : defaultVariables.entrySet()) {
-            newText = newText.replace("${" + entry.getKey() + "}", entry.getValue());
-        }
-
-        Pattern p = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
-        Matcher m = p.matcher(newText);
-        while (m.find()) {
-            String value = getVariable(m.group().replace("${", "").replace("}", ""), variables);
-            if (value == null) {
-                unknownVariables.add(m.group());
-                continue;
-            }
-            newText = newText.replace(m.group(), value);
-        }
-
-        p = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
-        m = p.matcher(newText);
-
-        while (m.find()) {
-            if (JDABootConfigurationManager.getConfigProviderChain().hasKey(m.group().replace("?{", "").replace("}", ""))) {
-                String value = JDABootConfigurationManager.getConfigProviderChain().getString(m.group().replace("?{", "").replace("}", ""));
-                if (value == null) {
-                    unknownVariables.add(m.group());
-                    continue;
+            if (locale != null) {
+                String translatedText = TranslationProcessor.processTranslation(locale, newText);
+                if (!translatedText.equals(newText)) {
+                    changed = true;
+                    newText = translatedText;
                 }
-                newText = newText.replace(m.group(), value);
-            } else {
-                unknownVariables.add(m.group());
             }
+
+            ReplacementResult variableResult = replaceVariables(newText, variables, defaultVariables, unknownVariables);
+            newText = variableResult.text;
+            changed = changed || variableResult.changed;
+
+            ReplacementResult configResult = replaceConfigValues(newText, unknownVariables);
+            newText = configResult.text;
+            changed = changed || configResult.changed;
+
+            if (!isIncompletelyProcessed(newText, locale != null, unknownVariables)) {
+                return newText;
+            }
+
+            if (!changed) {
+                return newText;
+            }
+
+            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
+            if (firstSeenStateIndex != null) {
+                throw new VariableCycleException(
+                        "Detected cyclic variable references while processing placeholders",
+                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
+                );
+            }
+            stateHistory.add(newText);
         }
 
-        if (isIncompletelyProcessed(newText, false, unknownVariables)) {
-            newText = processVariable(newText, variables, defaultVariables, unknownVariables);
-        }
-
-        return newText;
+        throw new VariableCycleException(
+                String.format("Variable processing reached the safety iteration limit of %d passes.", MAX_PROCESSING_PASSES),
+                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
+        );
     }
 
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull DefaultVariable @NonNull [] defaultVariable) {
-        HashMap<String, String> defaultVariables = new HashMap<>();
+        HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (DefaultVariable variable : defaultVariable) {
             defaultVariables.put(variable.variable(), variable.value());
         }
@@ -127,37 +112,91 @@ public class VariableProcessor {
     }
 
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
-        HashMap<String, String> defaultVariables = new HashMap<>();
+        HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (XmlDefaultVariable variable : defaultVariable) {
             defaultVariables.put(variable.key(), variable.value());
         }
         return defaultVariables;
     }
 
-    private static boolean isIncompletelyProcessed(@NonNull String newText, boolean withLanguage, @NonNull List<@NonNull String> ignoredVariables) {
-        Pattern languagePattern = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
-        Matcher languageMatcher = languagePattern.matcher(newText);
-        Pattern configPattern = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
-        Matcher configMatcher = configPattern.matcher(newText);
-        Pattern variablePattern = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
-        Matcher variableMatcher = variablePattern.matcher(newText);
+    private static boolean isIncompletelyProcessed(@NonNull String newText, boolean withLanguage, @NonNull Set<@NonNull String> ignoredVariables) {
+        if (withLanguage && hasUnresolvedPlaceholder(newText, LANGUAGE_PATTERN, ignoredVariables)) {
+            return true;
+        }
 
-        while (withLanguage && languageMatcher.find()) {
-            if (!ignoredVariables.contains(languageMatcher.group())) {
-                return true;
-            }
-        }
-        while (configMatcher.find()) {
-            if (!ignoredVariables.contains(configMatcher.group())) {
-                return true;
-            }
-        }
-        while (variableMatcher.find()) {
-            if (!ignoredVariables.contains(variableMatcher.group())) {
+        return hasUnresolvedPlaceholder(newText, CONFIG_PATTERN, ignoredVariables)
+                || hasUnresolvedPlaceholder(newText, VARIABLE_PATTERN, ignoredVariables);
+    }
+
+    private static boolean hasUnresolvedPlaceholder(@NonNull String text, @NonNull Pattern pattern, @NonNull Set<@NonNull String> ignoredVariables) {
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            if (!ignoredVariables.contains(matcher.group())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static @NonNull ReplacementResult replaceVariables(@NonNull String text, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull Set<@NonNull String> unknownVariables) {
+        Matcher matcher = VARIABLE_PATTERN.matcher(text);
+        StringBuilder result = new StringBuilder(text.length());
+        boolean changed = false;
+
+        while (matcher.find()) {
+            String token = matcher.group();
+            String key = matcher.group(1);
+            String replacement = getVariable(key, variables);
+            if (replacement == null && defaultVariables.containsKey(key)) {
+                replacement = defaultVariables.get(key);
+            }
+
+            if (replacement == null) {
+                unknownVariables.add(token);
+                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
+                continue;
+            }
+
+            if (!replacement.equals(token)) {
+                changed = true;
+            }
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+
+        matcher.appendTail(result);
+        return new ReplacementResult(result.toString(), changed);
+    }
+
+    private static @NonNull ReplacementResult replaceConfigValues(@NonNull String text, @NonNull Set<@NonNull String> unknownVariables) {
+        Matcher matcher = CONFIG_PATTERN.matcher(text);
+        StringBuilder result = new StringBuilder(text.length());
+        boolean changed = false;
+
+        while (matcher.find()) {
+            String token = matcher.group();
+            String key = matcher.group(1);
+
+            if (!JDABootConfigurationManager.getConfigProviderChain().hasKey(key)) {
+                unknownVariables.add(token);
+                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
+                continue;
+            }
+
+            String replacement = JDABootConfigurationManager.getConfigProviderChain().getString(key);
+            if (replacement == null) {
+                unknownVariables.add(token);
+                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
+                continue;
+            }
+
+            if (!replacement.equals(token)) {
+                changed = true;
+            }
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+
+        matcher.appendTail(result);
+        return new ReplacementResult(result.toString(), changed);
     }
 
     private static @Nullable String getVariable(@NonNull String key, @NonNull Map<@NonNull String, @NonNull String> variables) {
@@ -169,4 +208,35 @@ public class VariableProcessor {
             return null;
         }
     }
+
+    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
+        Set<String> loopTokens = new LinkedHashSet<>();
+
+        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
+        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
+
+        for (int i = safeStart; i < safeEnd; i++) {
+            collectLoopTokens(stateHistory.get(i), VARIABLE_PATTERN, loopTokens);
+            collectLoopTokens(stateHistory.get(i), CONFIG_PATTERN, loopTokens);
+            collectLoopTokens(stateHistory.get(i), LANGUAGE_PATTERN, loopTokens);
+        }
+
+        collectLoopTokens(currentText, VARIABLE_PATTERN, loopTokens);
+        collectLoopTokens(currentText, CONFIG_PATTERN, loopTokens);
+        collectLoopTokens(currentText, LANGUAGE_PATTERN, loopTokens);
+
+        if (loopTokens.isEmpty()) {
+            return "unknown";
+        }
+        return String.join(", ", loopTokens);
+    }
+
+    private static void collectLoopTokens(@NonNull String text, @NonNull Pattern pattern, @NonNull Set<@NonNull String> loopTokens) {
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            loopTokens.add(matcher.group(1));
+        }
+    }
+
+    private record ReplacementResult(@NonNull String text, boolean changed) {}
 }

@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.component.v2;
 
 import de.swiftbyte.jdaboot.JDABootConfigurationManager;
+import de.swiftbyte.jdaboot.exceptions.ElementBuildException;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
 import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
@@ -69,12 +70,28 @@ public class AdvancedComponentV2 {
         return this;
     }
 
+    /**
+     * Appends multiple variables used for component rendering.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedComponentV2 instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedComponentV2 setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
     public @NonNull List<@NonNull MessageTopLevelComponent> build() {
-        List<MessageTopLevelComponent> components = new ArrayList<>();
-        for (ComponentV2Nodes.MessageTopLevelNode node : template.getDefinition().components()) {
-            components.add(buildMessageComponent(node));
+        try {
+            List<MessageTopLevelComponent> components = new ArrayList<>();
+            for (ComponentV2Nodes.MessageTopLevelNode node : template.getDefinition().components()) {
+                components.add(buildMessageComponent(node));
+            }
+            return components;
+        } catch (Exception e) {
+            throw new ElementBuildException("Failed to build component layout", sourceReference(), e);
         }
-        return components;
     }
 
     private @NonNull MessageTopLevelComponent buildMessageComponent(ComponentV2Nodes.MessageTopLevelNode node) {

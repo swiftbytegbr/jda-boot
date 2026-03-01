@@ -72,6 +72,18 @@ public class AdvancedSelectMenu {
     }
 
     /**
+     * Appends multiple variables to be used in the select menu.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedSelectMenu instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedSelectMenu setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    /**
      * Adds a default value to the entity select menu.
      *
      * @param defaultValue The default value to add.

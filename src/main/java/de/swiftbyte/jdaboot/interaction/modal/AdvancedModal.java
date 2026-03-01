@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
+import de.swiftbyte.jdaboot.exceptions.ElementBuildException;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalNodes;
@@ -77,6 +78,18 @@ public class AdvancedModal {
     }
 
     /**
+     * Appends multiple variables to be used in the modal.
+     *
+     * @param variables The variables to append.
+     * @return The AdvancedModal instance for chaining.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull AdvancedModal setVariables(@NonNull Map<@NonNull String, @NonNull String> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    /**
      * Add a row to the modal at runtime.
      *
      * @param dynamicModalRow The row to add.
@@ -138,22 +151,62 @@ public class AdvancedModal {
      * @since 1.0.0-alpha.7
      */
     public @NonNull Modal build() {
+        try {
+            String variableId = UUID.randomUUID().toString();
+            variableTransfer.put(variableId, Map.copyOf(getTransferredVariables()));
 
-        String variableId = UUID.randomUUID().toString();
-        variableTransfer.put(variableId, Map.copyOf(getTransferredVariables()));
+            String id = template.getId() + ";" + variableId;
+            String title = processVar(getTitle());
 
-        String id = template.getId() + ";" + variableId;
-        String title = processVar(getTitle());
+            Modal.Builder modal = Modal.create(id, title);
 
-        Modal.Builder modal = Modal.create(id, title);
+            if (template.getDefinition() != null) {
+                for (ModalRow inputDefinition : template.getDefinition().rows()) {
+                    String inputId = processVar(inputDefinition.id());
+                    String placeholder = processVar(inputDefinition.placeholder());
+                    String label = processVar(inputDefinition.label());
+                    TextInputStyle style = switch (inputDefinition.inputStyle()) {
+                        case PARAGRAPH -> TextInputStyle.PARAGRAPH;
+                        case SHORT -> TextInputStyle.SHORT;
+                    };
 
-        if (template.getDefinition() != null) {
-            for (ModalRow inputDefinition : template.getDefinition().rows()) {
+                    TextInput.Builder input = TextInput.create(inputId, style);
+                    if (StringUtils.isNotBlank(placeholder)) {
+                        input.setPlaceholder(placeholder);
+                    }
+                    input.setRequired(inputDefinition.required());
+                    if (inputDefinition.maxLength() > 0) {
+                        input.setMaxLength(inputDefinition.maxLength());
+                    }
+                    if (inputDefinition.minLength() > 0) {
+                        input.setMinLength(inputDefinition.minLength());
+                    }
+                    if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
+                        input.setValue(processVar(inputDefinition.defaultValue()));
+                    }
+                    modal.addComponents(Label.of(label, input.build()));
+                }
+            } else if (template.getXmlDefinition() != null) {
+                for (XmlModalNodes.LabelNode labelNode : template.getXmlDefinition().labels()) {
+                    String label = processVar(labelNode.text());
+                    String description = processVar(labelNode.description());
+                    LabelChildComponent child = buildLabelChild(labelNode.child());
+
+                    if (StringUtils.isNotBlank(description)) {
+                        modal.addComponents(Label.of(label, description, child));
+                    } else {
+                        modal.addComponents(Label.of(label, child));
+                    }
+                }
+            }
+
+            for (DynamicModalRow inputDefinition : dynamicRows) {
                 String inputId = processVar(inputDefinition.id());
                 String placeholder = processVar(inputDefinition.placeholder());
                 String label = processVar(inputDefinition.label());
-                TextInputStyle style = switch (inputDefinition.inputStyle()) {
+                TextInputStyle style = switch (inputDefinition.style) {
                     case PARAGRAPH -> TextInputStyle.PARAGRAPH;
+                    case UNKNOWN -> TextInputStyle.UNKNOWN;
                     case SHORT -> TextInputStyle.SHORT;
                 };
 
@@ -173,48 +226,15 @@ public class AdvancedModal {
                 }
                 modal.addComponents(Label.of(label, input.build()));
             }
-        } else if (template.getXmlDefinition() != null) {
-            for (XmlModalNodes.LabelNode labelNode : template.getXmlDefinition().labels()) {
-                String label = processVar(labelNode.text());
-                String description = processVar(labelNode.description());
-                LabelChildComponent child = buildLabelChild(labelNode.child());
 
-                if (StringUtils.isNotBlank(description)) {
-                    modal.addComponents(Label.of(label, description, child));
-                } else {
-                    modal.addComponents(Label.of(label, child));
-                }
+            return modal.build();
+        } catch (Exception e) {
+            XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
+            if (xmlDefinition != null) {
+                throw new ElementBuildException("Failed to build modal", xmlDefinition.sourcePath() + ", layout: " + xmlDefinition.id(), e);
             }
+            throw new ElementBuildException("Failed to build modal", e);
         }
-
-        for (DynamicModalRow inputDefinition : dynamicRows) {
-            String inputId = processVar(inputDefinition.id());
-            String placeholder = processVar(inputDefinition.placeholder());
-            String label = processVar(inputDefinition.label());
-            TextInputStyle style = switch (inputDefinition.style) {
-                case PARAGRAPH -> TextInputStyle.PARAGRAPH;
-                case UNKNOWN -> TextInputStyle.UNKNOWN;
-                case SHORT -> TextInputStyle.SHORT;
-            };
-
-            TextInput.Builder input = TextInput.create(inputId, style);
-            if (StringUtils.isNotBlank(placeholder)) {
-                input.setPlaceholder(placeholder);
-            }
-            input.setRequired(inputDefinition.required());
-            if (inputDefinition.maxLength() > 0) {
-                input.setMaxLength(inputDefinition.maxLength());
-            }
-            if (inputDefinition.minLength() > 0) {
-                input.setMinLength(inputDefinition.minLength());
-            }
-            if (StringUtils.isNotBlank(inputDefinition.defaultValue())) {
-                input.setValue(processVar(inputDefinition.defaultValue()));
-            }
-            modal.addComponents(Label.of(label, input.build()));
-        }
-
-        return modal.build();
     }
 
     private @NonNull LabelChildComponent buildLabelChild(XmlModalNodes.LabelChildNode childNode) {
