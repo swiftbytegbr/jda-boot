@@ -10,6 +10,7 @@ import lombok.CustomLog;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
@@ -199,6 +200,10 @@ public final class JDABoot {
             if (declaredMethod.getName().equalsIgnoreCase("getVoiceDispatchInterceptor")) {
                 if (VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType())) {
                     builder.setVoiceDispatchInterceptor((VoiceDispatchInterceptor) JDABootObjectManager.runMethod(mainClass, declaredMethod));
+                }
+            } else if (declaredMethod.getName().equalsIgnoreCase("getAudioModuleConfig")) {
+                if (AudioModuleConfig.class.isAssignableFrom(declaredMethod.getReturnType())) {
+                    builder.setAudioModuleConfig((AudioModuleConfig) JDABootObjectManager.runMethod(mainClass, declaredMethod));
                 }
             }
         }
