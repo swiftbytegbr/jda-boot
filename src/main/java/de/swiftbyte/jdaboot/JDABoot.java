@@ -182,7 +182,7 @@ public final class JDABoot {
             builder.disableCache(CacheFlag.VOICE_STATE);
         }
         if (!allow.contains(GatewayIntent.GUILD_EXPRESSIONS)) {
-            builder.disableCache(CacheFlag.EMOJI, CacheFlag.STICKER);
+            builder.disableCache(CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.SOUNDBOARD_SOUNDS);
         }
         if (!allow.contains(GatewayIntent.SCHEDULED_EVENTS)) {
             builder.disableCache(CacheFlag.SCHEDULED_EVENTS);
