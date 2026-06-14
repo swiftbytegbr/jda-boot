@@ -132,7 +132,7 @@ public final class JDABoot {
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(configProvider.getString("discord.token"));
 
-        if(!configProvider.getBoolean("sharding.enabled", false)) {
+        if (!configProvider.getBoolean("sharding.enabled", false)) {
             builder.setShardsTotal(1);
         } else {
 
@@ -288,7 +288,9 @@ public final class JDABoot {
      */
     public @NonNull JDA getFirstJDA() {
         JDA jda = getShardManager().getShardById(minShardId);
-        if (jda == null) throw new IllegalStateException("No JDA instance found for min shard ID " + minShardId);
+        if (jda == null) {
+            throw new IllegalStateException("No JDA instance found for min shard ID " + minShardId);
+        }
         return jda;
     }
 }

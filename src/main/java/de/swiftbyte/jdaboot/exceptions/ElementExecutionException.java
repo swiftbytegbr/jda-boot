@@ -2,7 +2,6 @@ package de.swiftbyte.jdaboot.exceptions;
 
 import org.jspecify.annotations.NonNull;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ElementExecutionException extends RuntimeException {

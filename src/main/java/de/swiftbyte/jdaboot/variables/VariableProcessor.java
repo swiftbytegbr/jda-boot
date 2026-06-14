@@ -238,5 +238,6 @@ public class VariableProcessor {
         }
     }
 
-    private record ReplacementResult(@NonNull String text, boolean changed) {}
+    private record ReplacementResult(@NonNull String text, boolean changed) {
+    }
 }

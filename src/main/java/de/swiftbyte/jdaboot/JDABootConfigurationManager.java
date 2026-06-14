@@ -173,7 +173,7 @@ public final class JDABootConfigurationManager {
     /**
      * Initializes framework managers and registers their listeners with every shard.
      *
-     * @param mainClass The main class of the application.
+     * @param mainClass    The main class of the application.
      * @param shardManager The shard manager used for Discord event handling.
      * @since alpha.4
      */
@@ -185,7 +185,7 @@ public final class JDABootConfigurationManager {
         componentV2Manager = new ComponentV2Manager(mainClass);
 
         int schedulerThreadPoolSize = getConfigProviderChain().getInt("scheduler.threadPoolSize", 5);
-        if(schedulerThreadPoolSize <= 0) {
+        if (schedulerThreadPoolSize <= 0) {
             log.warn("Invalid scheduler thread pool size: {}. Using default value of 5.", schedulerThreadPoolSize);
             schedulerThreadPoolSize = 5;
         }

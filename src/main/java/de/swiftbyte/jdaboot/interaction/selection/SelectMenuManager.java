@@ -9,7 +9,6 @@ import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDef
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -52,7 +51,7 @@ public class SelectMenuManager extends ListenerAdapter {
     /**
      * Discovers select menu definitions, injects templates, and registers this listener with every shard.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass    The main class of your project.
      * @param shardManager The shard manager used for select menu interactions.
      * @since 1.0.0-alpha.11
      */

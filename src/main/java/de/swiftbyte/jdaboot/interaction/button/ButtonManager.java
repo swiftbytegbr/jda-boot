@@ -7,7 +7,6 @@ import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -44,7 +43,7 @@ public class ButtonManager extends ListenerAdapter {
     /**
      * Discovers button definitions, injects button templates, and registers this listener with every shard.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass    The main class of your project.
      * @param shardManager The shard manager used for button interactions.
      * @since alpha.4
      */

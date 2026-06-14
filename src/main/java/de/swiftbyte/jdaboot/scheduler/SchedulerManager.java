@@ -63,11 +63,11 @@ public class SchedulerManager {
 
                     Scheduler scheduler = method.getAnnotation(Scheduler.class);
 
-                    if(scheduler.initialDelay() < 0) {
+                    if (scheduler.initialDelay() < 0) {
                         throw new ElementRegistrationException("Scheduler initial delay cannot be negative!", method);
                     }
 
-                    if(scheduler.interval() <= 0) {
+                    if (scheduler.interval() <= 0) {
                         throw new ElementRegistrationException("Scheduler interval must be greater than 0!", method);
                     }
 
@@ -97,7 +97,9 @@ public class SchedulerManager {
      * @since 1.0.0-beta.2
      */
     public void startReadySchedulers() {
-        if(!readySchedulersStarted.compareAndSet(false, true)) return;
+        if (!readySchedulersStarted.compareAndSet(false, true)) {
+            return;
+        }
         startSchedulers(readyTasks);
     }
 
@@ -145,7 +147,8 @@ public class SchedulerManager {
      * @param method    The scheduled method.
      * @since 1.0.0-beta.2
      */
-    private record ScheduledTask(@NonNull Scheduler scheduler, @NonNull Method method) {}
+    private record ScheduledTask(@NonNull Scheduler scheduler, @NonNull Method method) {
+    }
 
     /**
      * Stores a scheduled future and supports cancellation requests made before the future is assigned.
@@ -163,7 +166,9 @@ public class SchedulerManager {
         private void setFuture(ScheduledFuture<?> value) {
             future.set(value);
 
-            if(cancellationRequested.get()) value.cancel(false);
+            if (cancellationRequested.get()) {
+                value.cancel(false);
+            }
         }
 
         /**

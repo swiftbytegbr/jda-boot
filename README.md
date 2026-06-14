@@ -207,8 +207,8 @@ import de.swiftbyte.jdaboot.annotation.SetValue;
 
 public class ConfigClass {
 
-  @SetValue("discord.token")
-  private String token;
+    @SetValue("discord.token")
+    private String token;
 
 }
 
@@ -230,15 +230,15 @@ public class ConfigClass {
 - ✅ Scheduler System
 - ✅ Functionality to customize the shard manager builder
 - ✅ Variable transfer between commands, buttons, and modals
-  - ⛔ Options to save variables and random command ids between bot restarts
+    - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Updated and improved docs
 - ✅ Better error handling
 - ✅ Improved Kotlin friendliness
 - ✅ Support for Components V2
-  - ✅Message Components
-  - ✅Modal Components
-  - ⛔Conditional Cases, Loops and other advanced features
-  - ⛔Allow to design buttons and select menus in xml
+    - ✅Message Components
+    - ✅Modal Components
+    - ⛔Conditional Cases, Loops and other advanced features
+    - ⛔Allow to design buttons and select menus in xml
 - 🚧 Rework variable system to allow more complex variable types
 - ✅ Add support for sharding
 - ⛔ Database ORM System

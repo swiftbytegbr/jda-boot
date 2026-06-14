@@ -50,7 +50,7 @@ public @interface JDABootConfiguration {
      * @return An array of ShardManagerBuilderCustomizer classes.
      * @since 1.0.0-beta.2
      */
-     @NonNull
+    @NonNull
     Class<? extends ShardManagerBuilderCustomizer> @NonNull [] builderCustomizers() default {};
 
     /**

@@ -4,7 +4,6 @@ import de.swiftbyte.jdaboot.JDABootObjectManager;
 import de.swiftbyte.jdaboot.annotation.EventHandler;
 import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import lombok.CustomLog;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -39,7 +38,7 @@ public class EventManager implements EventListener {
     /**
      * Discovers event handlers below the main package and registers this listener with every shard.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass    The main class of your project.
      * @param shardManager The shard manager used for event handling.
      * @since alpha.4
      */

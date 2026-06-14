@@ -432,9 +432,9 @@ public class AdvancedComponentV2 {
     /**
      * Loads a class and verifies that it implements the required type.
      *
-     * @param className The class name.
+     * @param className  The class name.
      * @param targetType The required target type.
-     * @param <T> The required type.
+     * @param <T>        The required type.
      * @return The validated class.
      * @since 1.0.0-beta.2
      */

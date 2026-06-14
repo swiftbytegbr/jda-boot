@@ -11,7 +11,6 @@ import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -57,7 +56,7 @@ public class ModalManager extends ListenerAdapter {
     /**
      * Discovers modal definitions, injects templates, and registers this listener with every shard.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass    The main class of your project.
      * @param shardManager The shard manager used for modal interactions.
      * @since 1.0.0-alpha.7
      */
@@ -207,7 +206,7 @@ public class ModalManager extends ListenerAdapter {
      * @param layoutId The requested layout ID, or an empty string for a single-layout file.
      * @return The resolved modal template.
      * @throws ElementRegistrationException If no unambiguous layout can be selected.
-     * @throws ElementNotFoundException If the requested layout does not exist.
+     * @throws ElementNotFoundException     If the requested layout does not exist.
      * @since 1.0.0-beta.2
      */
     private @NonNull TemplateModal resolveXmlModalForField(@NonNull Field field, @NonNull String xmlPath,
@@ -271,7 +270,7 @@ public class ModalManager extends ListenerAdapter {
      *
      * @param definition The parsed XML layout definition.
      * @return The modal template.
-     * @throws ConfigurationException If the referenced modal is not registered.
+     * @throws ConfigurationException        If the referenced modal is not registered.
      * @throws ObjectInitializationException If a referenced modal class cannot be loaded or used.
      * @since 1.0.0-beta.2
      */

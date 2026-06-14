@@ -9,7 +9,6 @@ import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
 import de.swiftbyte.jdaboot.variables.TranslationProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
@@ -63,7 +62,7 @@ public class CommandManager extends ListenerAdapter {
     /**
      * Discovers command definitions and registers this listener with every shard.
      *
-     * @param mainClass The main class of your project.
+     * @param mainClass    The main class of your project.
      * @param shardManager The shard manager used for command interactions.
      * @since alpha.4
      */
