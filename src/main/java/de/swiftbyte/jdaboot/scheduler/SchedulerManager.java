@@ -22,23 +22,33 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The SchedulerManager class is responsible for managing scheduled tasks.
- * It includes methods to register tasks and to start the scheduler thread.
+ * It discovers scheduled methods and starts them in their configured lifecycle phase.
  *
  * @since alpha.4
  */
 @Slf4j
 public class SchedulerManager {
 
+    /**
+     * Shared executor used by all scheduled tasks.
+     */
     private final ScheduledExecutorService executorService;
 
+    /**
+     * Tasks waiting for the ready lifecycle phase.
+     */
     private final @NonNull List<ScheduledTask> readyTasks = new ArrayList<>();
 
+    /**
+     * Ensures that ready tasks are submitted at most once.
+     */
     private final AtomicBoolean readySchedulersStarted = new AtomicBoolean();
 
     /**
-     * Constructs a new SchedulerManager and registers all methods annotated with Scheduler.
+     * Constructs a scheduler manager, discovers scheduled methods, and starts initialization tasks.
      *
-     * @param mainClass The main class of the application.
+     * @param mainClass      The main class of the application.
+     * @param threadPoolSize The number of threads available for scheduled tasks.
      * @since alpha.4
      */
     public SchedulerManager(@NonNull Class<?> mainClass, int threadPoolSize) {
@@ -80,12 +90,24 @@ public class SchedulerManager {
         startSchedulers(initializationTasks);
     }
 
+    /**
+     * Starts all tasks configured for the ready phase.
+     * Subsequent calls have no effect.
+     *
+     * @since 1.0.0-beta.2
+     */
     public void startReadySchedulers() {
         if(!readySchedulersStarted.compareAndSet(false, true)) return;
         startSchedulers(readyTasks);
     }
 
-    private void startSchedulers(List<ScheduledTask> tasks) {
+    /**
+     * Submits the supplied tasks to the scheduler executor.
+     *
+     * @param tasks The tasks to start.
+     * @since 1.0.0-beta.2
+     */
+    private void startSchedulers(@NonNull List<ScheduledTask> tasks) {
         tasks.forEach(task -> addScheduler(task.scheduler, task.method));
     }
 
@@ -116,18 +138,39 @@ public class SchedulerManager {
         handle.setFuture(future);
     }
 
+    /**
+     * Associates a scheduler configuration with its method.
+     *
+     * @param scheduler The scheduler annotation.
+     * @param method    The scheduled method.
+     * @since 1.0.0-beta.2
+     */
     private record ScheduledTask(@NonNull Scheduler scheduler, @NonNull Method method) {}
 
+    /**
+     * Stores a scheduled future and supports cancellation requests made before the future is assigned.
+     */
     private static class ScheduledTaskHandle {
         private final AtomicReference<ScheduledFuture<?>> future = new AtomicReference<>();
         private final AtomicBoolean cancellationRequested = new AtomicBoolean();
 
+        /**
+         * Assigns the scheduled future and applies an earlier cancellation request.
+         *
+         * @param value The scheduled future.
+         * @since 1.0.0-beta.2
+         */
         private void setFuture(ScheduledFuture<?> value) {
             future.set(value);
 
             if(cancellationRequested.get()) value.cancel(false);
         }
 
+        /**
+         * Cancels future executions without interrupting an invocation that is already running.
+         *
+         * @since 1.0.0-beta.2
+         */
         private void cancel() {
             cancellationRequested.set(true);
 

@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 /**
  * The Scheduler annotation is used to mark a method as a scheduled task.
- * It includes properties to specify the interval and initial delay of the task.
- * The method marked with this annotation should have no parameters and be static.
+ * It includes properties to specify the interval, initial delay, and lifecycle phase of the task.
+ * The annotated method must have no parameters.
  *
  * @since alpha.4
  */
@@ -35,6 +35,13 @@ public @interface Scheduler {
      */
     int initialDelay() default 0;
 
+    /**
+     * Specifies the lifecycle phase in which the scheduler should start.
+     * By default, the scheduler starts after JDABoot is ready.
+     *
+     * @return The lifecycle phase in which the scheduler starts.
+     * @since 1.0.0-beta.2
+     */
     SchedulerStartPhase startPhase() default SchedulerStartPhase.READY;
 
 }

@@ -4,16 +4,17 @@ The Scheduler system in JDA-Boot allows you to execute recurring tasks at specif
 
 ## Scheduler Configuration
 
-To create a scheduler, a method must be annotated with the `@Scheduler` annotation. The method will be executed periodically based on the specified interval and initial delay.
+To create a scheduler, a method must be annotated with the `@Scheduler` annotation. The method will be executed periodically based on the specified interval, initial delay, and start phase.
 
 ### @Scheduler
 
 The `@Scheduler` annotation is used to define the configuration of a scheduler.
 
-| Annotation Field | Description                                                                   | Data Type |
-|------------------|-------------------------------------------------------------------------------|-----------|
-| `interval`       | The interval in milliseconds between each execution of the scheduler          | long      |
-| `initialDelay`   | The delay in milliseconds before the scheduler is executed for the first time | long      |
+| Annotation Field | Description                                                                         | Data Type           |
+|------------------|-------------------------------------------------------------------------------------|---------------------|
+| `interval`       | The interval in milliseconds between each execution of the scheduler                | int                 |
+| `initialDelay`   | The delay in milliseconds after the selected start phase before the first execution | int                 |
+| `startPhase`     | Starts the scheduler during initialization or after JDABoot is ready                | SchedulerStartPhase |
 
 ### Method Requirements
 
@@ -23,7 +24,7 @@ The `@Scheduler` annotation is used to define the configuration of a scheduler.
 
 ## Scheduler Execution
 
-When the bot starts, all methods annotated with `@Scheduler` are automatically registered and executed based on their configuration. The scheduler will continue to run until the method returns `false`.
+When the bot starts, all methods annotated with `@Scheduler` are automatically registered. By default, schedulers start after JDABoot is ready. Set `startPhase = SchedulerStartPhase.INITIALIZATION` to start a scheduler during initialization. The configured `initialDelay` begins when the selected phase is reached. The scheduler will continue to run until the method returns `false`.
 
 !!! example
     === "Java"
@@ -41,4 +42,4 @@ When the bot starts, all methods annotated with `@Scheduler` are automatically r
         }
         ```
 
-In this example, the `runScheduler` method is executed every 10 seconds, starting 5 seconds after the bot starts. The scheduler stops after 5 executions.
+In this example, the `runScheduler` method is executed every 10 seconds, starting 5 seconds after JDABoot is ready. The scheduler stops after 5 executions.
