@@ -49,5 +49,5 @@ jda-boot version.
 - ✅ Variable transfer between commands, buttons, and modals
     - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Scheduler System
-- ✅ Functionality to set a voice dispatch interceptor
+- ✅ Functionality to customize the shard manager builder
 ```

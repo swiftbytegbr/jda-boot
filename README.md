@@ -228,7 +228,7 @@ public class ConfigClass {
 - ✅ Other Interactions (✅ Buttons, ✅ Select Menus, ✅ Modals)
 - ✅ .env configuration support
 - ✅ Scheduler System
-- ✅ Functionality to set a voice dispatch interceptor
+- ✅ Functionality to customize the shard manager builder
 - ✅ Variable transfer between commands, buttons, and modals
   - ⛔ Options to save variables and random command ids between bot restarts
 - ✅ Updated and improved docs
@@ -240,6 +240,5 @@ public class ConfigClass {
   - ⛔Conditional Cases, Loops and other advanced features
   - ⛔Allow to design buttons and select menus in xml
 - 🚧 Rework variable system to allow more complex variable types
-- 🚧 Add support for sharding
-- ✅ Support for audio module config
+- ✅ Add support for sharding
 - ⛔ Database ORM System
