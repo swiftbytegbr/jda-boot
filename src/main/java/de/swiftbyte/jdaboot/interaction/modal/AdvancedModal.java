@@ -13,8 +13,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.components.attachmentupload.AttachmentUpload;
+import net.dv8tion.jda.api.components.checkbox.Checkbox;
+import net.dv8tion.jda.api.components.checkboxgroup.CheckboxGroup;
+import net.dv8tion.jda.api.components.checkboxgroup.CheckboxGroupOption;
 import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.label.LabelChildComponent;
+import net.dv8tion.jda.api.components.radiogroup.RadioGroup;
+import net.dv8tion.jda.api.components.radiogroup.RadioGroupOption;
 import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.components.selections.SelectOption;
 import net.dv8tion.jda.api.components.selections.StringSelectMenu;
@@ -306,7 +311,49 @@ public class AdvancedModal {
             return input.build();
         }
 
+        if (childNode instanceof XmlModalNodes.CheckboxNode inputNode) {
+            return Checkbox.of(processVar(inputNode.id()), inputNode.defaultValue());
+        }
+
+        if (childNode instanceof XmlModalNodes.CheckboxGroupNode inputNode) {
+            CheckboxGroup.Builder input = CheckboxGroup.create(processVar(inputNode.id()));
+            for (XmlModalNodes.GroupOptionNode optionNode : inputNode.options()) {
+                input.addOptions(CheckboxGroupOption.of(
+                        processVar(optionNode.label()),
+                        processVar(optionNode.value()),
+                        optionalProcessedValue(optionNode.description()),
+                        optionNode.defaultOption()
+                ));
+            }
+            input.setRequired(inputNode.required());
+            if (inputNode.minValues() >= 0) {
+                input.setMinValues(inputNode.minValues());
+            }
+            if (inputNode.maxValues() >= 0) {
+                input.setMaxValues(inputNode.maxValues());
+            }
+            return input.build();
+        }
+
+        if (childNode instanceof XmlModalNodes.RadioGroupNode inputNode) {
+            RadioGroup.Builder input = RadioGroup.create(processVar(inputNode.id()));
+            for (XmlModalNodes.GroupOptionNode optionNode : inputNode.options()) {
+                input.addOptions(RadioGroupOption.of(
+                        processVar(optionNode.label()),
+                        processVar(optionNode.value()),
+                        optionalProcessedValue(optionNode.description()),
+                        optionNode.defaultOption()
+                ));
+            }
+            input.setRequired(inputNode.required());
+            return input.build();
+        }
+
         throw new IllegalStateException("Unsupported XML modal label child: " + childNode.getClass().getName());
+    }
+
+    private @Nullable String optionalProcessedValue(@NonNull String value) {
+        return StringUtils.isNotBlank(value) ? processVar(value) : null;
     }
 
     /**

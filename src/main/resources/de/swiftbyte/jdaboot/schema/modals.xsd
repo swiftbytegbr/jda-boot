@@ -87,12 +87,45 @@
         <xs:attribute name="disabled" type="xs:boolean"/>
     </xs:complexType>
 
+    <xs:complexType name="checkboxType">
+        <xs:attribute name="id" type="c:idType" use="required"/>
+        <xs:attribute name="default" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="groupOptionType">
+        <xs:attribute name="label" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="default" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="checkboxGroupType">
+        <xs:sequence>
+            <xs:element name="option" type="groupOptionType" maxOccurs="10"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="c:idType" use="required"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+        <xs:attribute name="min-values" type="xs:int"/>
+        <xs:attribute name="max-values" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:complexType name="radioGroupType">
+        <xs:sequence>
+            <xs:element name="option" type="groupOptionType" minOccurs="2" maxOccurs="10"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="c:idType" use="required"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+    </xs:complexType>
+
     <xs:complexType name="labelType">
         <xs:choice>
             <xs:element name="string-input" type="stringInputType"/>
             <xs:element name="file-input" type="fileInputType"/>
             <xs:element name="string-select" type="stringSelectType"/>
             <xs:element name="entity-select" type="entitySelectType"/>
+            <xs:element name="checkbox" type="checkboxType"/>
+            <xs:element name="checkbox-group" type="checkboxGroupType"/>
+            <xs:element name="radio-group" type="radioGroupType"/>
         </xs:choice>
         <xs:attribute name="text" type="c:nonEmptyString" use="required"/>
         <xs:attribute name="description" type="xs:string"/>

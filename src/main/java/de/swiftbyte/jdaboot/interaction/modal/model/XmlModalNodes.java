@@ -18,7 +18,8 @@ public final class XmlModalNodes {
         // utility
     }
 
-    public sealed interface LabelChildNode permits StringInputNode, FileInputNode, StringSelectNode, EntitySelectNode {
+    public sealed interface LabelChildNode permits StringInputNode, FileInputNode, StringSelectNode, EntitySelectNode,
+            CheckboxNode, CheckboxGroupNode, RadioGroupNode {
     }
 
     public record LabelNode(
@@ -75,6 +76,36 @@ public final class XmlModalNodes {
             boolean disabled,
             @NonNull List<EntitySelectMenu.SelectTarget> targets,
             @NonNull List<ChannelType> channelTypes
+    ) implements LabelChildNode {
+    }
+
+    public record CheckboxNode(
+            @NonNull String id,
+            boolean defaultValue
+    ) implements LabelChildNode {
+    }
+
+    public record GroupOptionNode(
+            @NonNull String label,
+            @NonNull String value,
+            @NonNull String description,
+            boolean defaultOption
+    ) {
+    }
+
+    public record CheckboxGroupNode(
+            @NonNull String id,
+            boolean required,
+            int minValues,
+            int maxValues,
+            @NonNull List<@NonNull GroupOptionNode> options
+    ) implements LabelChildNode {
+    }
+
+    public record RadioGroupNode(
+            @NonNull String id,
+            boolean required,
+            @NonNull List<@NonNull GroupOptionNode> options
     ) implements LabelChildNode {
     }
 }

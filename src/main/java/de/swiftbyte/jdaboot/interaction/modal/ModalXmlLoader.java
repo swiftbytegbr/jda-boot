@@ -191,8 +191,11 @@ public final class ModalXmlLoader {
             case "file-input" -> parseFileInputNode(child, resourcePath);
             case "string-select" -> parseStringSelectNode(child, resourcePath);
             case "entity-select" -> parseEntitySelectNode(child, resourcePath);
+            case "checkbox" -> parseCheckboxNode(child, resourcePath);
+            case "checkbox-group" -> parseCheckboxGroupNode(child, resourcePath);
+            case "radio-group" -> parseRadioGroupNode(child, resourcePath);
             default -> throw new ConfigurationException(String.format(
-                    "Unsupported <label> child <%s>. Allowed: string-input, file-input, string-select, entity-select",
+                    "Unsupported <label> child <%s>. Allowed: string-input, file-input, string-select, entity-select, checkbox, checkbox-group, radio-group",
                     nodeName
             ), resourcePath);
         };
@@ -367,6 +370,99 @@ public final class ModalXmlLoader {
                 List.copyOf(targets),
                 List.copyOf(channelTypes)
         );
+    }
+
+    private static XmlModalNodes.CheckboxNode parseCheckboxNode(@NonNull Element element,
+                                                                @NonNull String resourcePath) {
+        return new XmlModalNodes.CheckboxNode(
+                requiredAttribute(element, "id", resourcePath),
+                booleanAttribute(element, "default", false)
+        );
+    }
+
+    private static XmlModalNodes.CheckboxGroupNode parseCheckboxGroupNode(@NonNull Element element,
+                                                                          @NonNull String resourcePath) {
+        String id = requiredAttribute(element, "id", resourcePath);
+        boolean required = booleanAttribute(element, "required", true);
+        int minValues = intAttribute(element, "min-values", -1, resourcePath);
+        int maxValues = intAttribute(element, "max-values", -1, resourcePath);
+        List<XmlModalNodes.GroupOptionNode> options = parseGroupOptions(element, resourcePath);
+
+        if (minValues < -1 || minValues > 10) {
+            throw new ConfigurationException("<checkbox-group> min-values must be between 0 and 10", resourcePath);
+        }
+        if (maxValues != -1 && (maxValues <= 0 || maxValues > 10)) {
+            throw new ConfigurationException("<checkbox-group> max-values must be between 1 and 10", resourcePath);
+        }
+        if (minValues != -1 && maxValues != -1 && minValues > maxValues) {
+            throw new ConfigurationException("<checkbox-group> min-values cannot be greater than max-values", resourcePath);
+        }
+        if (required && minValues == 0) {
+            throw new ConfigurationException("<checkbox-group> min-values cannot be 0 when required=true", resourcePath);
+        }
+
+        long defaultOptions = options.stream().filter(XmlModalNodes.GroupOptionNode::defaultOption).count();
+        if (defaultOptions > 0 && minValues != -1 && defaultOptions < minValues) {
+            throw new ConfigurationException("<checkbox-group> has fewer default options than min-values", resourcePath);
+        }
+        if (defaultOptions > 0 && maxValues != -1 && defaultOptions > maxValues) {
+            throw new ConfigurationException("<checkbox-group> has more default options than max-values", resourcePath);
+        }
+
+        return new XmlModalNodes.CheckboxGroupNode(id, required, minValues, maxValues, List.copyOf(options));
+    }
+
+    private static XmlModalNodes.RadioGroupNode parseRadioGroupNode(@NonNull Element element,
+                                                                    @NonNull String resourcePath) {
+        String id = requiredAttribute(element, "id", resourcePath);
+        boolean required = booleanAttribute(element, "required", true);
+        List<XmlModalNodes.GroupOptionNode> options = parseGroupOptions(element, resourcePath);
+
+        if (options.size() < 2) {
+            throw new ConfigurationException("<radio-group> must contain at least two <option> elements", resourcePath);
+        }
+        long defaultOptions = options.stream().filter(XmlModalNodes.GroupOptionNode::defaultOption).count();
+        if (defaultOptions > 1) {
+            throw new ConfigurationException("<radio-group> can contain at most one default option", resourcePath);
+        }
+
+        return new XmlModalNodes.RadioGroupNode(id, required, List.copyOf(options));
+    }
+
+    private static @NonNull List<XmlModalNodes.GroupOptionNode> parseGroupOptions(
+            @NonNull Element element,
+            @NonNull String resourcePath) {
+        List<XmlModalNodes.GroupOptionNode> options = new ArrayList<>();
+        for (Element child : childElements(element)) {
+            String childName = nodeName(child);
+            if (!"option".equals(childName)) {
+                throw new ConfigurationException(String.format(
+                        "Unsupported <%s> child <%s>. Only <option> is allowed",
+                        nodeName(element), childName
+                ), resourcePath);
+            }
+
+            options.add(new XmlModalNodes.GroupOptionNode(
+                    requiredAttribute(child, "label", resourcePath),
+                    requiredAttribute(child, "value", resourcePath),
+                    optionalAttribute(child, "description"),
+                    booleanAttribute(child, "default", false)
+            ));
+        }
+
+        if (options.isEmpty()) {
+            throw new ConfigurationException(String.format(
+                    "<%s> must contain at least one <option>",
+                    nodeName(element)
+            ), resourcePath);
+        }
+        if (options.size() > 10) {
+            throw new ConfigurationException(String.format(
+                    "<%s> can contain at most 10 <option> elements",
+                    nodeName(element)
+            ), resourcePath);
+        }
+        return options;
     }
 
     private static @NonNull SelectSettings parseSelectSettings(@NonNull Element element, @NonNull String resourcePath) {

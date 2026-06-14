@@ -32,6 +32,35 @@ public final class XmlLoaderSupport {
         // utility
     }
 
+    /**
+     * Normalizes a classpath resource path relative to the given base directory.
+     * Classpath paths always use forward slashes and do not start with a slash.
+     *
+     * @param path          The configured resource path.
+     * @param baseDirectory The base directory for relative paths.
+     * @return The normalized classpath resource path.
+     * @since 1.0.0-beta.2
+     */
+    public static @NonNull String normalizeResourcePath(@NonNull String path, @NonNull String baseDirectory) {
+        String normalizedPath = path.trim().replace('\\', '/');
+        while (normalizedPath.startsWith("/")) {
+            normalizedPath = normalizedPath.substring(1);
+        }
+
+        String normalizedBaseDirectory = baseDirectory.trim().replace('\\', '/');
+        while (normalizedBaseDirectory.startsWith("/")) {
+            normalizedBaseDirectory = normalizedBaseDirectory.substring(1);
+        }
+        if (!normalizedBaseDirectory.endsWith("/")) {
+            normalizedBaseDirectory += "/";
+        }
+
+        if (!normalizedPath.startsWith(normalizedBaseDirectory)) {
+            normalizedPath = normalizedBaseDirectory + normalizedPath;
+        }
+        return normalizedPath;
+    }
+
     public static @NonNull Schema loadBundledSchema(@NonNull String schemaResource, @NonNull ClassLoader classLoader) {
         URL schemaUrl = classLoader.getResource(schemaResource);
         if (schemaUrl == null) {

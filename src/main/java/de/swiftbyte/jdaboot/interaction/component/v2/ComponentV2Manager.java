@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.normalizeResourcePath;
+
 /**
  * Manages Component V2 layouts loaded from XML resources and supports field injection.
  *
@@ -45,7 +47,7 @@ public class ComponentV2Manager {
             }
 
             ComponentByPath annotation = field.getAnnotation(ComponentByPath.class);
-            String xmlPath = normalizePath(annotation.value());
+            String xmlPath = normalizeResourcePath(annotation.value(), COMPONENTS_DIR);
             String layoutId = annotation.layoutId();
 
             TemplateComponentV2 component = resolveComponentForField(field, xmlPath, layoutId);
@@ -79,7 +81,7 @@ public class ComponentV2Manager {
      * @since 1.0.0-beta.2
      */
     public @Nullable TemplateComponentV2 getComponentByPath(@NonNull String path, @NonNull String layoutId) {
-        Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(normalizePath(path));
+        Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(normalizeResourcePath(path, COMPONENTS_DIR));
         ComponentV2LayoutDefinition definition = layouts.get(layoutId);
         if (definition == null) {
             return null;
@@ -96,7 +98,7 @@ public class ComponentV2Manager {
      * @since 1.0.0-beta.2
      */
     public @Nullable TemplateComponentV2 getComponentByPath(@NonNull String path) {
-        Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(normalizePath(path));
+        Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(normalizeResourcePath(path, COMPONENTS_DIR));
         if (layouts.size() != 1) {
             return null;
         }
@@ -159,16 +161,4 @@ public class ComponentV2Manager {
         return xmlFileCache.get(xmlPath);
     }
 
-    private @NonNull String normalizePath(@NonNull String path) {
-        String normalized = path.trim();
-        if (normalized.startsWith("/")) {
-            normalized = normalized.substring(1);
-        }
-
-        if (!normalized.startsWith(COMPONENTS_DIR)) {
-            normalized = COMPONENTS_DIR + normalized;
-        }
-
-        return normalized;
-    }
 }

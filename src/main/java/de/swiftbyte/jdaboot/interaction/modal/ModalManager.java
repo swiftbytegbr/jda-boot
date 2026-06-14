@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.normalizeResourcePath;
+
 /**
  * The ModalManager class extends ListenerAdapter and is responsible for managing bot modals in the application.
  * It maintains a map of modal IDs to ModalExecutor instances, and handles modal interaction events.
@@ -110,7 +112,7 @@ public class ModalManager extends ListenerAdapter {
             }
 
             ModalByPath annotation = field.getAnnotation(ModalByPath.class);
-            String xmlPath = normalizePath(annotation.value());
+            String xmlPath = normalizeResourcePath(annotation.value(), MODALS_DIR);
             TemplateModal modal = resolveXmlModalForField(field, xmlPath, annotation.layoutId());
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, modal);
             log.info("Registered XML modal field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(), xmlPath);
@@ -156,7 +158,7 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-beta.2
      */
     public @Nullable TemplateModal getModalByPath(@NonNull String path, @NonNull String layoutId) {
-        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizePath(path));
+        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizeResourcePath(path, MODALS_DIR));
         XmlModalLayoutDefinition definition = layouts.get(layoutId);
         if (definition == null) {
             return null;
@@ -173,7 +175,7 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-beta.2
      */
     public @Nullable TemplateModal getModalByPath(@NonNull String path) {
-        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizePath(path));
+        Map<String, XmlModalLayoutDefinition> layouts = getOrLoadXmlFile(normalizeResourcePath(path, MODALS_DIR));
         if (layouts.size() != 1) {
             return null;
         }
@@ -309,20 +311,4 @@ public class ModalManager extends ListenerAdapter {
         }
     }
 
-    /**
-     * Normalizes a modal XML path relative to the {@code modals/} resource directory.
-     *
-     * @param path The configured resource path.
-     * @return The normalized resource path.
-     */
-    private @NonNull String normalizePath(@NonNull String path) {
-        String normalized = path.trim();
-        if (normalized.startsWith("/")) {
-            normalized = normalized.substring(1);
-        }
-        if (!normalized.startsWith(MODALS_DIR)) {
-            normalized = MODALS_DIR + normalized;
-        }
-        return normalized;
-    }
 }
