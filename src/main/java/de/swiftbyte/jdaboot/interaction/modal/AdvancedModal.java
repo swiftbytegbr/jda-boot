@@ -242,6 +242,13 @@ public class AdvancedModal {
         }
     }
 
+    /**
+     * Builds a JDA label child from an XML node.
+     *
+     * @param childNode The parsed XML node.
+     * @return The built label child component.
+     * @since 1.0.0-beta.2
+     */
     private @NonNull LabelChildComponent buildLabelChild(XmlModalNodes.LabelChildNode childNode) {
         if (childNode instanceof XmlModalNodes.StringInputNode inputNode) {
             TextInput.Builder input = TextInput.create(processVar(inputNode.id()), inputNode.style());
@@ -352,6 +359,13 @@ public class AdvancedModal {
         throw new IllegalStateException("Unsupported XML modal label child: " + childNode.getClass().getName());
     }
 
+    /**
+     * Processes an optional XML value and converts blank values to {@code null}.
+     *
+     * @param value The configured value.
+     * @return The processed value, or {@code null} when blank.
+     * @since 1.0.0-beta.2
+     */
     private @Nullable String optionalProcessedValue(@NonNull String value) {
         return StringUtils.isNotBlank(value) ? processVar(value) : null;
     }
@@ -376,6 +390,12 @@ public class AdvancedModal {
         return old;
     }
 
+    /**
+     * Returns the configured modal title.
+     *
+     * @return The modal title.
+     * @since 1.0.0-alpha.7
+     */
     private @NonNull String getTitle() {
         if (template.getDefinition() != null) {
             return template.getDefinition().title();
@@ -389,6 +409,12 @@ public class AdvancedModal {
         return "";
     }
 
+    /**
+     * Collects the default and runtime variables transferred on submission.
+     *
+     * @return The transferred variables.
+     * @since 1.0.0-alpha.7
+     */
     private @NonNull HashMap<@NonNull String, @NonNull String> getTransferredVariables() {
         HashMap<String, String> transferred = new HashMap<>();
 
@@ -428,6 +454,14 @@ public class AdvancedModal {
         private int minLength;
         private @NonNull String defaultValue = "";
 
+        /**
+         * Creates a dynamic modal row with default input settings.
+         *
+         * @param id    The input ID.
+         * @param label The displayed label.
+         * @param style The text input style.
+         * @since 1.0.0-alpha.7
+         */
         public DynamicModalRow(@NonNull String id, @NonNull String label, @NonNull TextInputStyle style) {
             this.id = id;
             this.label = label;

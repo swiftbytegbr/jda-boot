@@ -208,6 +208,7 @@ public class ModalManager extends ListenerAdapter {
      * @return The resolved modal template.
      * @throws ElementRegistrationException If no unambiguous layout can be selected.
      * @throws ElementNotFoundException If the requested layout does not exist.
+     * @since 1.0.0-beta.2
      */
     private @NonNull TemplateModal resolveXmlModalForField(@NonNull Field field, @NonNull String xmlPath,
                                                            @NonNull String layoutId) {
@@ -235,6 +236,7 @@ public class ModalManager extends ListenerAdapter {
      * @param field          The field to validate.
      * @param annotationName The annotation name used in an error message.
      * @throws ElementRegistrationException If the field type is incompatible.
+     * @since 1.0.0-beta.2
      */
     private void checkTemplateModalFieldType(@NonNull Field field, @NonNull String annotationName) {
         if (!TemplateModal.class.isAssignableFrom(field.getType())) {
@@ -251,6 +253,7 @@ public class ModalManager extends ListenerAdapter {
      * @param xmlPath The normalized XML resource path.
      * @return The layouts indexed by layout ID.
      * @throws ConfigurationException If the XML file contains no modal layouts.
+     * @since 1.0.0-beta.2
      */
     private @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> getOrLoadXmlFile(@NonNull String xmlPath) {
         if (!xmlFileCache.containsKey(xmlPath)) {
@@ -270,6 +273,7 @@ public class ModalManager extends ListenerAdapter {
      * @return The modal template.
      * @throws ConfigurationException If the referenced modal is not registered.
      * @throws ObjectInitializationException If a referenced modal class cannot be loaded or used.
+     * @since 1.0.0-beta.2
      */
     private @NonNull TemplateModal toTemplate(@NonNull XmlModalLayoutDefinition definition) {
         String source = definition.sourcePath() + ", layout: " + definition.id();

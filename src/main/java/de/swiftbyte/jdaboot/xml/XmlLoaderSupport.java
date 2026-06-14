@@ -28,6 +28,11 @@ import java.util.List;
  */
 public final class XmlLoaderSupport {
 
+    /**
+     * Prevents instantiation of this utility class.
+     *
+     * @since 1.0.0-beta.2
+     */
     private XmlLoaderSupport() {
         // utility
     }
@@ -61,6 +66,14 @@ public final class XmlLoaderSupport {
         return normalizedPath;
     }
 
+    /**
+     * Loads an XML schema from a classpath resource.
+     *
+     * @param schemaResource The classpath path of the schema.
+     * @param classLoader    The class loader used to resolve the schema.
+     * @return The loaded XML schema.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull Schema loadBundledSchema(@NonNull String schemaResource, @NonNull ClassLoader classLoader) {
         URL schemaUrl = classLoader.getResource(schemaResource);
         if (schemaUrl == null) {
@@ -75,6 +88,17 @@ public final class XmlLoaderSupport {
         }
     }
 
+    /**
+     * Parses and validates an XML document.
+     *
+     * @param xmlStream The XML input stream.
+     * @param schema    The schema used for validation.
+     * @return The parsed document.
+     * @throws IOException                  If the stream cannot be read.
+     * @throws SAXException                 If parsing or validation fails.
+     * @throws ParserConfigurationException If the document builder cannot be configured.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull Document parseDocument(@NonNull InputStream xmlStream,
                                                   @NonNull Schema schema)
             throws IOException, SAXException, ParserConfigurationException {
@@ -86,6 +110,13 @@ public final class XmlLoaderSupport {
         return builder.parse(xmlStream);
     }
 
+    /**
+     * Returns the direct child elements of an element.
+     *
+     * @param parent The parent element.
+     * @return The direct child elements.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull List<@NonNull Element> childElements(@NonNull Element parent) {
         List<Element> elements = new ArrayList<>();
         NodeList children = parent.getChildNodes();
@@ -98,10 +129,26 @@ public final class XmlLoaderSupport {
         return elements;
     }
 
+    /**
+     * Returns the local or tag name of an element.
+     *
+     * @param element The element.
+     * @return The element name.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull String nodeName(@NonNull Element element) {
         return element.getLocalName() != null ? element.getLocalName() : element.getTagName();
     }
 
+    /**
+     * Reads a required, non-blank attribute.
+     *
+     * @param element       The source element.
+     * @param attributeName The attribute name.
+     * @param resourcePath  The XML resource path used for error reporting.
+     * @return The attribute value.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull String requiredAttribute(@NonNull Element element,
                                                     @NonNull String attributeName,
                                                     @NonNull String resourcePath) {
@@ -114,12 +161,29 @@ public final class XmlLoaderSupport {
         return value;
     }
 
+    /**
+     * Reads an optional attribute.
+     *
+     * @param element       The source element.
+     * @param attributeName The attribute name.
+     * @return The attribute value, or an empty string when absent.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull String optionalAttribute(@NonNull Element element,
                                                     @NonNull String attributeName) {
         String value = element.getAttribute(attributeName);
         return value == null || value.isBlank() ? "" : value;
     }
 
+    /**
+     * Reads an optional boolean attribute.
+     *
+     * @param element       The source element.
+     * @param attributeName The attribute name.
+     * @param fallback      The value used when the attribute is absent.
+     * @return The parsed boolean value.
+     * @since 1.0.0-beta.2
+     */
     public static boolean booleanAttribute(@NonNull Element element,
                                            @NonNull String attributeName,
                                            boolean fallback) {
@@ -130,6 +194,16 @@ public final class XmlLoaderSupport {
         return Boolean.parseBoolean(value.trim());
     }
 
+    /**
+     * Reads an optional integer attribute.
+     *
+     * @param element       The source element.
+     * @param attributeName The attribute name.
+     * @param fallback      The value used when the attribute is absent.
+     * @param resourcePath  The XML resource path used for error reporting.
+     * @return The parsed integer value.
+     * @since 1.0.0-beta.2
+     */
     public static int intAttribute(@NonNull Element element,
                                    @NonNull String attributeName,
                                    int fallback,
@@ -148,6 +222,14 @@ public final class XmlLoaderSupport {
         }
     }
 
+    /**
+     * Parses a block of default variable definitions.
+     *
+     * @param element      The default variables element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed variable definitions.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull List<@NonNull XmlVariableDefinition> parseDefaultVariables(@NonNull Element element,
                                                                                       @NonNull String resourcePath) {
         List<XmlVariableDefinition> variables = new ArrayList<>();
@@ -171,6 +253,14 @@ public final class XmlLoaderSupport {
         return variables;
     }
 
+    /**
+     * Parses a reference target configured by ID or class name.
+     *
+     * @param element      The reference element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed reference target.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull XmlRefTarget parseRefTarget(@NonNull Element element,
                                                        @NonNull String resourcePath) {
         String id = optionalAttribute(element, "id");
@@ -187,9 +277,23 @@ public final class XmlLoaderSupport {
         return new XmlRefTarget(hasId ? id : null, hasClass ? className : null);
     }
 
+    /**
+     * Defines a default XML variable.
+     *
+     * @param key   The variable key.
+     * @param value The default value.
+     * @since 1.0.0-beta.2
+     */
     public record XmlVariableDefinition(@NonNull String key, @NonNull String value) {
     }
 
+    /**
+     * Defines a component reference by ID or class name.
+     *
+     * @param id        The referenced ID, or {@code null}.
+     * @param className The referenced class name, or {@code null}.
+     * @since 1.0.0-beta.2
+     */
     public record XmlRefTarget(@Nullable String id, @Nullable String className) {
     }
 }

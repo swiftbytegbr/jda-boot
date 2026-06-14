@@ -41,10 +41,23 @@ public final class ComponentV2XmlLoader {
             ComponentV2XmlLoader.class.getClassLoader()
     );
 
+    /**
+     * Prevents instantiation of this utility class.
+     *
+     * @since 1.0.0-beta.2
+     */
     private ComponentV2XmlLoader() {
         // utility
     }
 
+    /**
+     * Loads all Component V2 layouts from an XML classpath resource.
+     *
+     * @param mainClass    The application class whose class loader resolves the resource.
+     * @param resourcePath The classpath path of the XML resource.
+     * @return The parsed layouts indexed by layout ID.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition> load(@NonNull Class<?> mainClass,
                                                                                            @NonNull String resourcePath) {
         if (resourcePath.isBlank()) {
@@ -91,6 +104,14 @@ public final class ComponentV2XmlLoader {
         }
     }
 
+    /**
+     * Parses a Component V2 layout element.
+     *
+     * @param layoutElement The layout element.
+     * @param resourcePath  The XML resource path used for error reporting.
+     * @return The parsed layout definition.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull ComponentV2LayoutDefinition parseLayout(@NonNull Element layoutElement,
                                                                     @NonNull String resourcePath) {
         String id = requiredAttribute(layoutElement, "id", resourcePath);
@@ -134,6 +155,14 @@ public final class ComponentV2XmlLoader {
         );
     }
 
+    /**
+     * Parses Component V2 default variables.
+     *
+     * @param element      The default variables element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed default variables.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
@@ -143,6 +172,14 @@ public final class ComponentV2XmlLoader {
         return defaultVars;
     }
 
+    /**
+     * Parses a message top-level component.
+     *
+     * @param element      The component element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed message node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.MessageTopLevelNode parseMessageNode(@NonNull Element element,
                                                                          @NonNull String resourcePath) {
         String nodeName = nodeName(element);
@@ -165,6 +202,14 @@ public final class ComponentV2XmlLoader {
         };
     }
 
+    /**
+     * Parses an action row component.
+     *
+     * @param element      The action row element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed action row node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.ActionRowNode parseActionRowNode(@NonNull Element element,
                                                                      @NonNull String resourcePath) {
         List<ComponentV2Nodes.ActionRowChildNode> children = new ArrayList<>();
@@ -217,23 +262,55 @@ public final class ComponentV2XmlLoader {
         return new ComponentV2Nodes.ActionRowNode(List.copyOf(children));
     }
 
+    /**
+     * Parses a button reference.
+     *
+     * @param element      The button reference element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed button reference.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.ButtonRefNode parseButtonRefNode(@NonNull Element element, @NonNull String resourcePath) {
         XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.ButtonRefNode(target.id(), target.className());
     }
 
+    /**
+     * Parses a string select reference.
+     *
+     * @param element      The string select reference element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed string select reference.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.StringSelectRefNode parseStringSelectRefNode(@NonNull Element element,
                                                                                  @NonNull String resourcePath) {
         XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.StringSelectRefNode(target.id(), target.className());
     }
 
+    /**
+     * Parses an entity select reference.
+     *
+     * @param element      The entity select reference element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed entity select reference.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.EntitySelectRefNode parseEntitySelectRefNode(@NonNull Element element,
                                                                                  @NonNull String resourcePath) {
         XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.EntitySelectRefNode(target.id(), target.className());
     }
 
+    /**
+     * Parses a container component.
+     *
+     * @param element      The container element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed container node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.ContainerNode parseContainerNode(@NonNull Element element,
                                                                      @NonNull String resourcePath) {
         List<ComponentV2Nodes.ContainerChildNode> children = new ArrayList<>();
@@ -253,6 +330,14 @@ public final class ComponentV2XmlLoader {
         );
     }
 
+    /**
+     * Parses a container child component.
+     *
+     * @param element      The child element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed container child node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.ContainerChildNode parseContainerChildNode(@NonNull Element element,
                                                                                @NonNull String resourcePath) {
         String nodeName = nodeName(element);
@@ -274,6 +359,14 @@ public final class ComponentV2XmlLoader {
         };
     }
 
+    /**
+     * Parses a file display component.
+     *
+     * @param element      The file display element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed file display node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.FileDisplayNode parseFileDisplayNode(@NonNull Element element,
                                                                          @NonNull String resourcePath) {
         return new ComponentV2Nodes.FileDisplayNode(
@@ -282,6 +375,14 @@ public final class ComponentV2XmlLoader {
         );
     }
 
+    /**
+     * Parses a media gallery component.
+     *
+     * @param element      The media gallery element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed media gallery node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.MediaGalleryNode parseMediaGalleryNode(@NonNull Element element,
                                                                            @NonNull String resourcePath) {
         List<ComponentV2Nodes.MediaGalleryItemNode> items = new ArrayList<>();
@@ -310,6 +411,14 @@ public final class ComponentV2XmlLoader {
         return new ComponentV2Nodes.MediaGalleryNode(List.copyOf(items));
     }
 
+    /**
+     * Parses a section component.
+     *
+     * @param element      The section element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed section node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.SectionNode parseSectionNode(@NonNull Element element,
                                                                  @NonNull String resourcePath) {
         Element contentElement = null;
@@ -348,6 +457,14 @@ public final class ComponentV2XmlLoader {
         );
     }
 
+    /**
+     * Parses the content components of a section.
+     *
+     * @param contentElement The section content element.
+     * @param resourcePath   The XML resource path used for error reporting.
+     * @return The parsed section content nodes.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull List<ComponentV2Nodes.SectionContentNode> parseSectionContent(@NonNull Element contentElement,
                                                                                           @NonNull String resourcePath) {
         List<ComponentV2Nodes.SectionContentNode> content = new ArrayList<>();
@@ -367,6 +484,14 @@ public final class ComponentV2XmlLoader {
         return content;
     }
 
+    /**
+     * Parses the accessory component of a section.
+     *
+     * @param accessoryElement The section accessory element.
+     * @param resourcePath     The XML resource path used for error reporting.
+     * @return The parsed section accessory node.
+     * @since 1.0.0-beta.2
+     */
     private static ComponentV2Nodes.SectionAccessoryNode parseSectionAccessory(@NonNull Element accessoryElement,
                                                                                @NonNull String resourcePath) {
         List<Element> children = childElements(accessoryElement);
@@ -389,6 +514,14 @@ public final class ComponentV2XmlLoader {
         };
     }
 
+    /**
+     * Parses an optional container accent color.
+     *
+     * @param element      The container element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed color, or {@code null} when unset.
+     * @since 1.0.0-beta.2
+     */
     private static @Nullable Integer nullableColorAttribute(@NonNull Element element, @NonNull String resourcePath) {
         String value = optionalAttribute(element, "accent-color").trim();
         if (value.isEmpty()) {
@@ -416,6 +549,14 @@ public final class ComponentV2XmlLoader {
         }
     }
 
+    /**
+     * Parses a separator spacing attribute.
+     *
+     * @param element      The separator element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed separator spacing.
+     * @since 1.0.0-beta.2
+     */
     private static Separator.Spacing spacingAttribute(@NonNull Element element, @NonNull String resourcePath) {
         String value = optionalAttribute(element, "spacing");
         if (value.isBlank()) {

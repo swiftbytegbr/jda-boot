@@ -43,10 +43,23 @@ public final class ModalXmlLoader {
             ModalXmlLoader.class.getClassLoader()
     );
 
+    /**
+     * Prevents instantiation of this utility class.
+     *
+     * @since 1.0.0-beta.2
+     */
     private ModalXmlLoader() {
         // utility
     }
 
+    /**
+     * Loads all modal layouts from an XML classpath resource.
+     *
+     * @param mainClass    The application class whose class loader resolves the resource.
+     * @param resourcePath The classpath path of the XML resource.
+     * @return The parsed modal layouts indexed by layout ID.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> load(@NonNull Class<?> mainClass,
                                                                                         @NonNull String resourcePath) {
         if (resourcePath.isBlank()) {
@@ -93,6 +106,14 @@ public final class ModalXmlLoader {
         }
     }
 
+    /**
+     * Parses a modal layout element.
+     *
+     * @param layoutElement The layout element.
+     * @param resourcePath  The XML resource path used for error reporting.
+     * @return The parsed modal layout definition.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull XmlModalLayoutDefinition parseLayout(@NonNull Element layoutElement,
                                                                  @NonNull String resourcePath) {
         String id = requiredAttribute(layoutElement, "id", resourcePath);
@@ -165,6 +186,14 @@ public final class ModalXmlLoader {
         );
     }
 
+    /**
+     * Parses modal default variables.
+     *
+     * @param element      The default variables element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed default variables.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
@@ -174,6 +203,14 @@ public final class ModalXmlLoader {
         return defaultVars;
     }
 
+    /**
+     * Parses a modal label and its child component.
+     *
+     * @param element      The label element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed label node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.LabelNode parseLabelNode(@NonNull Element element,
                                                           @NonNull String resourcePath) {
         String text = requiredAttribute(element, "text", resourcePath);
@@ -203,6 +240,14 @@ public final class ModalXmlLoader {
         return new XmlModalNodes.LabelNode(text, description, childNode);
     }
 
+    /**
+     * Parses a string input component.
+     *
+     * @param element      The string input element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed string input node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.StringInputNode parseStringInputNode(@NonNull Element element,
                                                                       @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
@@ -252,6 +297,14 @@ public final class ModalXmlLoader {
         );
     }
 
+    /**
+     * Parses a file input component.
+     *
+     * @param element      The file input element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed file input node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.FileInputNode parseFileInputNode(@NonNull Element element,
                                                                   @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
@@ -275,6 +328,14 @@ public final class ModalXmlLoader {
         return new XmlModalNodes.FileInputNode(id, required, maxValues, minValues);
     }
 
+    /**
+     * Parses a string select component.
+     *
+     * @param element      The string select element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed string select node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.StringSelectNode parseStringSelectNode(@NonNull Element element,
                                                                         @NonNull String resourcePath) {
         SelectSettings settings = parseSelectSettings(element, resourcePath);
@@ -312,6 +373,14 @@ public final class ModalXmlLoader {
         );
     }
 
+    /**
+     * Parses an entity select component.
+     *
+     * @param element      The entity select element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed entity select node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.EntitySelectNode parseEntitySelectNode(@NonNull Element element,
                                                                         @NonNull String resourcePath) {
         SelectSettings settings = parseSelectSettings(element, resourcePath);
@@ -372,6 +441,14 @@ public final class ModalXmlLoader {
         );
     }
 
+    /**
+     * Parses a checkbox component.
+     *
+     * @param element      The checkbox element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed checkbox node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.CheckboxNode parseCheckboxNode(@NonNull Element element,
                                                                 @NonNull String resourcePath) {
         return new XmlModalNodes.CheckboxNode(
@@ -380,6 +457,14 @@ public final class ModalXmlLoader {
         );
     }
 
+    /**
+     * Parses a checkbox group component.
+     *
+     * @param element      The checkbox group element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed checkbox group node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.CheckboxGroupNode parseCheckboxGroupNode(@NonNull Element element,
                                                                           @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
@@ -412,6 +497,14 @@ public final class ModalXmlLoader {
         return new XmlModalNodes.CheckboxGroupNode(id, required, minValues, maxValues, List.copyOf(options));
     }
 
+    /**
+     * Parses a radio group component.
+     *
+     * @param element      The radio group element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed radio group node.
+     * @since 1.0.0-beta.2
+     */
     private static XmlModalNodes.RadioGroupNode parseRadioGroupNode(@NonNull Element element,
                                                                     @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
@@ -429,6 +522,14 @@ public final class ModalXmlLoader {
         return new XmlModalNodes.RadioGroupNode(id, required, List.copyOf(options));
     }
 
+    /**
+     * Parses the options of a checkbox or radio group.
+     *
+     * @param element      The group element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed group options.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull List<XmlModalNodes.GroupOptionNode> parseGroupOptions(
             @NonNull Element element,
             @NonNull String resourcePath) {
@@ -465,6 +566,14 @@ public final class ModalXmlLoader {
         return options;
     }
 
+    /**
+     * Parses settings shared by string and entity select components.
+     *
+     * @param element      The select element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed select settings.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull SelectSettings parseSelectSettings(@NonNull Element element, @NonNull String resourcePath) {
         String id = requiredAttribute(element, "id", resourcePath);
         String placeholder = optionalAttribute(element, "placeholder");
@@ -489,6 +598,17 @@ public final class ModalXmlLoader {
         return new SelectSettings(id, placeholder, required, minValues, maxValues, disabled);
     }
 
+    /**
+     * Contains settings shared by string and entity select components.
+     *
+     * @param id          The custom component ID.
+     * @param placeholder The optional placeholder.
+     * @param required    Whether the component is required.
+     * @param minValues   The minimum number of selected values.
+     * @param maxValues   The maximum number of selected values.
+     * @param disabled    Whether the component is disabled.
+     * @since 1.0.0-beta.2
+     */
     private record SelectSettings(
             @NonNull String id,
             @NonNull String placeholder,

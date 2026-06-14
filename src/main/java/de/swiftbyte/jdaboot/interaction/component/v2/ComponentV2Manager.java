@@ -35,6 +35,12 @@ public class ComponentV2Manager {
 
     private final @NonNull Class<?> mainClass;
 
+    /**
+     * Creates a manager and injects all discovered Component V2 XML templates.
+     *
+     * @param mainClass The application main class.
+     * @since 1.0.0-beta.2
+     */
     public ComponentV2Manager(@NonNull Class<?> mainClass) {
 
         this.mainClass = mainClass;
@@ -115,6 +121,15 @@ public class ComponentV2Manager {
         return List.copyOf(layoutsById.keySet());
     }
 
+    /**
+     * Resolves the XML component template requested by an annotated field.
+     *
+     * @param field    The field receiving the template.
+     * @param xmlPath  The normalized XML resource path.
+     * @param layoutId The requested layout ID, or an empty string for a single-layout file.
+     * @return The resolved component template.
+     * @since 1.0.0-beta.2
+     */
     private @NonNull TemplateComponentV2 resolveComponentForField(@NonNull Field field, @NonNull String xmlPath,
                                                                   @NonNull String layoutId) {
         Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(xmlPath);
@@ -138,6 +153,13 @@ public class ComponentV2Manager {
         return new TemplateComponentV2(definition);
     }
 
+    /**
+     * Returns cached layouts or loads them from an XML resource.
+     *
+     * @param xmlPath The normalized XML resource path.
+     * @return The layouts indexed by layout ID.
+     * @since 1.0.0-beta.2
+     */
     private @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition> getOrLoadFile(@NonNull String xmlPath) {
         if (!xmlFileCache.containsKey(xmlPath)) {
             Map<String, ComponentV2LayoutDefinition> parsed = ComponentV2XmlLoader.load(mainClass, xmlPath);
