@@ -8,10 +8,8 @@ import lombok.AccessLevel;
 import lombok.CustomLog;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
-import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -178,17 +176,10 @@ public final class JDABoot {
             builder.setEnabledIntents(allow);
         }
 
-        for (Method declaredMethod : mainClass.getDeclaredMethods()) {
-            if (declaredMethod.getName().equalsIgnoreCase("getVoiceDispatchInterceptor")) {
-                if (VoiceDispatchInterceptor.class.isAssignableFrom(declaredMethod.getReturnType())) {
-                    builder.setVoiceDispatchInterceptor((VoiceDispatchInterceptor) JDABootObjectManager.runMethod(mainClass, declaredMethod));
-                }
-            } else if (declaredMethod.getName().equalsIgnoreCase("getAudioModuleConfig")) {
-                if (AudioModuleConfig.class.isAssignableFrom(declaredMethod.getReturnType())) {
-                    builder.setAudioModuleConfig((AudioModuleConfig) JDABootObjectManager.runMethod(mainClass, declaredMethod));
-                }
-            }
-        }
+        JDABootConfigurationManager.getBuilderCustomizers().forEach(clazz -> {
+            ShardManagerBuilderCustomizer customizer = (ShardManagerBuilderCustomizer) JDABootObjectManager.getOrInitialiseObject(clazz);
+            customizer.customize(builder);
+        });
 
         shardManager = builder.build();
         JDABootConfigurationManager.initialiseManagers(mainClass, shardManager);

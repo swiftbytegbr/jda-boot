@@ -2,18 +2,21 @@ package de.swiftbyte.test;
 
 import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
+import de.swiftbyte.jdaboot.ShardManagerBuilderCustomizer;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.annotation.Scheduler;
 import de.swiftbyte.jdaboot.annotation.SetValue;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jspecify.annotations.NonNull;
 
 @JDABootConfiguration(
         intents = {GatewayIntent.GUILD_MESSAGES},
         disabledCacheFlags = {CacheFlag.VOICE_STATE},
-        memberCachePolicy = MemberCachePolicyConfiguration.DEFAULT
+        memberCachePolicy = MemberCachePolicyConfiguration.DEFAULT,
+        builderCustomizers = {TestClient.ShardManagerBuilderCustomizerImpl.class}
 )
 @Slf4j
 public class TestClient {
@@ -26,10 +29,6 @@ public class TestClient {
         JDABoot.getInstance().updateCommands("774993548579045386");
     }
 
-    private VoiceDispatchInterceptor getVoiceDispatchInterceptor() {
-        return new TestVoiceDispatchInterceptor();
-    }
-
     public static int testValue = 0;
 
     @Scheduler(interval = 1000 * 10, initialDelay = 5000)
@@ -40,5 +39,13 @@ public class TestClient {
         System.out.println("Scheduler test run " + testValue + " times.");
 
         return testValue < 10;
+    }
+
+    static class ShardManagerBuilderCustomizerImpl implements ShardManagerBuilderCustomizer {
+
+        @Override
+        public void customize(@NonNull DefaultShardManagerBuilder builder) {
+            builder.setVoiceDispatchInterceptor(new TestVoiceDispatchInterceptor());
+        }
     }
 }

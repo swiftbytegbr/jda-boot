@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation;
 
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
+import de.swiftbyte.jdaboot.ShardManagerBuilderCustomizer;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import de.swiftbyte.jdaboot.variables.ResourceBundleTranslationProviderImpl;
 import de.swiftbyte.jdaboot.variables.TranslationProvider;
@@ -41,6 +42,16 @@ public @interface JDABootConfiguration {
      * @since alpha.4
      */
     @NonNull Class<? extends TranslationProvider> translationProvider() default ResourceBundleTranslationProviderImpl.class;
+
+    /**
+     * Specifies the ShardManagerBuilderCustomizer classes to be used for customizing the ShardManagerBuilder.
+     * By default, no customizers are specified.
+     *
+     * @return An array of ShardManagerBuilderCustomizer classes.
+     * @since 1.0.0-beta.2
+     */
+     @NonNull
+    Class<? extends ShardManagerBuilderCustomizer> @NonNull [] builderCustomizers() default {};
 
     /**
      * Specifies the GatewayIntents that the JDA instance should be configured with.

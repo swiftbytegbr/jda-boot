@@ -30,6 +30,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +51,9 @@ import java.util.List;
  */
 @CustomLog
 public final class JDABootConfigurationManager {
+
+    @Getter(AccessLevel.PROTECTED)
+    private static @NonNull List<@NonNull Class<? extends ShardManagerBuilderCustomizer>> builderCustomizers = new ArrayList<>();
 
     private static @Nullable List<@NonNull GatewayIntent> intents;
 
@@ -149,6 +153,8 @@ public final class JDABootConfigurationManager {
                  NoSuchMethodException e) {
             throw new ObjectInitializationException("Failed to instantiate translation provider", jdaBootConfiguration.translationProvider(), e);
         }
+
+        builderCustomizers = List.of(jdaBootConfiguration.builderCustomizers());
 
         intents = List.of(jdaBootConfiguration.intents());
         enabledCacheFlags = List.of(jdaBootConfiguration.enabledCacheFlags());

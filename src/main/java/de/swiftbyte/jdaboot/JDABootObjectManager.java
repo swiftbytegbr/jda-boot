@@ -41,7 +41,9 @@ public final class JDABootObjectManager {
                 throw new ObjectInitializationException("Failed to initialise new object because it does not have a no-args constructor! Arg constructors will be supported in an future version!", clazz);
             }
 
-            Object object = clazz.getDeclaredConstructor().newInstance();
+            constructor.setAccessible(true);
+
+            Object object = constructor.newInstance();
             objectMap.put(clazz, object);
             return object;
         } catch (Exception e) {
