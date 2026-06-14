@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -42,7 +43,7 @@ public class EventManager implements EventListener {
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public EventManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+    public EventManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
 
         executor = Executors.newCachedThreadPool();
 
@@ -76,7 +77,7 @@ public class EventManager implements EventListener {
             log.info("Registered event handler for {}", eventClass.getName());
         }
 
-        jda.addEventListener(this);
+        shardManager.addEventListener(this);
     }
 
     private static @NonNull Class<@NonNull Event> getEventClass(@NonNull Method method) {

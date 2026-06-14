@@ -22,6 +22,7 @@ import lombok.CustomLog;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
@@ -149,14 +150,14 @@ public final class JDABootConfigurationManager {
      * @param jda       The JDA instance.
      * @since alpha.4
      */
-    static void initialiseManagers(@NonNull Class<?> mainClass, @NonNull JDA jda) {
-        commandManager = new CommandManager(jda, mainClass);
-        buttonManager = new ButtonManager(jda, mainClass);
-        selectMenuManager = new SelectMenuManager(jda, mainClass);
-        modalManager = new ModalManager(jda, mainClass);
+    static void initialiseManagers(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
+        commandManager = new CommandManager(mainClass, shardManager);
+        buttonManager = new ButtonManager(mainClass, shardManager);
+        selectMenuManager = new SelectMenuManager(mainClass, shardManager);
+        modalManager = new ModalManager(mainClass, shardManager);
         componentV2Manager = new ComponentV2Manager(mainClass);
 
-        new EventManager(jda, mainClass);
+        new EventManager(mainClass, shardManager);
         //noinspection InstantiationOfUtilityClass
         new EmbedManager(mainClass);
         new SchedulerManager(mainClass);
@@ -174,10 +175,10 @@ public final class JDABootConfigurationManager {
      * @param jda The JDA instance from which the values are retrieved.
      * @since 1.0.0-beta.1
      */
-    static void initialiseGlobalVariables(@NonNull JDA jda) {
-        GlobalVariables.setDynamicValue("guildCount", () -> Integer.toString(jda.getGuilds().size()));
+    static void initialiseGlobalVariables(@NonNull ShardManager shardManager, @NonNull JDA jda) {
+        GlobalVariables.setDynamicValue("guildCount", () -> Integer.toString(shardManager.getGuilds().size()));
         GlobalVariables.setDynamicValue("selfUsername", () -> jda.getSelfUser().getName());
-        GlobalVariables.setDynamicValue("shardCount", () -> Integer.toString(jda.getShardInfo().getShardTotal()));
+        GlobalVariables.setDynamicValue("shardCount", () -> String.valueOf(shardManager.getShardsTotal()));
     }
 
     static @NonNull CommandManager getCommandManager() {

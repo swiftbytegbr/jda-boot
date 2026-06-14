@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
@@ -59,7 +60,7 @@ public class ModalManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since 1.0.0-alpha.7
      */
-    public ModalManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+    public ModalManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
         this.mainClass = mainClass;
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
@@ -116,7 +117,7 @@ public class ModalManager extends ListenerAdapter {
             log.info("Registered XML modal field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(), xmlPath);
         });
 
-        jda.addEventListener(this);
+        shardManager.addEventListener(this);
     }
 
     /**

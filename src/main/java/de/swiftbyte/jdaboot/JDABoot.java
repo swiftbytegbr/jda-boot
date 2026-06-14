@@ -4,18 +4,18 @@ package de.swiftbyte.jdaboot;
 import de.swiftbyte.jdaboot.annotation.JDABootConfiguration;
 import de.swiftbyte.jdaboot.configuration.ConfigProvider;
 import de.swiftbyte.jdaboot.exceptions.JDABootInitializationException;
-import de.swiftbyte.jdaboot.exceptions.StillInitializingException;
 import lombok.AccessLevel;
 import lombok.CustomLog;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -41,9 +41,14 @@ public final class JDABoot {
     @Getter(AccessLevel.PROTECTED)
     private static @NonNull HashMap<@NonNull String, @NonNull String> startupArgs = new HashMap<>();
 
-    private @Nullable JDA jda;
-
     private @NonNull Class<?> mainClass;
+
+    private @Nullable ShardManager shardManager;
+
+    @Getter
+    private boolean isReady = false;
+
+    private int minShardId = 0;
 
     private @NonNull ConfigProvider configProvider;
 
@@ -76,52 +81,6 @@ public final class JDABoot {
     }
 
     /**
-     * Updates the bot's commands.
-     *
-     * @see JDA#updateCommands()
-     * @since alpha.2
-     */
-    public void updateCommands() {
-        getJda().updateCommands().queue();
-    }
-
-    /**
-     * Updates the commands for a specific guild.
-     *
-     * @param guildId The ID of the guild to update commands for.
-     * @return true if the guild was found and the update was initiated, false otherwise.
-     * @see Guild#updateCommands()
-     * @since alpha.2
-     */
-    public boolean updateCommands(@NonNull String guildId) {
-        Guild guild = getJda().getGuildById(guildId);
-        if (guild == null) {
-            return false;
-        }
-        guild.updateCommands().queue();
-        return true;
-    }
-
-    /**
-     * Registers a command for a specific guild.
-     *
-     * @param guildId   The ID of the guild to register the command for.
-     * @param commandId The ID of the command to register.
-     * @return true if the guild was found and the update was initiated, false otherwise.
-     * @see Guild#upsertCommand(CommandData)
-     * @since alpha.2
-     */
-    public boolean registerCommand(@NonNull String guildId, @NonNull String commandId) {
-        Guild guild = getJda().getGuildById(guildId);
-        CommandData commandData = JDABootConfigurationManager.getCommandManager().getCommandData().get(commandId);
-        if (guild == null || commandData == null) {
-            return false;
-        }
-        guild.upsertCommand(commandData).queue();
-        return true;
-    }
-
-    /**
      * Private method to initialize the bot.
      *
      * @param args The command line arguments.
@@ -130,6 +89,8 @@ public final class JDABoot {
     private void init(@NonNull String @NonNull [] args) {
 
         instance = this;
+
+        //TODO improve arg parsing, maybe with a library
         for (String arg : args) {
             String[] split = arg.replace("-", "").split("=");
             if (split.length == 2) {
@@ -144,7 +105,7 @@ public final class JDABoot {
         configProvider = JDABootConfigurationManager.getConfigProviderChain();
 
         try {
-            discordLogin();
+            login();
         } catch (InterruptedException e) {
             throw new JDABootInitializationException("Error while logging in to Discord", e);
         } catch (InvalidTokenException e) {
@@ -162,9 +123,24 @@ public final class JDABoot {
      * @throws InvalidTokenException If the provided token is invalid.
      * @since alpha.4
      */
-    private void discordLogin() throws InterruptedException, InvalidTokenException {
+    private void login() throws InterruptedException, InvalidTokenException {
         log.info("Logging in to Discord...");
-        JDABuilder builder = JDABuilder.createDefault(configProvider.getString("discord.token"));
+
+        DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(configProvider.getString("discord.token"));
+
+        if(!configProvider.getBoolean("sharding.enabled", false)) {
+            builder.setShardsTotal(1);
+        } else {
+
+            int totalShards = configProvider.getInt("sharding.totalShards", 1);
+            minShardId = configProvider.getInt("sharding.minShardId", 0);
+            int maxShardId = configProvider.getInt("sharding.maxShardId", totalShards - 1);
+
+            log.info("Sharding is enabled. Total shards: {}, Min shard ID: {}, Max shard ID: {}", totalShards, minShardId, maxShardId);
+
+            builder.setShardsTotal(totalShards);
+            builder.setShards(minShardId, maxShardId);
+        }
 
         List<GatewayIntent> allow = JDABootConfigurationManager.getIntents();
 
@@ -208,10 +184,13 @@ public final class JDABoot {
             }
         }
 
-        this.jda = builder.build();
-        JDABootConfigurationManager.initialiseManagers(mainClass, jda);
-        JDABootConfigurationManager.initialiseGlobalVariables(jda);
-        jda.awaitReady();
+        shardManager = builder.build();
+        JDABootConfigurationManager.initialiseManagers(mainClass, shardManager, getFirstJDA());
+        JDABootConfigurationManager.initialiseGlobalVariables(shardManager, getFirstJDA());
+
+        awaitReady();
+
+        isReady = true;
 
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {
             if (declaredMethod.getName().equalsIgnoreCase("onReady")) {
@@ -220,10 +199,72 @@ public final class JDABoot {
         }
     }
 
-    public @NonNull JDA getJda() {
-        if (jda == null) {
-            throw new StillInitializingException();
+    private void awaitReady() throws InterruptedException {
+        for (JDA jda : getShardManager().getShards()) {
+            jda.awaitReady();
         }
+    }
+
+    /**
+     * Updates the bot's commands.
+     *
+     * @see JDA#updateCommands()
+     * @since alpha.2
+     */
+    public void updateCommands() {
+        getFirstJDA().updateCommands().addCommands(JDABootConfigurationManager.getCommandManager().getGlobalData().values()).queue();
+    }
+
+    /**
+     * Updates the commands for a specific guild.
+     *
+     * @param guildId The ID of the guild to update commands for.
+     * @return true if the guild was found and the update was initiated, false otherwise.
+     * @see Guild#updateCommands()
+     * @since alpha.2
+     */
+    public boolean updateCommands(@NonNull String guildId) {
+        Guild guild = getGuildById(guildId);
+        if (guild == null) {
+            return false;
+        }
+        guild.updateCommands().addCommands(JDABootConfigurationManager.getCommandManager().getGlobalData().values()).queue();
+        return true;
+    }
+
+    /**
+     * Registers a command for a specific guild.
+     *
+     * @param guildId   The ID of the guild to register the command for.
+     * @param commandId The ID of the command to register.
+     * @return true if the guild was found and the update was initiated, false otherwise.
+     * @see Guild#upsertCommand(CommandData)
+     * @since alpha.2
+     */
+    public boolean registerCommand(@NonNull String guildId, @NonNull String commandId) {
+        Guild guild = getGuildById(guildId);
+        CommandData commandData = JDABootConfigurationManager.getCommandManager().getCommandData().get(commandId);
+        if (guild == null || commandData == null) {
+            return false;
+        }
+        guild.upsertCommand(commandData).queue();
+        return true;
+    }
+
+    public @Nullable Guild getGuildById(String id) {
+        return getShardManager().getGuildById(id);
+    }
+
+    public @NonNull ShardManager getShardManager() {
+        if (shardManager == null) {
+            throw new IllegalStateException("ShardManager is not initialized yet");
+        }
+        return shardManager;
+    }
+
+    public @NonNull JDA getFirstJDA() {
+        JDA jda = getShardManager().getShardById(minShardId);
+        if (jda == null) throw new IllegalStateException("No JDA instance found for min shard ID " + minShardId);
         return jda;
     }
 }

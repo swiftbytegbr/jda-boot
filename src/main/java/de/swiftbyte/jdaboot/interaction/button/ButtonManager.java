@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
@@ -44,11 +45,10 @@ public class ButtonManager extends ListenerAdapter {
      * Constructor for ButtonManager. Initializes the manager with the specified JDA instance and main class.
      * It uses reflection to find classes annotated with @ButtonDefinition and creates instances of those classes.
      *
-     * @param jda       The JDA instance to use for button handling.
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public ButtonManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+    public ButtonManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(ButtonDefinition.class).forEach(clazz -> {
@@ -91,7 +91,7 @@ public class ButtonManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, button);
         });
 
-        jda.addEventListener(this);
+        shardManager.addEventListener(this);
     }
 
     /**

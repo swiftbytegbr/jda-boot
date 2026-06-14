@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 
@@ -50,6 +51,9 @@ public class CommandManager extends ListenerAdapter {
     @Getter
     private @NonNull HashMap<@NonNull String, @NonNull CommandData> commandData = new HashMap<>();
 
+    @Getter
+    private @NonNull HashMap<@NonNull String, @NonNull CommandData> globalData = new HashMap<>();
+
     /**
      * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
      * It uses reflection to find classes annotated with @Command and creates instances of those classes.
@@ -58,7 +62,7 @@ public class CommandManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since alpha.4
      */
-    public CommandManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+    public CommandManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
         Reflections reflections = new Reflections(mainClass.getPackageName());
 
         reflections.getTypesAnnotatedWith(SlashCommandDefinition.class).forEach(clazz -> {
@@ -79,8 +83,8 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) {
                     return;
                 }
-                jda.upsertCommand(data).queue();
                 cmd.onEnable((SlashCommandData) data);
+                globalData.put(data.getName(), data);
                 log.info("Registered slash command {}", clazz.getName());
             } else if (UserContextCommandExecutor.class.isAssignableFrom(clazz)) {
 
@@ -95,7 +99,7 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) {
                     return;
                 }
-                jda.upsertCommand(data).queue();
+                globalData.put(data.getName(), data);
                 cmd.onEnable(data);
                 log.info("Registered user context command {}", clazz.getName());
             } else if (MessageContextCommandExecutor.class.isAssignableFrom(clazz)) {
@@ -111,7 +115,7 @@ public class CommandManager extends ListenerAdapter {
                 if (!annotation.isGlobal()) {
                     return;
                 }
-                jda.upsertCommand(data).queue();
+                globalData.put(data.getName(), data);
                 cmd.onEnable(data);
                 log.info("Registered message context command {}", clazz.getName());
             } else {
@@ -119,7 +123,7 @@ public class CommandManager extends ListenerAdapter {
             }
         });
 
-        jda.addEventListener(this);
+        shardManager.addEventListener(this);
     }
 
     /**

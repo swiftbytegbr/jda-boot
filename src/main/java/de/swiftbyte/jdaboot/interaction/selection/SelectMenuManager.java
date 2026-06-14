@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
@@ -56,7 +57,7 @@ public class SelectMenuManager extends ListenerAdapter {
      * @param mainClass The main class of your project.
      * @since 1.0.0-alpha.11
      */
-    public SelectMenuManager(@NonNull JDA jda, @NonNull Class<?> mainClass) {
+    public SelectMenuManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
         Reflections reflections = new Reflections(mainClass.getPackageName(), Scanners.FieldsAnnotated, Scanners.TypesAnnotated);
 
         reflections.getTypesAnnotatedWith(StringSelectMenuDefinition.class).forEach(clazz -> {
@@ -119,7 +120,7 @@ public class SelectMenuManager extends ListenerAdapter {
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, selectMenu);
         });
 
-        jda.addEventListener(this);
+        shardManager.addEventListener(this);
     }
 
     private void checkId(@NonNull String id, @NonNull Class<?> clazz) {
