@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot;
 
+import de.swiftbyte.jdaboot.exceptions.ElementExecutionException;
 import de.swiftbyte.jdaboot.exceptions.ObjectInitializationException;
 import lombok.CustomLog;
 import org.jspecify.annotations.NonNull;
@@ -170,7 +171,8 @@ public final class JDABootObjectManager {
      * @param clazz  The class of the object to run the method on.
      * @param method The method to run.
      * @param args   The arguments to pass to the method.
-     * @return The return value of the method, or null if the method could not be run.
+     * @return The return value of the method.
+     * @throws ElementExecutionException If the method could not be run.
      * @since 1.0.0-alpha.5
      */
     public static @Nullable Object runMethod(@NonNull Class<?> clazz, @NonNull Method method, @Nullable Object @Nullable ... args) {
@@ -188,8 +190,7 @@ public final class JDABootObjectManager {
                 return method.invoke(object, args);
             }
         } catch (Exception e) {
-            log.warn("Failed to run method {} in class {}!", method.getName(), clazz.getName(), e);
-            return null;
+            throw new ElementExecutionException("Failed to run method", method, e);
         }
     }
 }

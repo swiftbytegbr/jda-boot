@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.annotation;
 
+import de.swiftbyte.jdaboot.scheduler.SchedulerStartPhase;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -32,5 +34,7 @@ public @interface Scheduler {
      * @since alpha.4
      */
     int initialDelay() default 0;
+
+    SchedulerStartPhase startPhase() default SchedulerStartPhase.READY;
 
 }

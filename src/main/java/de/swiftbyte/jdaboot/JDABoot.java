@@ -189,6 +189,8 @@ public final class JDABoot {
 
         isReady = true;
 
+        JDABootConfigurationManager.getSchedulerManager().startReadySchedulers();
+
         for (Method declaredMethod : mainClass.getDeclaredMethods()) {
             if (declaredMethod.getName().equalsIgnoreCase("onReady")) {
                 JDABootObjectManager.runMethod(mainClass, declaredMethod);

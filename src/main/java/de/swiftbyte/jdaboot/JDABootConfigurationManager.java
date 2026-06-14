@@ -88,26 +88,32 @@ public final class JDABootConfigurationManager {
     /**
      * The initialized button manager.
      */
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
     private static @Nullable ButtonManager buttonManager;
 
     /**
      * The initialized modal manager.
      */
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
     private static @Nullable ModalManager modalManager;
 
     /**
      * The initialized select menu manager.
      */
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
     private static @Nullable SelectMenuManager selectMenuManager;
 
     /**
      * The initialized Components V2 manager.
      */
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
     private static @Nullable ComponentV2Manager componentV2Manager;
+
+    /**
+     * The initialized scheduler manager.
+     */
+    @Getter
+    private static SchedulerManager schedulerManager;
 
     private static boolean consoleCommandsEnabled;
 
@@ -178,10 +184,16 @@ public final class JDABootConfigurationManager {
         modalManager = new ModalManager(mainClass, shardManager);
         componentV2Manager = new ComponentV2Manager(mainClass);
 
+        int schedulerThreadPoolSize = getConfigProviderChain().getInt("scheduler.threadPoolSize", 5);
+        if(schedulerThreadPoolSize <= 0) {
+            log.warn("Invalid scheduler thread pool size: {}. Using default value of 5.", schedulerThreadPoolSize);
+            schedulerThreadPoolSize = 5;
+        }
+        schedulerManager = new SchedulerManager(mainClass, schedulerThreadPoolSize);
+
         new EventManager(mainClass, shardManager);
         //noinspection InstantiationOfUtilityClass
         new EmbedManager(mainClass);
-        new SchedulerManager(mainClass);
 
         if (consoleCommandsEnabled) {
             new ConsoleCommandManager(mainClass);
