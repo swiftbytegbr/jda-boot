@@ -57,6 +57,9 @@ public final class JDABootConfigurationManager {
 
     private static @Nullable List<@NonNull CacheFlag> disabledCacheFlags;
 
+    /**
+     * The member cache policy applied to every shard.
+     */
     @Getter(AccessLevel.PROTECTED)
     private static @Nullable MemberCachePolicy memberCachePolicy;
 
@@ -78,15 +81,27 @@ public final class JDABootConfigurationManager {
 
     private static @Nullable CommandManager commandManager;
 
+    /**
+     * The initialized button manager.
+     */
     @Getter(AccessLevel.PUBLIC)
     private static @Nullable ButtonManager buttonManager;
 
+    /**
+     * The initialized modal manager.
+     */
     @Getter(AccessLevel.PUBLIC)
     private static @Nullable ModalManager modalManager;
 
+    /**
+     * The initialized select menu manager.
+     */
     @Getter(AccessLevel.PUBLIC)
     private static @Nullable SelectMenuManager selectMenuManager;
 
+    /**
+     * The initialized Components V2 manager.
+     */
     @Getter(AccessLevel.PUBLIC)
     private static @Nullable ComponentV2Manager componentV2Manager;
 
@@ -114,7 +129,7 @@ public final class JDABootConfigurationManager {
     /**
      * Applies the configuration specified by the {@link JDABootConfiguration} annotation.
      *
-     * @param jdaBootConfiguration The AutoConfiguration annotation to apply.
+     * @param jdaBootConfiguration The JDABoot configuration annotation to apply.
      * @since alpha.4
      */
     private static void applyConfiguration(@NotNull JDABootConfiguration jdaBootConfiguration) {
@@ -144,10 +159,10 @@ public final class JDABootConfigurationManager {
     }
 
     /**
-     * Initializes various managers.
+     * Initializes framework managers and registers their listeners with every shard.
      *
      * @param mainClass The main class of the application.
-     * @param jda       The JDA instance.
+     * @param shardManager The shard manager used for Discord event handling.
      * @since alpha.4
      */
     static void initialiseManagers(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -169,10 +184,11 @@ public final class JDABootConfigurationManager {
     }
 
     /**
-     * Initializes global variables that provide dynamic values from the JDA instance.
+     * Initializes global variables that provide dynamic values from the shard manager.
      * These variables can be accessed at runtime and always reflect the current state.
      *
-     * @param jda The JDA instance from which the values are retrieved.
+     * @param shardManager The shard manager used to determine guild and shard counts.
+     * @param jda          A JDA instance used to retrieve information shared by all shards.
      * @since 1.0.0-beta.1
      */
     static void initialiseGlobalVariables(@NonNull ShardManager shardManager, @NonNull JDA jda) {
@@ -181,6 +197,12 @@ public final class JDABootConfigurationManager {
         GlobalVariables.setDynamicValue("shardCount", () -> String.valueOf(shardManager.getShardsTotal()));
     }
 
+    /**
+     * Returns the initialized command manager.
+     *
+     * @return The command manager.
+     * @throws StillInitializingException If the manager has not been initialized yet.
+     */
     static @NonNull CommandManager getCommandManager() {
         if (commandManager == null) {
             throw new StillInitializingException();
@@ -188,6 +210,12 @@ public final class JDABootConfigurationManager {
         return commandManager;
     }
 
+    /**
+     * Returns the configured provider chain.
+     *
+     * @return The configuration provider chain.
+     * @throws StillInitializingException If configuration has not been initialized yet.
+     */
     public static @NonNull ConfigProviderChain getConfigProviderChain() {
         if (configProviderChain == null) {
             throw new StillInitializingException();
@@ -195,6 +223,12 @@ public final class JDABootConfigurationManager {
         return configProviderChain;
     }
 
+    /**
+     * Returns the cache flags that should be enabled.
+     *
+     * @return The enabled cache flags.
+     * @throws StillInitializingException If configuration has not been initialized yet.
+     */
     static @NonNull List<@NonNull CacheFlag> getEnabledCacheFlags() {
         if (enabledCacheFlags == null) {
             throw new StillInitializingException();
@@ -202,6 +236,12 @@ public final class JDABootConfigurationManager {
         return enabledCacheFlags;
     }
 
+    /**
+     * Returns the cache flags that should be disabled.
+     *
+     * @return The disabled cache flags.
+     * @throws StillInitializingException If configuration has not been initialized yet.
+     */
     static @NonNull List<@NonNull CacheFlag> getDisabledCacheFlags() {
         if (disabledCacheFlags == null) {
             throw new StillInitializingException();
@@ -209,6 +249,12 @@ public final class JDABootConfigurationManager {
         return disabledCacheFlags;
     }
 
+    /**
+     * Returns the configured gateway intents.
+     *
+     * @return The gateway intents.
+     * @throws StillInitializingException If configuration has not been initialized yet.
+     */
     static @NonNull List<@NonNull GatewayIntent> getIntents() {
         if (intents == null) {
             throw new StillInitializingException();
@@ -216,6 +262,12 @@ public final class JDABootConfigurationManager {
         return intents;
     }
 
+    /**
+     * Returns the configured translation provider.
+     *
+     * @return The translation provider.
+     * @throws StillInitializingException If configuration has not been initialized yet.
+     */
     public static @NonNull TranslationProvider getTranslationProvider() {
         if (translationProvider == null) {
             throw new StillInitializingException();

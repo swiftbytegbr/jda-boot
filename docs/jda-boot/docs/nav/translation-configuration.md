@@ -52,6 +52,21 @@ You can create a custom translation provider by implementing the `TranslationPro
 
 The configuration system in JDA-Boot allows you to manage settings for your bot. Configuration values can be retrieved dynamically or injected into fields using annotations.
 
+### Framework Configuration
+
+JDABoot recognizes the following framework settings:
+
+| Key                    | Description                                                                                  | Default |
+|------------------------|----------------------------------------------------------------------------------------------|---------|
+| `discord.token`        | Discord bot token.                                                                           | Required |
+| `sharding.enabled`     | Enables sharding. When disabled, exactly one shard is started.                               | `false` |
+| `sharding.totalShards` | Total number of shards used by the bot across all processes.                                 | `1` |
+| `sharding.minShardId`  | Lowest shard ID assigned to the current process.                                             | `0` |
+| `sharding.maxShardId`  | Highest shard ID assigned to the current process, inclusive.                                 | `totalShards - 1` |
+
+The shard ID range is only used when `sharding.enabled` is `true`. `minShardId` must be non-negative,
+`maxShardId` must be greater than or equal to `minShardId`, and `maxShardId` must be lower than `totalShards`.
+
 ### Using Configuration
 
 Configuration values can be used in any place where normal variables are supported by using the syntax `?{CONFIG_KEY}`. Alternatively, you can use the `@SetValue` annotation to inject configuration values into fields.

@@ -42,10 +42,10 @@ public class ButtonManager extends ListenerAdapter {
 
 
     /**
-     * Constructor for ButtonManager. Initializes the manager with the specified JDA instance and main class.
-     * It uses reflection to find classes annotated with @ButtonDefinition and creates instances of those classes.
+     * Discovers button definitions, injects button templates, and registers this listener with every shard.
      *
      * @param mainClass The main class of your project.
+     * @param shardManager The shard manager used for button interactions.
      * @since alpha.4
      */
     public ButtonManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -139,6 +139,13 @@ public class ButtonManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Verifies that an annotated field can receive a {@link TemplateButton}.
+     *
+     * @param field          The field to validate.
+     * @param annotationName The annotation name used in an error message.
+     * @throws ElementRegistrationException If the field type is incompatible.
+     */
     private void checkTemplateButtonFieldType(@NonNull Field field, @NonNull String annotationName) {
         if (!TemplateButton.class.isAssignableFrom(field.getType())) {
             throw new ElementRegistrationException(

@@ -1,10 +1,10 @@
 # Commands
 
 ## Slash Commands
-Slash Commands are the regular Discord commands which can be executed via the chat with `/`. To create a command in JDA-Boot, a `@SlashCommandDefinition` annotation must be annotated to a class that extends the `SlashCommandExecutor` class. In addition, the commands must be registered with Discord via `JDABoot.getInstance.updateCommands()` or `JDABoot.getInstance.updateCommands(guildId)`.
+Slash Commands are the regular Discord commands which can be executed via the chat with `/`. To create a command in JDA-Boot, annotate a class that extends `SlashCommandExecutor` with `@SlashCommandDefinition`. Commands are registered with Discord through `JDABoot.getInstance().updateCommands()`, `JDABoot.getInstance().updateCommands(guildId)`, or `JDABoot.getInstance().registerCommand(guildId, commandId)`.
 
 ### Command Configuration
-The `@SlashCommandDefinition` annotation has many customization options for the command. This is a list of all fields with a description of what each field does. If a command is not global, it can be registered via `JDABoot.getInstance.registerCommand(guildId, commandId)`. The command id corresponds to the name of the command.
+The `@SlashCommandDefinition` annotation has many customization options for the command. This is a list of all fields with a description of what each field does. The command ID used by `registerCommand` corresponds to the command name.
 
 #### @SlashCommandDefinition
 The fields `name` and `type` are required. It also makes sense to set `description`.
@@ -85,6 +85,26 @@ If the Command class is extended with SlashCommandExecutor, the `onCommand` meth
             }
         }
         ```
+
+### Registering Commands
+
+`JDABoot.getInstance().updateCommands()` replaces the application's global commands with every command whose
+`isGlobal` setting is `true`.
+
+`JDABoot.getInstance().updateCommands(guildId)` replaces the commands in one guild with the same set of global
+commands. This is useful for testing because guild command updates are usually available immediately.
+
+Commands with `isGlobal = false` are excluded from both bulk operations. They can be assigned to selected guilds:
+
+=== "Java"
+    ```java
+    JDABoot.getInstance().registerCommand(guildId, "command-name");
+    ```
+
+=== "Kotlin"
+    ```kotlin
+    JDABoot.getInstance().registerCommand(guildId, "command-name")
+    ```
 
 ## Console Commands
 JDABoot supports a simple small console command system. It is important that the setting `enableConsoleCommands` of the `@JDABootConfiguration` annotation is enabled. Then a class that implements the `ConsoleCommandExecutor` class can be annotated with the `@ConsoleCommandDefinition` annotation. This has the field `name` which sets the name of the command and the field `aliases` which takes an array of strings and sets alternative names for the command. The command itself is implemented in the method `onCommand(String[] args)`. The arguments specified during execution are passed as an array.

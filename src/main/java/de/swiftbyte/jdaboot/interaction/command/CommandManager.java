@@ -48,18 +48,23 @@ public class CommandManager extends ListenerAdapter {
 
     private @NonNull HashMap<@NonNull String, @NonNull ContextCommandExecutor<?>> contextCommands = new HashMap<>();
 
+    /**
+     * All discovered command definitions indexed by command name.
+     */
     @Getter
     private @NonNull HashMap<@NonNull String, @NonNull CommandData> commandData = new HashMap<>();
 
+    /**
+     * Command definitions marked for global registration, indexed by command name.
+     */
     @Getter
     private @NonNull HashMap<@NonNull String, @NonNull CommandData> globalData = new HashMap<>();
 
     /**
-     * Constructor for CommandManager. Initializes the manager with the specified JDA instance and main class.
-     * It uses reflection to find classes annotated with @Command and creates instances of those classes.
+     * Discovers command definitions and registers this listener with every shard.
      *
-     * @param jda       The JDA instance to use for command handling.
      * @param mainClass The main class of your project.
+     * @param shardManager The shard manager used for command interactions.
      * @since alpha.4
      */
     public CommandManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -227,7 +232,8 @@ public class CommandManager extends ListenerAdapter {
     /**
      * Builds a SlashCommandData object based on the provided Command annotation.
      *
-     * @param command The Command annotation to use for building the SlashCommandData.
+     * @param id      The command name.
+     * @param command The command annotation to use for building the SlashCommandData.
      * @return The built SlashCommandData.
      * @since alpha.4
      */

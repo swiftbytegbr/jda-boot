@@ -1,3 +1,10 @@
-| Key           |                                                                              Description                                                                              | Default |
-|---------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|--------:|
-| discord.token | Discord application token, used to authenticate with the Discord API. <br/> Create one at the [Discord Developer Portal](https://discord.com/developers/applications) |     N/A |
+| Key                      | Description                                                                                                                                                            | Default |
+|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `discord.token`          | Discord application token used to authenticate with the Discord API. Create one at the [Discord Developer Portal](https://discord.com/developers/applications).        | N/A     |
+| `sharding.enabled`       | Enables sharding. When disabled, JDABoot starts exactly one shard and ignores the remaining sharding settings.                                                         | `false` |
+| `sharding.totalShards`   | Total number of shards used by the Discord bot across all running processes.                                                                                            | `1`     |
+| `sharding.minShardId`    | Lowest shard ID assigned to this process.                                                                                                                              | `0`     |
+| `sharding.maxShardId`    | Highest shard ID assigned to this process. The value is inclusive and must be lower than `sharding.totalShards`.                                                       | `totalShards - 1` |
+
+When a bot is split across multiple processes, every process must use the same
+`sharding.totalShards` value. The configured shard ID ranges must not overlap.

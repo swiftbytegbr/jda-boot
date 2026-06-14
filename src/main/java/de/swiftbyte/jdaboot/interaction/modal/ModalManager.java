@@ -53,11 +53,10 @@ public class ModalManager extends ListenerAdapter {
 
 
     /**
-     * Constructor for ModalManager. Initializes the manager with the specified JDA instance and main class.
-     * It uses reflection to find classes annotated with @ModalDefinition and creates instances of those classes.
+     * Discovers modal definitions, injects templates, and registers this listener with every shard.
      *
-     * @param jda       The JDA instance to use for modal handling.
      * @param mainClass The main class of your project.
+     * @param shardManager The shard manager used for modal interactions.
      * @since 1.0.0-alpha.7
      */
     public ModalManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -198,6 +197,16 @@ public class ModalManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Resolves the XML modal template requested by an annotated field.
+     *
+     * @param field    The field receiving the template.
+     * @param xmlPath  The normalized XML resource path.
+     * @param layoutId The requested layout ID, or an empty string for a single-layout file.
+     * @return The resolved modal template.
+     * @throws ElementRegistrationException If no unambiguous layout can be selected.
+     * @throws ElementNotFoundException If the requested layout does not exist.
+     */
     private @NonNull TemplateModal resolveXmlModalForField(@NonNull Field field, @NonNull String xmlPath,
                                                            @NonNull String layoutId) {
         if (layoutId.isBlank()) {
@@ -218,6 +227,13 @@ public class ModalManager extends ListenerAdapter {
         return modal;
     }
 
+    /**
+     * Verifies that an annotated field can receive a {@link TemplateModal}.
+     *
+     * @param field          The field to validate.
+     * @param annotationName The annotation name used in an error message.
+     * @throws ElementRegistrationException If the field type is incompatible.
+     */
     private void checkTemplateModalFieldType(@NonNull Field field, @NonNull String annotationName) {
         if (!TemplateModal.class.isAssignableFrom(field.getType())) {
             throw new ElementRegistrationException(
@@ -227,6 +243,13 @@ public class ModalManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Returns cached modal layouts or loads them from the given XML resource.
+     *
+     * @param xmlPath The normalized XML resource path.
+     * @return The layouts indexed by layout ID.
+     * @throws ConfigurationException If the XML file contains no modal layouts.
+     */
     private @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> getOrLoadXmlFile(@NonNull String xmlPath) {
         if (!xmlFileCache.containsKey(xmlPath)) {
             Map<String, XmlModalLayoutDefinition> parsed = ModalXmlLoader.load(mainClass, xmlPath);
@@ -238,6 +261,14 @@ public class ModalManager extends ListenerAdapter {
         return xmlFileCache.get(xmlPath);
     }
 
+    /**
+     * Converts an XML layout definition into a modal template.
+     *
+     * @param definition The parsed XML layout definition.
+     * @return The modal template.
+     * @throws ConfigurationException If the referenced modal is not registered.
+     * @throws ObjectInitializationException If a referenced modal class cannot be loaded or used.
+     */
     private @NonNull TemplateModal toTemplate(@NonNull XmlModalLayoutDefinition definition) {
         String source = definition.sourcePath() + ", layout: " + definition.id();
         String modalId = definition.modalId();
@@ -278,6 +309,12 @@ public class ModalManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Normalizes a modal XML path relative to the {@code modals/} resource directory.
+     *
+     * @param path The configured resource path.
+     * @return The normalized resource path.
+     */
     private @NonNull String normalizePath(@NonNull String path) {
         String normalized = path.trim();
         if (normalized.startsWith("/")) {

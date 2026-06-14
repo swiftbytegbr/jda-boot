@@ -35,6 +35,9 @@ import java.util.Objects;
 @CustomLog
 public final class JDABoot {
 
+    /**
+     * The active JDABoot instance.
+     */
     @Getter
     private static @NonNull JDABoot instance;
 
@@ -45,6 +48,9 @@ public final class JDABoot {
 
     private @Nullable ShardManager shardManager;
 
+    /**
+     * Whether JDABoot has completed initialization.
+     */
     @Getter
     private boolean isReady = false;
 
@@ -53,7 +59,7 @@ public final class JDABoot {
     private @NonNull ConfigProvider configProvider;
 
     /**
-     * Protected constructor for JDABoot. Initializes the bot with the specified settings.
+     * Creates and initializes a JDABoot instance.
      *
      * @param mainClass The main class of your project.
      * @param args      The command line arguments.
@@ -81,7 +87,7 @@ public final class JDABoot {
     }
 
     /**
-     * Private method to initialize the bot.
+     * Initializes configuration and starts the Discord connection.
      *
      * @param args The command line arguments.
      * @since alpha.4
@@ -117,7 +123,7 @@ public final class JDABoot {
     }
 
     /**
-     * Private method to log in to Discord.
+     * Configures and builds the shard manager, initializes framework managers, and invokes the ready callback.
      *
      * @throws InterruptedException  If the login process is interrupted.
      * @throws InvalidTokenException If the provided token is invalid.
@@ -185,7 +191,7 @@ public final class JDABoot {
         }
 
         shardManager = builder.build();
-        JDABootConfigurationManager.initialiseManagers(mainClass, shardManager, getFirstJDA());
+        JDABootConfigurationManager.initialiseManagers(mainClass, shardManager);
         JDABootConfigurationManager.initialiseGlobalVariables(shardManager, getFirstJDA());
 
         awaitReady();
@@ -199,6 +205,11 @@ public final class JDABoot {
         }
     }
 
+    /**
+     * Waits until every shard managed by this instance has reached the ready state.
+     *
+     * @throws InterruptedException If the current thread is interrupted while waiting.
+     */
     private void awaitReady() throws InterruptedException {
         for (JDA jda : getShardManager().getShards()) {
             jda.awaitReady();
@@ -206,7 +217,7 @@ public final class JDABoot {
     }
 
     /**
-     * Updates the bot's commands.
+     * Replaces the bot's global commands with all commands marked as global.
      *
      * @see JDA#updateCommands()
      * @since alpha.2
@@ -216,7 +227,9 @@ public final class JDABoot {
     }
 
     /**
-     * Updates the commands for a specific guild.
+     * Replaces the commands of a specific guild with all commands marked as global.
+     * Commands that are not global can be added individually with
+     * {@link #registerCommand(String, String)}.
      *
      * @param guildId The ID of the guild to update commands for.
      * @return true if the guild was found and the update was initiated, false otherwise.
@@ -233,7 +246,7 @@ public final class JDABoot {
     }
 
     /**
-     * Registers a command for a specific guild.
+     * Registers or updates one command for a specific guild.
      *
      * @param guildId   The ID of the guild to register the command for.
      * @param commandId The ID of the command to register.
@@ -251,10 +264,22 @@ public final class JDABoot {
         return true;
     }
 
+    /**
+     * Retrieves a guild from any shard managed by this instance.
+     *
+     * @param id The Discord snowflake ID of the guild.
+     * @return The matching guild, or {@code null} if the guild is unavailable.
+     */
     public @Nullable Guild getGuildById(String id) {
         return getShardManager().getGuildById(id);
     }
 
+    /**
+     * Returns the shard manager created by JDABoot.
+     *
+     * @return The initialized shard manager.
+     * @throws IllegalStateException If the shard manager has not been initialized yet.
+     */
     public @NonNull ShardManager getShardManager() {
         if (shardManager == null) {
             throw new IllegalStateException("ShardManager is not initialized yet");
@@ -262,6 +287,12 @@ public final class JDABoot {
         return shardManager;
     }
 
+    /**
+     * Returns the JDA instance with the lowest shard ID assigned to this process.
+     *
+     * @return The first JDA instance managed by this process.
+     * @throws IllegalStateException If the configured minimum shard is unavailable.
+     */
     public @NonNull JDA getFirstJDA() {
         JDA jda = getShardManager().getShardById(minShardId);
         if (jda == null) throw new IllegalStateException("No JDA instance found for min shard ID " + minShardId);

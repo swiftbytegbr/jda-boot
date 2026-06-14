@@ -37,6 +37,26 @@ So in order for JDA-Boot to know which Discord token it should use, it must be e
         token: TOKEN
     ```
 
+### Sharding
+
+JDABoot uses a JDA `ShardManager`. Sharding can be enabled through the application configuration:
+
+=== "config.properties"
+    ```properties
+    sharding.enabled=true
+    sharding.totalShards=2
+    ```
+
+=== "config.yml"
+    ```yaml
+    sharding:
+        enabled: true
+        totalShards: 2
+    ```
+
+See [Framework Configuration](translation-configuration.md#framework-configuration) for all available settings,
+their defaults, and the shard range rules.
+
 ## Setting up your main class
 For the project to start properly, a main class must be set up last. For the sake of simplicity, we will call it Main here. In our Main method, we now execute the method `JDABoot.run(ExampleBot.class, args);`. When we start the project now, the bot should go online!
 === "Java"

@@ -50,11 +50,10 @@ public class SelectMenuManager extends ListenerAdapter {
 
 
     /**
-     * Constructor for SelectMenuManager. Initializes the manager with the specified JDA instance and main class.
-     * It uses reflection to find classes annotated with @StringSelectMenuDefinition or @EntitySelectMenuDefinition and creates instances of those classes.
+     * Discovers select menu definitions, injects templates, and registers this listener with every shard.
      *
-     * @param jda       The JDA instance to use for button handling.
      * @param mainClass The main class of your project.
+     * @param shardManager The shard manager used for select menu interactions.
      * @since 1.0.0-alpha.11
      */
     public SelectMenuManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -123,6 +122,13 @@ public class SelectMenuManager extends ListenerAdapter {
         shardManager.addEventListener(this);
     }
 
+    /**
+     * Validates a select menu component ID.
+     *
+     * @param id    The ID to validate.
+     * @param clazz The select menu class associated with the ID.
+     * @throws ElementRegistrationException If the ID is invalid.
+     */
     private void checkId(@NonNull String id, @NonNull Class<?> clazz) {
         if (id.contains(";")) {
             throw new ElementRegistrationException("SelectMenu IDs cannot contain semicolons", clazz);
@@ -132,6 +138,13 @@ public class SelectMenuManager extends ListenerAdapter {
         }
     }
 
+    /**
+     * Verifies that an annotated field can receive a {@link TemplateSelectMenu}.
+     *
+     * @param field          The field to validate.
+     * @param annotationName The annotation name used in an error message.
+     * @throws ElementRegistrationException If the field type is incompatible.
+     */
     private void checkTemplateSelectMenuFieldType(@NonNull Field field, @NonNull String annotationName) {
         if (!TemplateSelectMenu.class.isAssignableFrom(field.getType())) {
             throw new ElementRegistrationException(
@@ -162,10 +175,10 @@ public class SelectMenuManager extends ListenerAdapter {
     }
 
     /**
-     * Retrieves the StringSelectMenu instance associated with the specified class.
+     * Retrieves the string select menu template associated with the specified class.
      *
      * @param clazz The class associated with the select menu.
-     * @return The SelectMenuButton instance.
+     * @return The select menu template, or {@code null} if the class is not registered.
      * @since 1.0.0-alpha.11
      */
     public <T extends StringSelectMenuExecutor> @Nullable TemplateSelectMenu getStringSelectMenu(@NonNull Class<T> clazz) {
@@ -174,10 +187,10 @@ public class SelectMenuManager extends ListenerAdapter {
     }
 
     /**
-     * Retrieves the StringSelectMenu instance associated with the specified class.
+     * Retrieves the entity select menu template associated with the specified class.
      *
      * @param clazz The class associated with the select menu.
-     * @return The SelectMenuButton instance.
+     * @return The select menu template, or {@code null} if the class is not registered.
      * @since 1.0.0-alpha.11
      */
     public <T extends EntitySelectMenuExecutor> @Nullable TemplateSelectMenu getEntitySelectMenu(Class<T> clazz) {

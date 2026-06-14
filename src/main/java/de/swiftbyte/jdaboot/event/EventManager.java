@@ -37,10 +37,10 @@ public class EventManager implements EventListener {
     private @NonNull ExecutorService executor;
 
     /**
-     * Constructor for EventManager. Initializes the manager with the specified JDA instance and main class.
+     * Discovers event handlers below the main package and registers this listener with every shard.
      *
-     * @param jda       The JDA instance to use for event handling.
      * @param mainClass The main class of your project.
+     * @param shardManager The shard manager used for event handling.
      * @since alpha.4
      */
     public EventManager(@NonNull Class<?> mainClass, @NonNull ShardManager shardManager) {
@@ -80,6 +80,13 @@ public class EventManager implements EventListener {
         shardManager.addEventListener(this);
     }
 
+    /**
+     * Validates an event handler method and returns its event parameter type.
+     *
+     * @param method The method annotated with {@link EventHandler}.
+     * @return The event class accepted by the handler.
+     * @throws ElementRegistrationException If the method does not accept exactly one JDA event.
+     */
     private static @NonNull Class<@NonNull Event> getEventClass(@NonNull Method method) {
         Class<?>[] params = method.getParameterTypes();
 
