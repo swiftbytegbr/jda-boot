@@ -9,14 +9,8 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The VariableProcessor class is responsible for processing variables in a given string.
@@ -27,10 +21,6 @@ import java.util.regex.Pattern;
  */
 @CustomLog
 public class VariableProcessor {
-    private static final Pattern LANGUAGE_PATTERN = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
-    private static final Pattern CONFIG_PATTERN = Pattern.compile(Pattern.quote("?{") + "(.*?)" + Pattern.quote("}"));
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile(Pattern.quote("${") + "(.*?)" + Pattern.quote("}"));
-    private static final int MAX_PROCESSING_PASSES = 64;
 
     /**
      * Processes the variables in the given string using the provided locale, variable map, and default variables.
@@ -47,70 +37,85 @@ public class VariableProcessor {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
+    /**
+     * Processes variables using XML default variable definitions.
+     *
+     * @param locale          The locale used for translations.
+     * @param old             The source text.
+     * @param variables       The variables available for replacement.
+     * @param defaultVariable The XML default variables.
+     * @return The processed text.
+     * @since 1.0.0-beta.2
+     */
     public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
+    /**
+     * Processes placeholders without explicit variables.
+     *
+     * @param locale The locale used for translations.
+     * @param old    The source text.
+     * @return The processed text.
+     * @since alpha.4
+     */
     public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old) {
         return processVariable(locale, old, new HashMap<>(), new HashMap<>());
     }
 
+    /**
+     * Processes placeholders using the default locale and no explicit variables.
+     *
+     * @param old The source text.
+     * @return The processed text.
+     * @since alpha.4
+     */
     public static @NonNull String processVariable(@NonNull String old) {
         return processVariable(DiscordLocale.ENGLISH_US, old, new HashMap<>(), new HashMap<>());
     }
 
+    /**
+     * Processes all supported placeholders with explicit and default variables.
+     *
+     * @param locale           The locale used for translations.
+     * @param old              The source text.
+     * @param variables        The explicit variables.
+     * @param defaultVariables The default variables.
+     * @return The processed text.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
-        return processVariableInternal(locale, old, variables, defaultVariables, new LinkedHashSet<>());
-    }
+        PlaceholderEngine engine = PlaceholderEngine.builder()
+                .resolver('$', key -> {
+                    String variable = getVariable(key, variables);
+                    return variable != null ? variable : defaultVariables.get(key);
+                })
+                .resolver('?', VariableProcessor::getConfigValue)
+                .resolver('#', key -> TranslationProcessor.getTranslatedString(locale, key))
+                .build();
 
-    private static @NonNull String processVariableInternal(@Nullable DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull Set<@NonNull String> unknownVariables) {
-        String newText = old;
-        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
-        List<String> stateHistory = new ArrayList<>();
-
-        for (int pass = 0; pass < MAX_PROCESSING_PASSES; pass++) {
-            boolean changed = false;
-
-            if (locale != null) {
-                String translatedText = TranslationProcessor.processTranslation(locale, newText);
-                if (!translatedText.equals(newText)) {
-                    changed = true;
-                    newText = translatedText;
-                }
-            }
-
-            ReplacementResult variableResult = replaceVariables(newText, variables, defaultVariables, unknownVariables);
-            newText = variableResult.text;
-            changed = changed || variableResult.changed;
-
-            ReplacementResult configResult = replaceConfigValues(newText, unknownVariables);
-            newText = configResult.text;
-            changed = changed || configResult.changed;
-
-            if (!isIncompletelyProcessed(newText, locale != null, unknownVariables)) {
-                return newText;
-            }
-
-            if (!changed) {
-                return newText;
-            }
-
-            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
-            if (firstSeenStateIndex != null) {
-                throw new VariableCycleException(
-                        "Detected cyclic variable references while processing placeholders",
-                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
-                );
-            }
-            stateHistory.add(newText);
+        try {
+            return engine.resolve(old);
+        } catch (PlaceholderEngine.PlaceholderCycleException e) {
+            throw new VariableCycleException(
+                    "Detected cyclic variable references while processing placeholders",
+                    formatReferences(e.getCycle())
+            );
+        } catch (PlaceholderEngine.PlaceholderDepthException e) {
+            throw new VariableCycleException(
+                    "Variable processing reached the safety depth limit of " + e.getMaxDepth(),
+                    formatReferences(e.getResolutionPath())
+            );
         }
-
-        throw new VariableCycleException(
-                String.format("Variable processing reached the safety iteration limit of %d passes.", MAX_PROCESSING_PASSES),
-                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
-        );
     }
 
+    /**
+     * Converts annotation default variables into a lookup map.
+     *
+     * @param defaultVariable The annotation default variables.
+     * @return The default variable lookup map.
+     * @since alpha.4
+     */
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull DefaultVariable @NonNull [] defaultVariable) {
         HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (DefaultVariable variable : defaultVariable) {
@@ -119,6 +124,13 @@ public class VariableProcessor {
         return defaultVariables;
     }
 
+    /**
+     * Converts XML default variables into a lookup map.
+     *
+     * @param defaultVariable The XML default variables.
+     * @return The default variable lookup map.
+     * @since 1.0.0-beta.2
+     */
     private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (XmlDefaultVariable variable : defaultVariable) {
@@ -127,86 +139,28 @@ public class VariableProcessor {
         return defaultVariables;
     }
 
-    private static boolean isIncompletelyProcessed(@NonNull String newText, boolean withLanguage, @NonNull Set<@NonNull String> ignoredVariables) {
-        if (withLanguage && hasUnresolvedPlaceholder(newText, LANGUAGE_PATTERN, ignoredVariables)) {
-            return true;
+    /**
+     * Resolves a configuration value.
+     *
+     * @param key The configuration key.
+     * @return The configured value, or {@code null} when the key is unknown.
+     * @since 1.0.0-beta.2
+     */
+    private static @Nullable String getConfigValue(@NonNull String key) {
+        if (!JDABootConfigurationManager.getConfigProviderChain().hasKey(key)) {
+            return null;
         }
-
-        return hasUnresolvedPlaceholder(newText, CONFIG_PATTERN, ignoredVariables)
-                || hasUnresolvedPlaceholder(newText, VARIABLE_PATTERN, ignoredVariables);
+        return JDABootConfigurationManager.getConfigProviderChain().getString(key);
     }
 
-    private static boolean hasUnresolvedPlaceholder(@NonNull String text, @NonNull Pattern pattern, @NonNull Set<@NonNull String> ignoredVariables) {
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            if (!ignoredVariables.contains(matcher.group())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static @NonNull ReplacementResult replaceVariables(@NonNull String text, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables, @NonNull Set<@NonNull String> unknownVariables) {
-        Matcher matcher = VARIABLE_PATTERN.matcher(text);
-        StringBuilder result = new StringBuilder(text.length());
-        boolean changed = false;
-
-        while (matcher.find()) {
-            String token = matcher.group();
-            String key = matcher.group(1);
-            String replacement = getVariable(key, variables);
-            if (replacement == null && defaultVariables.containsKey(key)) {
-                replacement = defaultVariables.get(key);
-            }
-
-            if (replacement == null) {
-                unknownVariables.add(token);
-                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
-                continue;
-            }
-
-            if (!replacement.equals(token)) {
-                changed = true;
-            }
-            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-        }
-
-        matcher.appendTail(result);
-        return new ReplacementResult(result.toString(), changed);
-    }
-
-    private static @NonNull ReplacementResult replaceConfigValues(@NonNull String text, @NonNull Set<@NonNull String> unknownVariables) {
-        Matcher matcher = CONFIG_PATTERN.matcher(text);
-        StringBuilder result = new StringBuilder(text.length());
-        boolean changed = false;
-
-        while (matcher.find()) {
-            String token = matcher.group();
-            String key = matcher.group(1);
-
-            if (!JDABootConfigurationManager.getConfigProviderChain().hasKey(key)) {
-                unknownVariables.add(token);
-                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
-                continue;
-            }
-
-            String replacement = JDABootConfigurationManager.getConfigProviderChain().getString(key);
-            if (replacement == null) {
-                unknownVariables.add(token);
-                matcher.appendReplacement(result, Matcher.quoteReplacement(token));
-                continue;
-            }
-
-            if (!replacement.equals(token)) {
-                changed = true;
-            }
-            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-        }
-
-        matcher.appendTail(result);
-        return new ReplacementResult(result.toString(), changed);
-    }
-
+    /**
+     * Resolves an explicit or global variable.
+     *
+     * @param key       The variable key.
+     * @param variables The explicit variables.
+     * @return The variable value, or {@code null} when the key is unknown.
+     * @since alpha.4
+     */
     private static @Nullable String getVariable(@NonNull String key, @NonNull Map<@NonNull String, @NonNull String> variables) {
         if (variables.containsKey(key)) {
             return variables.get(key);
@@ -217,35 +171,22 @@ public class VariableProcessor {
         }
     }
 
-    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
-        Set<String> loopTokens = new LinkedHashSet<>();
-
-        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
-        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
-
-        for (int i = safeStart; i < safeEnd; i++) {
-            collectLoopTokens(stateHistory.get(i), VARIABLE_PATTERN, loopTokens);
-            collectLoopTokens(stateHistory.get(i), CONFIG_PATTERN, loopTokens);
-            collectLoopTokens(stateHistory.get(i), LANGUAGE_PATTERN, loopTokens);
+    /**
+     * Formats placeholder references for compatibility with the existing cycle exception.
+     *
+     * @param references The placeholder references.
+     * @return The formatted reference path.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull String formatReferences(
+            @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
+        StringBuilder result = new StringBuilder();
+        for (PlaceholderEngine.PlaceholderReference reference : references) {
+            if (!result.isEmpty()) {
+                result.append(" -> ");
+            }
+            result.append(reference.token());
         }
-
-        collectLoopTokens(currentText, VARIABLE_PATTERN, loopTokens);
-        collectLoopTokens(currentText, CONFIG_PATTERN, loopTokens);
-        collectLoopTokens(currentText, LANGUAGE_PATTERN, loopTokens);
-
-        if (loopTokens.isEmpty()) {
-            return "unknown";
-        }
-        return String.join(", ", loopTokens);
-    }
-
-    private static void collectLoopTokens(@NonNull String text, @NonNull Pattern pattern, @NonNull Set<@NonNull String> loopTokens) {
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            loopTokens.add(matcher.group(1));
-        }
-    }
-
-    private record ReplacementResult(@NonNull String text, boolean changed) {
+        return result.isEmpty() ? "unknown" : result.toString();
     }
 }

@@ -6,15 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The TranslationProcessor class is responsible for processing translations in a given string.
@@ -24,8 +17,6 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class TranslationProcessor {
-    private static final Pattern TRANSLATION_PATTERN = Pattern.compile(Pattern.quote("#{") + "(.*?)" + Pattern.quote("}"));
-    private static final int MAX_PROCESSING_PASSES = 64;
 
     /**
      * Processes the translations in the given string using the provided locale.
@@ -37,56 +28,23 @@ public class TranslationProcessor {
      * @since alpha.4
      */
     public static @NonNull String processTranslation(@NonNull DiscordLocale locale, @NonNull String old) {
+        PlaceholderEngine engine = PlaceholderEngine.builder()
+                .resolver('#', key -> getTranslatedString(locale, key))
+                .build();
 
-        String newText = old;
-        HashMap<String, String> translationCache = new HashMap<>();
-        HashMap<String, Integer> seenStateIndexes = new HashMap<>();
-        List<String> stateHistory = new ArrayList<>();
-
-        for (int i = 0; i < MAX_PROCESSING_PASSES; i++) {
-            Matcher matcher = TRANSLATION_PATTERN.matcher(newText);
-            StringBuilder result = new StringBuilder(newText.length());
-            boolean changed = false;
-
-            while (matcher.find()) {
-                String key = matcher.group(1);
-                String replacement = translationCache.computeIfAbsent(key, cachedKey -> getTranslatedString(locale, cachedKey));
-                String token = matcher.group();
-
-                if (!replacement.equals(token)) {
-                    changed = true;
-                }
-                matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-            }
-
-            matcher.appendTail(result);
-            newText = result.toString();
-
-            if (!TRANSLATION_PATTERN.matcher(newText).find()) {
-                return newText;
-            }
-
-            if (!changed) {
-                throw new TranslationCycleException(
-                        "Detected cyclic translation references while processing placeholders",
-                        getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
-                );
-            }
-
-            Integer firstSeenStateIndex = seenStateIndexes.putIfAbsent(newText, stateHistory.size());
-            if (firstSeenStateIndex != null) {
-                throw new TranslationCycleException(
-                        "Detected cyclic translation references while processing placeholders",
-                        getLoopDetails(stateHistory, firstSeenStateIndex, stateHistory.size(), newText)
-                );
-            }
-            stateHistory.add(newText);
+        try {
+            return engine.resolve(old);
+        } catch (PlaceholderEngine.PlaceholderCycleException e) {
+            throw new TranslationCycleException(
+                    "Detected cyclic translation references while processing placeholders",
+                    formatReferences(e.getCycle())
+            );
+        } catch (PlaceholderEngine.PlaceholderDepthException e) {
+            throw new TranslationCycleException(
+                    "Translation processing reached the safety depth limit of " + e.getMaxDepth(),
+                    formatReferences(e.getResolutionPath())
+            );
         }
-
-        throw new TranslationCycleException(
-                String.format("Translation processing reached the safety iteration limit of %d passes", MAX_PROCESSING_PASSES),
-                getLoopDetails(stateHistory, 0, stateHistory.size(), newText)
-        );
     }
 
     /**
@@ -116,28 +74,23 @@ public class TranslationProcessor {
         }
     }
 
-    private static @NonNull String getLoopDetails(@NonNull List<@NonNull String> stateHistory, int startInclusive, int endExclusive, @NonNull String currentText) {
-        Set<String> loopKeys = new LinkedHashSet<>();
-
-        int safeStart = Math.max(0, Math.min(startInclusive, stateHistory.size()));
-        int safeEnd = Math.max(safeStart, Math.min(endExclusive, stateHistory.size()));
-
-        for (int i = safeStart; i < safeEnd; i++) {
-            collectLoopKeys(stateHistory.get(i), loopKeys);
+    /**
+     * Formats placeholder references for compatibility with the existing cycle exception.
+     *
+     * @param references The placeholder references.
+     * @return The formatted reference path.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull String formatReferences(
+            @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
+        StringBuilder result = new StringBuilder();
+        for (PlaceholderEngine.PlaceholderReference reference : references) {
+            if (!result.isEmpty()) {
+                result.append(" -> ");
+            }
+            result.append(reference.token());
         }
-        collectLoopKeys(currentText, loopKeys);
-
-        if (loopKeys.isEmpty()) {
-            return "unknown";
-        }
-        return String.join(", ", loopKeys);
-    }
-
-    private static void collectLoopKeys(@NonNull String text, @NonNull Set<@NonNull String> loopKeys) {
-        Matcher matcher = TRANSLATION_PATTERN.matcher(text);
-        while (matcher.find()) {
-            loopKeys.add(matcher.group(1));
-        }
+        return result.isEmpty() ? "unknown" : result.toString();
     }
 
 }
