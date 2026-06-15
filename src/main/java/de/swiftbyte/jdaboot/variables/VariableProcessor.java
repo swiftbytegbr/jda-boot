@@ -51,6 +51,14 @@ public class VariableProcessor {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old) {
+        return processVariable(locale, old, new HashMap<>(), new HashMap<>());
+    }
+
+    public static @NonNull String processVariable(@NonNull String old) {
+        return processVariable(DiscordLocale.ENGLISH_US, old, new HashMap<>(), new HashMap<>());
+    }
+
     private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
         return processVariableInternal(locale, old, variables, defaultVariables, new LinkedHashSet<>());
     }
