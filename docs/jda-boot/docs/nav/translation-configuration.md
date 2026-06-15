@@ -56,17 +56,18 @@ The configuration system in JDA-Boot allows you to manage settings for your bot.
 
 JDABoot recognizes the following framework settings:
 
-| Key                        | Description                                                    | Default           |
-|----------------------------|----------------------------------------------------------------|-------------------|
-| `discord.token`            | Discord bot token.                                             | Required          |
-| `sharding.enabled`         | Enables sharding. When disabled, exactly one shard is started. | `false`           |
-| `sharding.totalShards`     | Total number of shards used by the bot across all processes.   | `1`               |
-| `sharding.minShardId`      | Lowest shard ID assigned to the current process.               | `0`               |
-| `sharding.maxShardId`      | Highest shard ID assigned to the current process, inclusive.   | `totalShards - 1` |
-| `scheduler.threadPoolSize` | Number of threads available for scheduled tasks.               | `5`               |
+| Key                            | Description                                                    | Default           |
+|--------------------------------|----------------------------------------------------------------|-------------------|
+| `discord.token`                | Discord bot token.                                             | Required          |
+| `discord.sharding.enabled`     | Enables sharding. When disabled, exactly one shard is started. | `false`           |
+| `discord.sharding.totalShards` | Total number of shards used by the bot across all processes.   | `1`               |
+| `discord.sharding.minShardId`  | Lowest shard ID assigned to the current process.               | `0`               |
+| `discord.sharding.maxShardId`  | Highest shard ID assigned to the current process, inclusive.   | `totalShards - 1` |
+| `scheduler.threadPoolSize`     | Number of threads available for scheduled tasks.               | `5`               |
 
-The shard ID range is only used when `sharding.enabled` is `true`. `minShardId` must be non-negative,
-`maxShardId` must be greater than or equal to `minShardId`, and `maxShardId` must be lower than `totalShards`.
+The shard ID range is only used when `discord.sharding.enabled` is `true`. `discord.sharding.minShardId` must be
+non-negative, `discord.sharding.maxShardId` must be greater than or equal to `discord.sharding.minShardId`, and
+`discord.sharding.maxShardId` must be lower than `discord.sharding.totalShards`.
 
 ### Using Configuration
 

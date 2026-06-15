@@ -43,15 +43,16 @@ JDABoot uses a JDA `ShardManager`. Sharding can be enabled through the applicati
 
 === "config.properties"
     ```properties
-    sharding.enabled=true
-    sharding.totalShards=2
+    discord.sharding.enabled=true
+    discord.sharding.totalShards=2
     ```
 
 === "config.yml"
     ```yaml
-    sharding:
-        enabled: true
-        totalShards: 2
+    discord:
+        sharding:
+            enabled: true
+            totalShards: 2
     ```
 
 See [Framework Configuration](translation-configuration.md#framework-configuration) for all available settings,
