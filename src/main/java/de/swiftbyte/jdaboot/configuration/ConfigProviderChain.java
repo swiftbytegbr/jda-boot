@@ -42,6 +42,7 @@ public class ConfigProviderChain extends ConfigProvider {
      * @since 1.0.0.alpha.5
      */
     public void addConfigProviderToChain(@NonNull ConfigProvider provider) {
+        provider.setActiveProfiles(activeProfiles);
         providerChain.add(provider);
         reload();
     }
@@ -74,15 +75,16 @@ public class ConfigProviderChain extends ConfigProvider {
     }
 
     /**
-     * Sets the configuration profile for all providers in the chain.
+     * Sets the active configuration profiles for all providers in the chain.
      *
-     * @param configProfile The configuration profile to use.
-     * @since 1.0.0.alpha.5
+     * @param activeProfiles The additional active profiles in loading order.
+     * @since 1.0.0-beta.2
      */
     @Override
-    public void setConfigProfile(@NonNull String configProfile) {
+    public void setActiveProfiles(@NonNull List<@NonNull String> activeProfiles) {
+        super.setActiveProfiles(activeProfiles);
         for (ConfigProvider provider : providerChain) {
-            provider.setConfigProfile(configProfile);
+            provider.setActiveProfiles(this.activeProfiles);
             provider.reload();
         }
     }

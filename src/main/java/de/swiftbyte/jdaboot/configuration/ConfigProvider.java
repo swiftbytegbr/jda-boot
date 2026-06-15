@@ -1,8 +1,10 @@
 package de.swiftbyte.jdaboot.configuration;
 
-import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Defines the contract for configuration providers.
@@ -10,16 +12,33 @@ import org.jspecify.annotations.Nullable;
  *
  * @since alpha.4
  */
-@Setter
 public abstract class ConfigProvider {
 
     /**
-     * The configuration profile to use.
-     * The profile is used to determine which configuration file to use.
+     * The active configuration profiles in loading order.
+     * The default profile is always the first active profile.
      *
-     * @since 1.0.0-alpha.5
+     * @since 1.0.0-beta.2
      */
-    protected @NonNull String configProfile = "default";
+    protected @NonNull List<@NonNull String> activeProfiles = List.of("default");
+
+    /**
+     * Sets the active configuration profiles.
+     *
+     * @param activeProfiles The additional active profiles in loading order.
+     * @since 1.0.0-beta.2
+     */
+    public void setActiveProfiles(@NonNull List<@NonNull String> activeProfiles) {
+        LinkedHashSet<String> normalizedProfiles = new LinkedHashSet<>();
+        normalizedProfiles.add("default");
+        for (String profile : activeProfiles) {
+            String normalizedProfile = profile.trim();
+            if (!normalizedProfile.isEmpty() && !normalizedProfile.equals("default")) {
+                normalizedProfiles.add(normalizedProfile);
+            }
+        }
+        this.activeProfiles = List.copyOf(normalizedProfiles);
+    }
 
     /**
      * Reloads the configuration.

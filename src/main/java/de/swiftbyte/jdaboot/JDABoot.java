@@ -132,13 +132,13 @@ public final class JDABoot {
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(configProvider.getString("discord.token"));
 
-        if (!configProvider.getBoolean("sharding.enabled", false)) {
+        if (!configProvider.getBoolean("discord.sharding.enabled", false)) {
             builder.setShardsTotal(1);
         } else {
 
-            int totalShards = configProvider.getInt("sharding.totalShards", 1);
-            minShardId = configProvider.getInt("sharding.minShardId", 0);
-            int maxShardId = configProvider.getInt("sharding.maxShardId", totalShards - 1);
+            int totalShards = configProvider.getInt("discord.sharding.totalShards", 1);
+            minShardId = configProvider.getInt("discord.sharding.minShardId", 0);
+            int maxShardId = configProvider.getInt("discord.sharding.maxShardId", totalShards - 1);
 
             log.info("Sharding is enabled. Total shards: {}, Min shard ID: {}, Max shard ID: {}", totalShards, minShardId, maxShardId);
 

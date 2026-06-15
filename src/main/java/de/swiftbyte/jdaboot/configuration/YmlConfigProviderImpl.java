@@ -13,7 +13,7 @@ import java.util.Objects;
 
 /**
  * Implements the ConfigProvider interface using a YAML file for configuration.
- * The YAML file is named "config[-configProfile].yml" and is expected to be in the classpath.
+ * Loads {@code config.yml} followed by each active {@code config-[profile].yml} file.
  *
  * @see ConfigProvider
  * @since alpha.4
@@ -33,21 +33,46 @@ public class YmlConfigProviderImpl extends ConfigProvider {
     public void reload() {
         ymlConfig = new HashMap<>();
 
-        if (configProfile.equals("default")) {
-            configFileName = "config.yml";
-        } else {
-            configFileName = "config-" + configProfile + ".yml";
-        }
+        for (String profile : activeProfiles) {
+            configFileName = profile.equals("default")
+                    ? "config.yml"
+                    : "config-" + profile + ".yml";
 
-        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
-            if (resourceStream != null) {
-                Map<String, Object> loadedConfig = new Yaml().load(resourceStream);
-                if (loadedConfig != null) {
-                    ymlConfig.putAll(loadedConfig);
+            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+                if (resourceStream != null) {
+                    Map<String, Object> loadedConfig = new Yaml().load(resourceStream);
+                    if (loadedConfig != null) {
+                        mergeMaps(ymlConfig, loadedConfig);
+                    }
                 }
+            } catch (IOException e) {
+                throw new ConfigurationException("Failed to load configuration", configFileName, e);
             }
-        } catch (IOException e) {
-            throw new ConfigurationException("Failed to load configuration", configFileName, e);
+        }
+    }
+
+    /**
+     * Recursively merges a profile configuration into the accumulated configuration.
+     * Nested maps are merged while all other values are replaced.
+     *
+     * @param target The accumulated configuration.
+     * @param source The configuration loaded for the next profile.
+     * @since 1.0.0-beta.2
+     */
+    private void mergeMaps(@NonNull Map<String, Object> target, @NonNull Map<String, Object> source) {
+        for (Map.Entry<String, Object> entry : source.entrySet()) {
+            Object targetValue = target.get(entry.getKey());
+            Object sourceValue = entry.getValue();
+
+            if (targetValue instanceof Map<?, ?> targetMap && sourceValue instanceof Map<?, ?> sourceMap) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> typedTargetMap = (Map<String, Object>) targetMap;
+                @SuppressWarnings("unchecked")
+                Map<String, Object> typedSourceMap = (Map<String, Object>) sourceMap;
+                mergeMaps(typedTargetMap, typedSourceMap);
+            } else {
+                target.put(entry.getKey(), sourceValue);
+            }
         }
     }
 

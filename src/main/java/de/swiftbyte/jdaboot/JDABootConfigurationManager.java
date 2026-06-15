@@ -31,6 +31,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -149,9 +151,9 @@ public final class JDABootConfigurationManager {
             configProviderChain.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(configProvider));
         }
 
-        String configProfile = JDABoot.getStartupArgs().containsKey("profile") ? JDABoot.getStartupArgs().get("profile") : configProviderChain.getString("profile", jdaBootConfiguration.configProfile());
-        log.info("Using configuration profile: '{}'", configProfile);
-        configProviderChain.setConfigProfile(configProfile);
+        List<String> activeProfiles = resolveActiveProfiles(jdaBootConfiguration);
+        log.info("Using configuration profiles: {}", activeProfiles);
+        configProviderChain.setActiveProfiles(activeProfiles);
 
         try {
             translationProvider = jdaBootConfiguration.translationProvider().getConstructor().newInstance();
@@ -168,6 +170,54 @@ public final class JDABootConfigurationManager {
         memberCachePolicy = jdaBootConfiguration.memberCachePolicy().getJDAUtilsMemberCachePolicy();
 
         consoleCommandsEnabled = jdaBootConfiguration.enableConsoleCommands();
+    }
+
+    /**
+     * Resolves the active configuration profiles from startup arguments, configuration, or annotation defaults.
+     *
+     * @param jdaBootConfiguration The framework configuration annotation.
+     * @return The active profiles with {@code default} as the first entry.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull List<@NonNull String> resolveActiveProfiles(@NonNull JDABootConfiguration jdaBootConfiguration) {
+        Object configuredProfiles;
+        if (JDABoot.getStartupArgs().containsKey("profiles")) {
+            configuredProfiles = JDABoot.getStartupArgs().get("profiles");
+        } else if (getConfigProviderChain().hasKey("profiles")) {
+            configuredProfiles = getConfigProviderChain().get("profiles", "");
+        } else {
+            configuredProfiles = List.of(jdaBootConfiguration.configProfiles());
+        }
+
+        LinkedHashSet<String> profiles = new LinkedHashSet<>();
+        profiles.add("default");
+
+        if (configuredProfiles instanceof Collection<?> configuredProfileList) {
+            for (Object configuredProfile : configuredProfileList) {
+                addProfiles(profiles, String.valueOf(configuredProfile));
+            }
+        } else {
+            addProfiles(profiles, String.valueOf(configuredProfiles));
+        }
+
+        return List.copyOf(profiles);
+    }
+
+    /**
+     * Adds comma-separated profile names to the active profile set.
+     *
+     * @param profiles           The active profile set.
+     * @param configuredProfiles The configured profile names.
+     * @since 1.0.0-beta.2
+     */
+    private static void addProfiles(@NonNull LinkedHashSet<String> profiles,
+                                    @NonNull String configuredProfiles) {
+        for (String profile : configuredProfiles.split(",")) {
+            String normalizedProfile = profile.trim();
+            if (!normalizedProfile.isEmpty() && !normalizedProfile.equals("default")) {
+                profiles.add(normalizedProfile);
+            }
+        }
     }
 
     /**

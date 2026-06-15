@@ -99,12 +99,12 @@ public @interface JDABootConfiguration {
     boolean enableConsoleCommands() default true;
 
     /**
-     * Specifies the profile to use for the configuration.
-     * By default, the profile is set to "default".
+     * Specifies additional active configuration profiles.
+     * The default profile is always active and loaded before these profiles.
      *
-     * @return The profile to use for the configuration.
-     * @since 1.0.0-alpha.5
+     * @return The additional profiles in loading order.
+     * @since 1.0.0-beta.2
      */
-    @NonNull String configProfile() default "default";
+    @NonNull String @NonNull [] configProfiles() default {};
 
 }

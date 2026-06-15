@@ -11,7 +11,7 @@ import java.util.Properties;
 
 /**
  * Implements the ConfigProvider interface using a properties file for configuration.
- * The properties file is named "config[-configProfile].properties" and is expected to be in the classpath.
+ * Loads {@code config.properties} followed by each active {@code config-[profile].properties} file.
  *
  * @see ConfigProvider
  * @since alpha.4
@@ -128,19 +128,18 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
 
         properties = new Properties();
 
-        String configFileName;
-        if (configProfile.equals("default")) {
-            configFileName = "config.properties";
-        } else {
-            configFileName = "config-" + configProfile + ".properties";
-        }
+        for (String profile : activeProfiles) {
+            String configFileName = profile.equals("default")
+                    ? "config.properties"
+                    : "config-" + profile + ".properties";
 
-        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
-            if (resourceStream != null) {
-                properties.load(resourceStream);
+            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+                if (resourceStream != null) {
+                    properties.load(resourceStream);
+                }
+            } catch (IOException e) {
+                throw new ConfigurationException("Failed to load configuration", configFileName, e);
             }
-        } catch (IOException e) {
-            throw new ConfigurationException("Failed to load configuration", configFileName, e);
         }
     }
 }

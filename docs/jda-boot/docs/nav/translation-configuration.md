@@ -108,13 +108,15 @@ These providers are organized in a chain, so if a value is not found in one prov
 
 ### Configuration Profiles
 
-You can define configuration profiles to manage different environments (e.g., development, production). The active profile is determined by the `profile` configuration key. For example, if the profile is set to `dev`, the files `config-dev.yml` or `config-dev.properties` will be used.
+You can define configuration profiles to manage different environments (e.g., development, production). The default configuration is always active. Additional profiles are loaded in the order defined by the `profiles` configuration key, with later profiles overriding earlier profiles.
 
 !!! example
     === "yml"
         `config.yml`:
         ```yaml
-        profile: "dev"
+        profiles:
+          - dev
+          - local
         ```
     
         `config-dev.yml`:
@@ -122,15 +124,26 @@ You can define configuration profiles to manage different environments (e.g., de
         app:
           name: "MyBot (Development)"
         ```
+
+        `config-local.yml`:
+        ```yaml
+        app:
+          name: "MyBot (Local)"
+        ```
     === "properties"
         `config.properties`:
         ```
-        profile=dev
+        profiles=dev,local
         ```
     
         `config-dev.properties`:
         ```
         app.name=MyBot (Development)
+        ```
+
+        `config-local.properties`:
+        ```
+        app.name=MyBot (Local)
         ```
 
 ### Custom Configuration Providers
