@@ -84,7 +84,6 @@ public final class JDABootConfigurationManager {
      */
     private static @Nullable TranslationProvider translationProvider;
 
-
     private static @Nullable CommandManager commandManager;
 
     /**
@@ -271,7 +270,7 @@ public final class JDABootConfigurationManager {
      * @return The command manager.
      * @throws StillInitializingException If the manager has not been initialized yet.
      */
-    static @NonNull CommandManager getCommandManager() {
+    public static @NonNull CommandManager getCommandManager() {
         if (commandManager == null) {
             throw new StillInitializingException();
         }
@@ -342,4 +341,6 @@ public final class JDABootConfigurationManager {
         }
         return translationProvider;
     }
+
+
 }
