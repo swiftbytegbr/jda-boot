@@ -7,13 +7,6 @@
 
     <xs:import namespace="https://jda-boot.swiftbyte.de/schema/common" schemaLocation="common-types.xsd"/>
 
-    <xs:simpleType name="spacingType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="SMALL"/>
-            <xs:enumeration value="LARGE"/>
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:complexType name="defaultVariablesType">
         <xs:sequence>
             <xs:element name="variable" type="c:defaultVarType" maxOccurs="unbounded"/>
@@ -25,25 +18,25 @@
     </xs:complexType>
 
     <xs:complexType name="separatorType">
-        <xs:attribute name="divider" type="xs:boolean"/>
-        <xs:attribute name="spacing" type="spacingType"/>
+        <xs:attribute name="divider" type="xs:string"/>
+        <xs:attribute name="spacing" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="thumbnailType">
         <xs:attribute name="url" type="c:nonEmptyString" use="required"/>
         <xs:attribute name="description" type="xs:string"/>
-        <xs:attribute name="spoiler" type="xs:boolean"/>
+        <xs:attribute name="spoiler" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="fileDisplayType">
         <xs:attribute name="file-name" type="c:nonEmptyString" use="required"/>
-        <xs:attribute name="spoiler" type="xs:boolean"/>
+        <xs:attribute name="spoiler" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="mediaGalleryItemType">
         <xs:attribute name="url" type="c:nonEmptyString" use="required"/>
         <xs:attribute name="description" type="xs:string"/>
-        <xs:attribute name="spoiler" type="xs:boolean"/>
+        <xs:attribute name="spoiler" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="mediaGalleryType">
@@ -80,7 +73,7 @@
             <xs:element name="content" type="sectionContentType"/>
             <xs:element name="accessory" type="sectionAccessoryType"/>
         </xs:sequence>
-        <xs:attribute name="disabled" type="xs:boolean"/>
+        <xs:attribute name="disabled" type="xs:string"/>
     </xs:complexType>
 
     <xs:group name="containerChildren">
@@ -97,8 +90,8 @@
     <xs:complexType name="containerType">
         <xs:group ref="containerChildren" maxOccurs="unbounded"/>
         <xs:attribute name="accent-color" type="xs:string"/>
-        <xs:attribute name="spoiler" type="xs:boolean"/>
-        <xs:attribute name="disabled" type="xs:boolean"/>
+        <xs:attribute name="spoiler" type="xs:string"/>
+        <xs:attribute name="disabled" type="xs:string"/>
     </xs:complexType>
 
     <xs:group name="messageChildren">

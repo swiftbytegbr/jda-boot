@@ -176,6 +176,22 @@ public final class XmlLoaderSupport {
     }
 
     /**
+     * Reads an optional attribute with a fallback value.
+     *
+     * @param element       The source element.
+     * @param attributeName The attribute name.
+     * @param fallback      The value used when the attribute is absent or blank.
+     * @return The attribute value or the fallback.
+     * @since 1.0.0-beta.2
+     */
+    public static @NonNull String optionalAttribute(@NonNull Element element,
+                                                    @NonNull String attributeName,
+                                                    @NonNull String fallback) {
+        String value = optionalAttribute(element, attributeName);
+        return value.isBlank() ? fallback : value;
+    }
+
+    /**
      * Reads an optional boolean attribute.
      *
      * @param element       The source element.

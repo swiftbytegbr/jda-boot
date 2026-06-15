@@ -43,6 +43,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -127,7 +128,7 @@ public class AdvancedComponentV2 {
             return TextDisplay.of(processVar(textNode.content()));
         }
         if (node instanceof ComponentV2Nodes.SeparatorNode separatorNode) {
-            return Separator.create(separatorNode.divider(), separatorNode.spacing());
+            return buildSeparator(separatorNode);
         }
         if (node instanceof ComponentV2Nodes.FileDisplayNode fileDisplayNode) {
             return buildFileDisplay(fileDisplayNode);
@@ -198,11 +199,12 @@ public class AdvancedComponentV2 {
         }
 
         Container container = Container.of(children);
-        if (node.accentColor() != null) {
-            container = container.withAccentColor(node.accentColor());
+        String accentColor = processVar(node.accentColor()).trim();
+        if (!accentColor.isEmpty()) {
+            container = container.withAccentColor(parseColor(accentColor));
         }
-        container = container.withSpoiler(node.spoiler());
-        container = container.withDisabled(node.disabled());
+        container = container.withSpoiler(parseBoolean(node.spoiler(), "spoiler"));
+        container = container.withDisabled(parseBoolean(node.disabled(), "disabled"));
         return container;
     }
 
@@ -218,7 +220,7 @@ public class AdvancedComponentV2 {
             return TextDisplay.of(processVar(textNode.content()));
         }
         if (node instanceof ComponentV2Nodes.SeparatorNode separatorNode) {
-            return Separator.create(separatorNode.divider(), separatorNode.spacing());
+            return buildSeparator(separatorNode);
         }
         if (node instanceof ComponentV2Nodes.FileDisplayNode fileDisplayNode) {
             return buildFileDisplay(fileDisplayNode);
@@ -250,7 +252,7 @@ public class AdvancedComponentV2 {
         }
 
         Section section = Section.of(buildSectionAccessory(node.accessory()), content);
-        return section.withDisabled(node.disabled());
+        return section.withDisabled(parseBoolean(node.disabled(), "disabled"));
     }
 
     /**
@@ -281,10 +283,11 @@ public class AdvancedComponentV2 {
         }
         if (node instanceof ComponentV2Nodes.ThumbnailNode thumbnailNode) {
             Thumbnail thumbnail = Thumbnail.fromUrl(processVar(thumbnailNode.url()));
-            if (!thumbnailNode.description().isBlank()) {
-                thumbnail = thumbnail.withDescription(processVar(thumbnailNode.description()));
+            String description = processVar(thumbnailNode.description());
+            if (!description.isBlank()) {
+                thumbnail = thumbnail.withDescription(description);
             }
-            return thumbnail.withSpoiler(thumbnailNode.spoiler());
+            return thumbnail.withSpoiler(parseBoolean(thumbnailNode.spoiler(), "spoiler"));
         }
 
         throw new ObjectInitializationException("Unsupported section accessory type: " + node.getClass().getName(), node.getClass(), sourceReference());
@@ -298,7 +301,8 @@ public class AdvancedComponentV2 {
      * @since 1.0.0-beta.2
      */
     private @NonNull FileDisplay buildFileDisplay(ComponentV2Nodes.FileDisplayNode node) {
-        return FileDisplay.fromFileName(processVar(node.fileName())).withSpoiler(node.spoiler());
+        return FileDisplay.fromFileName(processVar(node.fileName()))
+                .withSpoiler(parseBoolean(node.spoiler(), "spoiler"));
     }
 
     /**
@@ -313,14 +317,29 @@ public class AdvancedComponentV2 {
 
         for (ComponentV2Nodes.MediaGalleryItemNode itemNode : node.items()) {
             MediaGalleryItem item = MediaGalleryItem.fromUrl(processVar(itemNode.url()));
-            if (!itemNode.description().isBlank()) {
-                item = item.withDescription(processVar(itemNode.description()));
+            String description = processVar(itemNode.description());
+            if (!description.isBlank()) {
+                item = item.withDescription(description);
             }
-            item = item.withSpoiler(itemNode.spoiler());
+            item = item.withSpoiler(parseBoolean(itemNode.spoiler(), "spoiler"));
             items.add(item);
         }
 
         return MediaGallery.of(items);
+    }
+
+    /**
+     * Builds a separator after resolving its variable-capable settings.
+     *
+     * @param node The source XML node.
+     * @return The built separator.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull Separator buildSeparator(ComponentV2Nodes.SeparatorNode node) {
+        return Separator.create(
+                parseBoolean(node.divider(), "divider"),
+                parseSpacing(node.spacing())
+        );
     }
 
     /**
@@ -478,6 +497,70 @@ public class AdvancedComponentV2 {
      */
     private @NonNull String processVar(@NonNull String old) {
         return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+    }
+
+    /**
+     * Parses a variable-capable boolean setting.
+     *
+     * @param value         The configured value.
+     * @param attributeName The XML attribute name used for error reporting.
+     * @return The parsed boolean.
+     * @since 1.0.0-beta.2
+     */
+    private boolean parseBoolean(@NonNull String value, @NonNull String attributeName) {
+        String processed = processVar(value).trim();
+        if ("true".equalsIgnoreCase(processed)) {
+            return true;
+        }
+        if ("false".equalsIgnoreCase(processed)) {
+            return false;
+        }
+        throw new IllegalArgumentException(String.format(
+                "Invalid boolean value '%s' for attribute '%s'",
+                processed, attributeName
+        ));
+    }
+
+    /**
+     * Parses a variable-capable separator spacing.
+     *
+     * @param value The configured spacing.
+     * @return The parsed spacing.
+     * @since 1.0.0-beta.2
+     */
+    private Separator.@NonNull Spacing parseSpacing(@NonNull String value) {
+        String processed = processVar(value).trim();
+        try {
+            return Separator.Spacing.valueOf(processed.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid separator spacing '" + processed + "'", e);
+        }
+    }
+
+    /**
+     * Parses a variable-capable container accent color.
+     *
+     * @param value The resolved color value.
+     * @return The parsed RGB color integer.
+     * @since 1.0.0-beta.2
+     */
+    private int parseColor(@NonNull String value) {
+        String normalized = value;
+        if (normalized.startsWith("#")) {
+            normalized = normalized.substring(1);
+        } else if (normalized.startsWith("0x") || normalized.startsWith("0X")) {
+            normalized = normalized.substring(2);
+        }
+
+        if (normalized.matches("[0-9a-fA-F]{6}")) {
+            return Integer.parseInt(normalized, 16);
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid container accent color '" + value + "'", e);
+        }
     }
 
     /**

@@ -6,9 +6,7 @@ import de.swiftbyte.jdaboot.interaction.component.v2.model.ComponentV2Nodes;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import de.swiftbyte.jdaboot.xml.XmlLoaderSupport;
 import lombok.CustomLog;
-import net.dv8tion.jda.api.components.separator.Separator;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -20,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.booleanAttribute;
 import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.childElements;
 import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.nodeName;
 import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.optionalAttribute;
@@ -188,8 +185,8 @@ public final class ComponentV2XmlLoader {
                     requiredAttribute(element, "content", resourcePath)
             );
             case "separator" -> new ComponentV2Nodes.SeparatorNode(
-                    booleanAttribute(element, "divider", true),
-                    spacingAttribute(element, resourcePath)
+                    optionalAttribute(element, "divider", "true"),
+                    optionalAttribute(element, "spacing", "SMALL")
             );
             case "file-display" -> parseFileDisplayNode(element, resourcePath);
             case "media-gallery" -> parseMediaGalleryNode(element, resourcePath);
@@ -324,9 +321,9 @@ public final class ComponentV2XmlLoader {
 
         return new ComponentV2Nodes.ContainerNode(
                 List.copyOf(children),
-                nullableColorAttribute(element, resourcePath),
-                booleanAttribute(element, "spoiler", false),
-                booleanAttribute(element, "disabled", false)
+                optionalAttribute(element, "accent-color"),
+                optionalAttribute(element, "spoiler", "false"),
+                optionalAttribute(element, "disabled", "false")
         );
     }
 
@@ -346,8 +343,8 @@ public final class ComponentV2XmlLoader {
                     requiredAttribute(element, "content", resourcePath)
             );
             case "separator" -> new ComponentV2Nodes.SeparatorNode(
-                    booleanAttribute(element, "divider", true),
-                    spacingAttribute(element, resourcePath)
+                    optionalAttribute(element, "divider", "true"),
+                    optionalAttribute(element, "spacing", "SMALL")
             );
             case "file-display" -> parseFileDisplayNode(element, resourcePath);
             case "media-gallery" -> parseMediaGalleryNode(element, resourcePath);
@@ -371,7 +368,7 @@ public final class ComponentV2XmlLoader {
                                                                          @NonNull String resourcePath) {
         return new ComponentV2Nodes.FileDisplayNode(
                 requiredAttribute(element, "file-name", resourcePath),
-                booleanAttribute(element, "spoiler", false)
+                optionalAttribute(element, "spoiler", "false")
         );
     }
 
@@ -398,7 +395,7 @@ public final class ComponentV2XmlLoader {
             items.add(new ComponentV2Nodes.MediaGalleryItemNode(
                     requiredAttribute(child, "url", resourcePath),
                     optionalAttribute(child, "description"),
-                    booleanAttribute(child, "spoiler", false)
+                    optionalAttribute(child, "spoiler", "false")
             ));
         }
 
@@ -453,7 +450,7 @@ public final class ComponentV2XmlLoader {
         return new ComponentV2Nodes.SectionNode(
                 List.copyOf(contentNodes),
                 accessoryNode,
-                booleanAttribute(element, "disabled", false)
+                optionalAttribute(element, "disabled", "false")
         );
     }
 
@@ -506,70 +503,12 @@ public final class ComponentV2XmlLoader {
             case "thumbnail" -> new ComponentV2Nodes.ThumbnailNode(
                     requiredAttribute(child, "url", resourcePath),
                     optionalAttribute(child, "description"),
-                    booleanAttribute(child, "spoiler", false)
+                    optionalAttribute(child, "spoiler", "false")
             );
             default -> throw new ConfigurationException(String.format(
                     "Unsupported <accessory> child <%s>. Allowed: button-ref, thumbnail",
                     nodeName), resourcePath);
         };
-    }
-
-    /**
-     * Parses an optional container accent color.
-     *
-     * @param element      The container element.
-     * @param resourcePath The XML resource path used for error reporting.
-     * @return The parsed color, or {@code null} when unset.
-     * @since 1.0.0-beta.2
-     */
-    private static @Nullable Integer nullableColorAttribute(@NonNull Element element, @NonNull String resourcePath) {
-        String value = optionalAttribute(element, "accent-color").trim();
-        if (value.isEmpty()) {
-            return null;
-        }
-
-        String normalized = value;
-        if (normalized.startsWith("#")) {
-            normalized = normalized.substring(1);
-        } else if (normalized.startsWith("0x") || normalized.startsWith("0X")) {
-            normalized = normalized.substring(2);
-        }
-
-        if (normalized.matches("[0-9a-fA-F]{6}")) {
-            return Integer.parseInt(normalized, 16);
-        }
-
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            throw new ConfigurationException(String.format(
-                    "Invalid accent-color '%s' on <%s>",
-                    value, nodeName(element)
-            ), resourcePath, e);
-        }
-    }
-
-    /**
-     * Parses a separator spacing attribute.
-     *
-     * @param element      The separator element.
-     * @param resourcePath The XML resource path used for error reporting.
-     * @return The parsed separator spacing.
-     * @since 1.0.0-beta.2
-     */
-    private static Separator.Spacing spacingAttribute(@NonNull Element element, @NonNull String resourcePath) {
-        String value = optionalAttribute(element, "spacing");
-        if (value.isBlank()) {
-            return Separator.Spacing.SMALL;
-        }
-        try {
-            return Separator.Spacing.valueOf(value.trim().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ConfigurationException(String.format(
-                    "Invalid spacing '%s' on <%s>",
-                    value, nodeName(element)
-            ), resourcePath, e);
-        }
     }
 
 }

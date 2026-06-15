@@ -1,6 +1,5 @@
 package de.swiftbyte.jdaboot.interaction.component.v2.model;
 
-import net.dv8tion.jda.api.components.separator.Separator;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -83,11 +82,11 @@ public final class ComponentV2Nodes {
     /**
      * Defines a separator component.
      *
-     * @param divider Whether the divider is visible.
-     * @param spacing The separator spacing.
+     * @param divider The variable-capable divider value.
+     * @param spacing The variable-capable separator spacing.
      * @since 1.0.0-beta.2
      */
-    public record SeparatorNode(boolean divider, Separator.Spacing spacing)
+    public record SeparatorNode(@NonNull String divider, @NonNull String spacing)
             implements MessageTopLevelNode, ContainerChildNode {
     }
 
@@ -105,13 +104,15 @@ public final class ComponentV2Nodes {
      * Defines a container component.
      *
      * @param children    The container children.
-     * @param accentColor The optional accent color.
-     * @param spoiler     Whether the container is a spoiler.
-     * @param disabled    Whether the container is disabled.
+     * @param accentColor The variable-capable optional accent color.
+     * @param spoiler     The variable-capable spoiler value.
+     * @param disabled    The variable-capable disabled value.
      * @since 1.0.0-beta.2
      */
-    public record ContainerNode(@NonNull List<@NonNull ContainerChildNode> children, @Nullable Integer accentColor,
-                                boolean spoiler, boolean disabled)
+    public record ContainerNode(@NonNull List<@NonNull ContainerChildNode> children,
+                                @NonNull String accentColor,
+                                @NonNull String spoiler,
+                                @NonNull String disabled)
             implements MessageTopLevelNode {
     }
 
@@ -120,12 +121,12 @@ public final class ComponentV2Nodes {
      *
      * @param content   The section content.
      * @param accessory The section accessory.
-     * @param disabled  Whether the section is disabled.
+     * @param disabled  The variable-capable disabled value.
      * @since 1.0.0-beta.2
      */
     public record SectionNode(@NonNull List<@NonNull SectionContentNode> content,
                               @NonNull SectionAccessoryNode accessory,
-                              boolean disabled)
+                              @NonNull String disabled)
             implements MessageTopLevelNode, ContainerChildNode {
     }
 
@@ -133,10 +134,10 @@ public final class ComponentV2Nodes {
      * Defines a file display component.
      *
      * @param fileName The referenced attachment file name.
-     * @param spoiler  Whether the file is a spoiler.
+     * @param spoiler  The variable-capable spoiler value.
      * @since 1.0.0-beta.2
      */
-    public record FileDisplayNode(@NonNull String fileName, boolean spoiler)
+    public record FileDisplayNode(@NonNull String fileName, @NonNull String spoiler)
             implements MessageTopLevelNode, ContainerChildNode {
     }
 
@@ -155,10 +156,12 @@ public final class ComponentV2Nodes {
      *
      * @param url         The media URL.
      * @param description The optional description.
-     * @param spoiler     Whether the item is a spoiler.
+     * @param spoiler     The variable-capable spoiler value.
      * @since 1.0.0-beta.2
      */
-    public record MediaGalleryItemNode(@NonNull String url, @NonNull String description, boolean spoiler) {
+    public record MediaGalleryItemNode(@NonNull String url,
+                                       @NonNull String description,
+                                       @NonNull String spoiler) {
     }
 
     /**
@@ -197,10 +200,12 @@ public final class ComponentV2Nodes {
      *
      * @param url         The thumbnail URL.
      * @param description The optional description.
-     * @param spoiler     Whether the thumbnail is a spoiler.
+     * @param spoiler     The variable-capable spoiler value.
      * @since 1.0.0-beta.2
      */
-    public record ThumbnailNode(@NonNull String url, @NonNull String description, boolean spoiler)
+    public record ThumbnailNode(@NonNull String url,
+                                @NonNull String description,
+                                @NonNull String spoiler)
             implements SectionAccessoryNode {
     }
 }
