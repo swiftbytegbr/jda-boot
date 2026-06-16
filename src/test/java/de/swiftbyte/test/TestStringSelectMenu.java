@@ -18,7 +18,7 @@ import java.util.Map;
         placeholder = "Placeholder",
         maxOptions = 2
 )
-public class TestStringSelectMenu implements StringSelectMenuExecutor {
+public class TestStringSelectMenu extends StringSelectMenuExecutor {
 
     @Override
     public void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull Map<String, String> variables) {

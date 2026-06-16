@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.jspecify.annotations.NonNull;
 
 /**
- * The SlashCommandExecutor interface represents a slash command in the application.
+ * The SlashCommandExecutor class represents a slash command in the application.
  * It provides methods to handle enabling the command and executing the command when it's invoked.
  *
  * @since alpha.4

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to associate a field with a specific string select menu by its ID.
  * This annotation is used to dynamically link a string select menu interaction to its handling logic
- * defined in a class that implements the {@link StringSelectMenuExecutor} interface.
+ * defined in a class that extends {@link StringSelectMenuExecutor}.
  * <p>
  * By annotating a field with {@code SelectMenuById}, the system can automatically
  * route string select menu events to the specified executor for processing.

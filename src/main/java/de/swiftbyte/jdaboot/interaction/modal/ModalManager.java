@@ -293,7 +293,7 @@ public class ModalManager extends ListenerAdapter {
             Class<?> rawClass = Class.forName(modalClassName, true, mainClass.getClassLoader());
             if (!ModalExecutor.class.isAssignableFrom(rawClass)) {
                 throw new ObjectInitializationException(
-                        String.format("Referenced modal class '%s' does not implement %s", modalClassName, ModalExecutor.class.getName()),
+                        String.format("Referenced modal class '%s' does not extend %s", modalClassName, ModalExecutor.class.getName()),
                         rawClass,
                         source
                 );
@@ -345,7 +345,7 @@ public class ModalManager extends ListenerAdapter {
         }
 
         if (!ModalExecutor.class.isAssignableFrom(clazz)) {
-            throw new ElementRegistrationException("Modal class must implement ModalExecutor", clazz);
+            throw new ElementRegistrationException("Modal class must extend ModalExecutor", clazz);
         }
 
         if (classList.containsKey(clazz)) {

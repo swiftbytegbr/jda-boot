@@ -11,7 +11,7 @@ import java.util.Map;
         placeholder = "Placeholder",
         enableChannel = true
 )
-public class TestEntitySelectMenu implements EntitySelectMenuExecutor {
+public class TestEntitySelectMenu extends EntitySelectMenuExecutor {
 
     @Override
     public void onSelectMenuSubmit(@NonNull EntitySelectInteractionEvent event, @NonNull Map<String, String> variables) {

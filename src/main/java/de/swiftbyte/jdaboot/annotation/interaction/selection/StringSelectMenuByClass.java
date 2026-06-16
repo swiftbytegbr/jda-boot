@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to associate a field with a specific {@link StringSelectMenuExecutor} class.
  * This annotation is used to dynamically link a string select menu interaction to its handling logic
- * defined in a class that implements the {@link StringSelectMenuExecutor} interface.
+ * defined in a class that extends {@link StringSelectMenuExecutor}.
  * <p>
  * By annotating a field with {@code StringSelectMenuByClass}, the system can automatically
  * route string select menu events to the specified executor for processing.
@@ -28,7 +28,7 @@ public @interface StringSelectMenuByClass {
      * Specifies the class of the {@link StringSelectMenuExecutor} that should be invoked
      * when the associated string select menu is interacted with.
      *
-     * @return The class implementing {@link StringSelectMenuExecutor} to handle string select menu interactions.
+     * @return The executor class used to handle string select menu interactions.
      */
     @NonNull Class<? extends StringSelectMenuExecutor> value();
 

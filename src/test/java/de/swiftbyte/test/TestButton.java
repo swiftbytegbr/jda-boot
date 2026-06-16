@@ -15,7 +15,7 @@ import java.util.Map;
         emoji = "\uD83D\uDC4D",
         type = ButtonDefinition.Type.PRIMARY
 )
-public class TestButton implements ButtonExecutor {
+public class TestButton extends ButtonExecutor {
 
     @ModalByPath("test.xml")
     private TemplateModal modal;

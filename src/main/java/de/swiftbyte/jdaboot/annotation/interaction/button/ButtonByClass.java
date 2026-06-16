@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to associate a field with a specific {@link ButtonExecutor} class.
  * This annotation is used to dynamically link a button interaction to its handling logic
- * defined in a class that implements the {@link ButtonExecutor} interface.
+ * defined in a class that extends {@link ButtonExecutor}.
  * <p>
  * By annotating a field with {@code ButtonByClass}, the system can automatically
  * route button click events to the specified executor for processing.
@@ -28,7 +28,7 @@ public @interface ButtonByClass {
      * Specifies the class of the {@link ButtonExecutor} that should be invoked
      * when the associated button is interacted with.
      *
-     * @return The class implementing {@link ButtonExecutor} to handle button interactions.
+     * @return The executor class used to handle button interactions.
      */
     @NonNull Class<? extends ButtonExecutor> value();
 

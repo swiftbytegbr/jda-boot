@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to associate a field with a specific {@link ModalExecutor} class.
  * This annotation is used to dynamically link a modal interaction to its handling logic
- * defined in a class that implements the {@link ModalExecutor} interface.
+ * defined in a class that extends {@link ModalExecutor}.
  * <p>
  * By annotating a field with {@code ModalByClass}, the system can automatically
  * route modal submit events to the specified executor for processing.
@@ -28,7 +28,7 @@ public @interface ModalByClass {
      * Specifies the class of the {@link ModalExecutor} that should be invoked
      * when the associated modal is interacted with.
      *
-     * @return The class implementing {@link ModalExecutor} to handle button interactions.
+     * @return The executor class used to handle modal interactions.
      */
     @NonNull Class<? extends ModalExecutor> value();
 

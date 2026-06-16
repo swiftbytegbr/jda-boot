@@ -37,7 +37,7 @@ import java.util.Map;
                 )
         }
 )
-public class TestModal implements ModalExecutor {
+public class TestModal extends ModalExecutor {
 
     @Override
     public void onModalSubmit(@NonNull ModalInteractionEvent event, @NonNull Map<String, String> variables) {
