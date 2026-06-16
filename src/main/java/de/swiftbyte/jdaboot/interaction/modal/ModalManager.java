@@ -5,6 +5,7 @@ import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
+import de.swiftbyte.jdaboot.annotation.interaction.modal.XmlModalDefinition;
 import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
 import de.swiftbyte.jdaboot.exceptions.ElementRegistrationException;
@@ -70,22 +71,13 @@ public class ModalManager extends ListenerAdapter {
 
             String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
 
-            if (id.contains(";")) {
-                throw new ElementRegistrationException("Modal ID cannot contain semicolons!", clazz);
-            }
+            registerModalExecutor(clazz, id, "modal");
+        });
 
-            if (id.length() >= 60) {
-                throw new ElementRegistrationException("Modal ID cannot be longer than 60 characters!", clazz);
-            }
-
-            if (ModalExecutor.class.isAssignableFrom(clazz)) {
-                ModalExecutor cmd = (ModalExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
-
-                modalExecutableList.put(id, cmd);
-                classList.put(clazz, id);
-
-                log.info("Registered modal {}", clazz.getName());
-            }
+        reflections.getTypesAnnotatedWith(XmlModalDefinition.class).forEach(clazz -> {
+            XmlModalDefinition annotation = clazz.getAnnotation(XmlModalDefinition.class);
+            String id = annotation.id().isEmpty() ? UUID.randomUUID().toString() : annotation.id();
+            registerModalExecutor(clazz, id, "XML modal");
         });
 
         reflections.getFieldsAnnotatedWith(ModalById.class).forEach(field -> {
@@ -133,6 +125,9 @@ public class ModalManager extends ListenerAdapter {
             return null;
         }
         ModalDefinition definition = executor.getClass().getAnnotation(ModalDefinition.class);
+        if (definition == null) {
+            return null;
+        }
         return new TemplateModal(definition, id);
     }
 
@@ -145,6 +140,9 @@ public class ModalManager extends ListenerAdapter {
      */
     public <T extends ModalExecutor> @Nullable TemplateModal getModal(@NonNull Class<T> clazz) {
         String id = classList.get(clazz);
+        if (id == null) {
+            return null;
+        }
         return getModal(id);
     }
 
@@ -312,6 +310,43 @@ public class ModalManager extends ListenerAdapter {
         } catch (ClassNotFoundException e) {
             throw new ObjectInitializationException("Could not load modal class: " + modalClassName, source, e);
         }
+    }
+
+    /**
+     * Registers a modal executor class.
+     *
+     * @param clazz       The executor class.
+     * @param id          The resolved modal ID.
+     * @param description The registration description used for logging.
+     * @throws ElementRegistrationException If the class or ID is invalid.
+     * @since 1.0.0-beta.2
+     */
+    private void registerModalExecutor(@NonNull Class<?> clazz, @NonNull String id, @NonNull String description) {
+        if (id.contains(";")) {
+            throw new ElementRegistrationException("Modal ID cannot contain semicolons!", clazz);
+        }
+
+        if (id.length() >= 60) {
+            throw new ElementRegistrationException("Modal ID cannot be longer than 60 characters!", clazz);
+        }
+
+        if (!ModalExecutor.class.isAssignableFrom(clazz)) {
+            throw new ElementRegistrationException("Modal class must implement ModalExecutor", clazz);
+        }
+
+        if (classList.containsKey(clazz)) {
+            throw new ElementRegistrationException("Modal class is already registered", clazz);
+        }
+
+        if (modalExecutableList.containsKey(id)) {
+            throw new ElementRegistrationException("Duplicate modal ID: " + id, clazz);
+        }
+
+        ModalExecutor executor = (ModalExecutor) JDABootObjectManager.getOrInitialiseObject(clazz);
+        modalExecutableList.put(id, executor);
+        classList.put(clazz, id);
+
+        log.info("Registered {} {}", description, clazz.getName());
     }
 
 }
