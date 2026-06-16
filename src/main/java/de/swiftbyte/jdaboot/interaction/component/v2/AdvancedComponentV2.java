@@ -37,6 +37,7 @@ import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.components.separator.Separator;
 import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
 import net.dv8tion.jda.api.components.thumbnail.Thumbnail;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
@@ -172,8 +173,8 @@ public class AdvancedComponentV2 {
      * @since 1.0.0-beta.2
      */
     private @NonNull ActionRowChildComponent buildActionRowChild(ComponentV2Nodes.ActionRowChildNode node) {
-        if (node instanceof ComponentV2Nodes.ButtonRefNode buttonRef) {
-            return buildButton(buttonRef);
+        if (node instanceof ComponentV2Nodes.ButtonNode buttonNode) {
+            return buildButton(buttonNode);
         }
         if (node instanceof ComponentV2Nodes.StringSelectRefNode stringRef) {
             return buildStringSelect(stringRef);
@@ -278,8 +279,8 @@ public class AdvancedComponentV2 {
      * @since 1.0.0-beta.2
      */
     private @NonNull SectionAccessoryComponent buildSectionAccessory(ComponentV2Nodes.SectionAccessoryNode node) {
-        if (node instanceof ComponentV2Nodes.ButtonRefNode buttonRef) {
-            return buildButton(buttonRef);
+        if (node instanceof ComponentV2Nodes.ButtonNode buttonNode) {
+            return buildButton(buttonNode);
         }
         if (node instanceof ComponentV2Nodes.ThumbnailNode thumbnailNode) {
             Thumbnail thumbnail = Thumbnail.fromUrl(processVar(thumbnailNode.url()));
@@ -343,13 +344,34 @@ public class AdvancedComponentV2 {
     }
 
     /**
+     * Builds a supported button node.
+     *
+     * @param node The source XML node.
+     * @return The built button.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull Button buildButton(ComponentV2Nodes.ButtonNode node) {
+        if (node instanceof ComponentV2Nodes.ButtonRefNode buttonRef) {
+            return buildReferencedButton(buttonRef);
+        }
+        if (node instanceof ComponentV2Nodes.LinkButtonNode linkButton) {
+            return buildLinkButton(linkButton);
+        }
+        throw new ObjectInitializationException(
+                "Unsupported button node type: " + node.getClass().getName(),
+                node.getClass(),
+                sourceReference()
+        );
+    }
+
+    /**
      * Resolves and builds a referenced button.
      *
      * @param ref The button reference.
      * @return The built button.
      * @since 1.0.0-beta.2
      */
-    private @NonNull Button buildButton(ComponentV2Nodes.ButtonRefNode ref) {
+    private @NonNull Button buildReferencedButton(ComponentV2Nodes.ButtonRefNode ref) {
         ButtonManager buttonManager = JDABootConfigurationManager.getButtonManager();
         if (buttonManager == null) {
             throw new StillInitializingException();
@@ -372,6 +394,22 @@ public class AdvancedComponentV2 {
         AdvancedButton advancedButton = templateButton.advancedButton(locale);
         applyVariables(advancedButton::setVariable);
         return advancedButton.build();
+    }
+
+    /**
+     * Builds a link button.
+     *
+     * @param node The link button node.
+     * @return The built link button.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull Button buildLinkButton(ComponentV2Nodes.LinkButtonNode node) {
+        Button button = Button.link(processVar(node.url()), processVar(node.label()));
+        String emoji = processVar(node.emoji()).trim();
+        if (!emoji.isEmpty()) {
+            button = button.withEmoji(Emoji.fromFormatted(emoji));
+        }
+        return button.withDisabled(parseBoolean(node.disabled(), "disabled"));
     }
 
     /**

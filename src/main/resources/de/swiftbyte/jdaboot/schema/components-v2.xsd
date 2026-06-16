@@ -45,11 +45,23 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="linkButtonType">
+        <xs:attribute name="url" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="label" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="emoji" type="xs:string"/>
+        <xs:attribute name="disabled" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:group name="buttonChildren">
+        <xs:choice>
+            <xs:element name="button-ref" type="c:refType"/>
+            <xs:element name="link-button" type="linkButtonType"/>
+        </xs:choice>
+    </xs:group>
+
     <xs:complexType name="actionRowType">
         <xs:choice>
-            <xs:sequence>
-                <xs:element name="button-ref" type="c:refType" maxOccurs="5"/>
-            </xs:sequence>
+            <xs:group ref="buttonChildren" minOccurs="1" maxOccurs="5"/>
             <xs:element name="string-select-ref" type="c:refType"/>
             <xs:element name="entity-select-ref" type="c:refType"/>
         </xs:choice>
@@ -63,7 +75,7 @@
 
     <xs:complexType name="sectionAccessoryType">
         <xs:choice>
-            <xs:element name="button-ref" type="c:refType"/>
+            <xs:group ref="buttonChildren"/>
             <xs:element name="thumbnail" type="thumbnailType"/>
         </xs:choice>
     </xs:complexType>

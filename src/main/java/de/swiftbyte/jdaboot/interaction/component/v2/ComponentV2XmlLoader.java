@@ -217,8 +217,8 @@ public final class ComponentV2XmlLoader {
         for (Element child : childElements(element)) {
             String childName = nodeName(child);
             switch (childName) {
-                case "button-ref" -> {
-                    children.add(parseButtonRefNode(child, resourcePath));
+                case "button-ref", "link-button" -> {
+                    children.add(parseButtonNode(child, resourcePath));
                     buttonCount++;
                 }
                 case "string-select-ref" -> {
@@ -230,7 +230,7 @@ public final class ComponentV2XmlLoader {
                     entitySelectCount++;
                 }
                 default -> throw new ConfigurationException(String.format(
-                        "Unsupported <action-row> child <%s>. Allowed: button-ref, string-select-ref, entity-select-ref",
+                        "Unsupported <action-row> child <%s>. Allowed: button-ref, link-button, string-select-ref, entity-select-ref",
                         childName), resourcePath);
             }
         }
@@ -241,10 +241,10 @@ public final class ComponentV2XmlLoader {
 
         if (buttonCount > 0) {
             if (stringSelectCount > 0 || entitySelectCount > 0) {
-                throw new ConfigurationException("<action-row> cannot mix button-ref with select refs", resourcePath);
+                throw new ConfigurationException("<action-row> cannot mix buttons with select refs", resourcePath);
             }
             if (buttonCount > 5) {
-                throw new ConfigurationException("<action-row> can contain at most 5 button-ref elements", resourcePath);
+                throw new ConfigurationException("<action-row> can contain at most 5 buttons", resourcePath);
             }
         }
 
@@ -253,10 +253,30 @@ public final class ComponentV2XmlLoader {
         boolean hasValidButtons = buttonCount >= 1 && buttonCount <= 5 && stringSelectCount == 0 && entitySelectCount == 0;
 
         if (!hasValidButtons && !hasExactlyOneStringSelect && !hasExactlyOneEntitySelect) {
-            throw new ConfigurationException("<action-row> must be either 1-5 button-ref OR exactly one string-select-ref OR exactly one entity-select-ref", resourcePath);
+            throw new ConfigurationException("<action-row> must be either 1-5 buttons OR exactly one string-select-ref OR exactly one entity-select-ref", resourcePath);
         }
 
         return new ComponentV2Nodes.ActionRowNode(List.copyOf(children));
+    }
+
+    /**
+     * Parses a supported button node.
+     *
+     * @param element      The button element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed button node.
+     * @since 1.0.0-beta.2
+     */
+    private static ComponentV2Nodes.ButtonNode parseButtonNode(@NonNull Element element,
+                                                               @NonNull String resourcePath) {
+        return switch (nodeName(element)) {
+            case "button-ref" -> parseButtonRefNode(element, resourcePath);
+            case "link-button" -> parseLinkButtonNode(element, resourcePath);
+            default -> throw new ConfigurationException(
+                    "Unsupported button element <" + nodeName(element) + ">",
+                    resourcePath
+            );
+        };
     }
 
     /**
@@ -270,6 +290,24 @@ public final class ComponentV2XmlLoader {
     private static ComponentV2Nodes.ButtonRefNode parseButtonRefNode(@NonNull Element element, @NonNull String resourcePath) {
         XmlLoaderSupport.XmlRefTarget target = parseRefTarget(element, resourcePath);
         return new ComponentV2Nodes.ButtonRefNode(target.id(), target.className());
+    }
+
+    /**
+     * Parses a link button.
+     *
+     * @param element      The link button element.
+     * @param resourcePath The XML resource path used for error reporting.
+     * @return The parsed link button.
+     * @since 1.0.0-beta.2
+     */
+    private static ComponentV2Nodes.LinkButtonNode parseLinkButtonNode(@NonNull Element element,
+                                                                       @NonNull String resourcePath) {
+        return new ComponentV2Nodes.LinkButtonNode(
+                requiredAttribute(element, "url", resourcePath),
+                requiredAttribute(element, "label", resourcePath),
+                optionalAttribute(element, "emoji"),
+                optionalAttribute(element, "disabled", "false")
+        );
     }
 
     /**
@@ -499,14 +537,14 @@ public final class ComponentV2XmlLoader {
         Element child = children.get(0);
         String nodeName = nodeName(child);
         return switch (nodeName) {
-            case "button-ref" -> parseButtonRefNode(child, resourcePath);
+            case "button-ref", "link-button" -> parseButtonNode(child, resourcePath);
             case "thumbnail" -> new ComponentV2Nodes.ThumbnailNode(
                     requiredAttribute(child, "url", resourcePath),
                     optionalAttribute(child, "description"),
                     optionalAttribute(child, "spoiler", "false")
             );
             default -> throw new ConfigurationException(String.format(
-                    "Unsupported <accessory> child <%s>. Allowed: button-ref, thumbnail",
+                    "Unsupported <accessory> child <%s>. Allowed: button-ref, link-button, thumbnail",
                     nodeName), resourcePath);
         };
     }

@@ -70,6 +70,14 @@ public final class ComponentV2Nodes {
     }
 
     /**
+     * Marker interface for button nodes supported in action rows and section accessories.
+     *
+     * @since 1.0.0-beta.2
+     */
+    public interface ButtonNode extends ActionRowChildNode, SectionAccessoryNode {
+    }
+
+    /**
      * Defines a text display component.
      *
      * @param content The displayed text.
@@ -172,7 +180,22 @@ public final class ComponentV2Nodes {
      * @since 1.0.0-beta.2
      */
     public record ButtonRefNode(@Nullable String id,
-                                @Nullable String className) implements ActionRowChildNode, SectionAccessoryNode {
+                                @Nullable String className) implements ButtonNode {
+    }
+
+    /**
+     * Defines a link button.
+     *
+     * @param url      The variable-capable target URL.
+     * @param label    The variable-capable button label.
+     * @param emoji    The variable-capable optional emoji.
+     * @param disabled The variable-capable disabled value.
+     * @since 1.0.0-beta.2
+     */
+    public record LinkButtonNode(@NonNull String url,
+                                 @NonNull String label,
+                                 @NonNull String emoji,
+                                 @NonNull String disabled) implements ButtonNode {
     }
 
     /**
