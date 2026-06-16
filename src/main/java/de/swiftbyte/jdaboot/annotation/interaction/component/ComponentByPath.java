@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot.annotation.interaction.component;
 
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.ElementType;
@@ -32,4 +33,12 @@ public @interface ComponentByPath {
      * @since 1.0.0-beta.2
      */
     @NonNull String layoutId() default "";
+
+    /**
+     * The default variables available to the injected Component V2 template.
+     *
+     * @return The default variables.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 }

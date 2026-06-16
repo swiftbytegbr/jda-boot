@@ -1,6 +1,8 @@
 package de.swiftbyte.jdaboot.interaction.component.v2;
 
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.ComponentV2LayoutDefinition;
+import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
@@ -12,6 +14,7 @@ import org.jspecify.annotations.NonNull;
 public class TemplateComponentV2 {
 
     private final @NonNull ComponentV2LayoutDefinition definition;
+    private final @NonNull XmlDefaultVariable @NonNull [] annotationDefaultVars;
 
     /**
      * Constructor for a Component V2 template.
@@ -20,11 +23,48 @@ public class TemplateComponentV2 {
      * @since 1.0.0-beta.2
      */
     protected TemplateComponentV2(@NonNull ComponentV2LayoutDefinition definition) {
+        this(definition, new DefaultVariable[0]);
+    }
+
+    /**
+     * Constructor for a Component V2 template.
+     *
+     * @param definition  The parsed layout definition.
+     * @param defaultVars The default variables configured on the injection annotation.
+     * @since 1.0.0-beta.2
+     */
+    protected TemplateComponentV2(@NonNull ComponentV2LayoutDefinition definition, @NonNull DefaultVariable @NonNull [] defaultVars) {
         this.definition = definition;
+        this.annotationDefaultVars = toXmlDefaultVars(defaultVars);
     }
 
     @NonNull ComponentV2LayoutDefinition getDefinition() {
         return definition;
+    }
+
+    /**
+     * Returns default variables configured on the injection annotation.
+     *
+     * @return The annotation default variables.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull XmlDefaultVariable @NonNull [] getAnnotationDefaultVars() {
+        return annotationDefaultVars;
+    }
+
+    /**
+     * Converts annotation default variables into XML default variables.
+     *
+     * @param defaultVars The annotation default variables.
+     * @return The XML default variables.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull XmlDefaultVariable @NonNull [] toXmlDefaultVars(@NonNull DefaultVariable @NonNull [] defaultVars) {
+        XmlDefaultVariable[] result = new XmlDefaultVariable[defaultVars.length];
+        for (int i = 0; i < defaultVars.length; i++) {
+            result[i] = new XmlDefaultVariable(defaultVars[i].variable(), defaultVars[i].value());
+        }
+        return result;
     }
 
     /**

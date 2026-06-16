@@ -43,6 +43,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -518,7 +519,7 @@ public class AdvancedComponentV2 {
      * @since 1.0.0-beta.2
      */
     private void applyVariables(@NonNull VariableReceiver receiver) {
-        for (XmlDefaultVariable defaultVar : template.getDefinition().defaultVars()) {
+        for (XmlDefaultVariable defaultVar : getDefaultVars()) {
             receiver.accept(defaultVar.key(), defaultVar.value());
         }
         for (Map.Entry<String, String> entry : variables.entrySet()) {
@@ -534,7 +535,31 @@ public class AdvancedComponentV2 {
      * @since 1.0.0-beta.2
      */
     private @NonNull String processVar(@NonNull String old) {
-        return VariableProcessor.processVariable(locale, old, variables, template.getDefinition().defaultVars());
+        return VariableProcessor.processVariable(locale, old, variables, getDefaultVars());
+    }
+
+    /**
+     * Returns Component V2 default variables from the injection annotation and the XML layout.
+     * XML layout defaults override injection annotation defaults with the same key.
+     *
+     * @return The merged default variables.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull XmlDefaultVariable @NonNull [] getDefaultVars() {
+        LinkedHashMap<String, String> merged = new LinkedHashMap<>();
+        for (XmlDefaultVariable defaultVar : template.getAnnotationDefaultVars()) {
+            merged.put(defaultVar.key(), defaultVar.value());
+        }
+        for (XmlDefaultVariable defaultVar : template.getDefinition().defaultVars()) {
+            merged.put(defaultVar.key(), defaultVar.value());
+        }
+
+        XmlDefaultVariable[] result = new XmlDefaultVariable[merged.size()];
+        int index = 0;
+        for (Map.Entry<String, String> entry : merged.entrySet()) {
+            result[index++] = new XmlDefaultVariable(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 
     /**

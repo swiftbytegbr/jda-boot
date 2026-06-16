@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.component.v2;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.annotation.interaction.component.ComponentByPath;
 import de.swiftbyte.jdaboot.exceptions.ConfigurationException;
 import de.swiftbyte.jdaboot.exceptions.ElementNotFoundException;
@@ -56,7 +57,7 @@ public class ComponentV2Manager {
             String xmlPath = normalizeResourcePath(annotation.value(), COMPONENTS_DIR);
             String layoutId = annotation.layoutId();
 
-            TemplateComponentV2 component = resolveComponentForField(field, xmlPath, layoutId);
+            TemplateComponentV2 component = resolveComponentForField(field, xmlPath, layoutId, annotation.defaultVars());
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, component);
 
             log.info("Registered component v2 field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(), xmlPath);
@@ -127,11 +128,13 @@ public class ComponentV2Manager {
      * @param field    The field receiving the template.
      * @param xmlPath  The normalized XML resource path.
      * @param layoutId The requested layout ID, or an empty string for a single-layout file.
+     * @param defaultVars The default variables configured on the injection annotation.
      * @return The resolved component template.
      * @since 1.0.0-beta.2
      */
     private @NonNull TemplateComponentV2 resolveComponentForField(@NonNull Field field, @NonNull String xmlPath,
-                                                                  @NonNull String layoutId) {
+                                                                  @NonNull String layoutId,
+                                                                  @NonNull DefaultVariable @NonNull [] defaultVars) {
         Map<String, ComponentV2LayoutDefinition> layouts = getOrLoadFile(xmlPath);
 
         if (layoutId.isBlank()) {
@@ -142,7 +145,7 @@ public class ComponentV2Manager {
                 );
             }
             ComponentV2LayoutDefinition definition = layouts.values().iterator().next();
-            return new TemplateComponentV2(definition);
+            return new TemplateComponentV2(definition, defaultVars);
         }
 
         ComponentV2LayoutDefinition definition = layouts.get(layoutId);
@@ -150,7 +153,7 @@ public class ComponentV2Manager {
             throw new ElementNotFoundException("Could not find component layout", layoutId, field);
         }
 
-        return new TemplateComponentV2(definition);
+        return new TemplateComponentV2(definition, defaultVars);
     }
 
     /**

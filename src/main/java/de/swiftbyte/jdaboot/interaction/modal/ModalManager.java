@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
 import de.swiftbyte.jdaboot.JDABootObjectManager;
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalById;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByPath;
@@ -283,7 +284,8 @@ public class ModalManager extends ListenerAdapter {
                         "/layout[@id='" + definition.id() + "']"
                 );
             }
-            return new TemplateModal(definition, modalId);
+            ModalExecutor executor = modalExecutableList.get(modalId);
+            return new TemplateModal(definition, modalId, getXmlDefaultVars(executor.getClass()));
         }
 
         String modalClassName = Objects.requireNonNull(definition.modalClassName());
@@ -306,10 +308,22 @@ public class ModalManager extends ListenerAdapter {
                 );
             }
 
-            return new TemplateModal(definition, id);
+            return new TemplateModal(definition, id, getXmlDefaultVars(rawClass));
         } catch (ClassNotFoundException e) {
             throw new ObjectInitializationException("Could not load modal class: " + modalClassName, source, e);
         }
+    }
+
+    /**
+     * Returns XML modal default variables configured on an executor class.
+     *
+     * @param clazz The executor class.
+     * @return The configured default variables, or an empty array.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull DefaultVariable @NonNull [] getXmlDefaultVars(@NonNull Class<?> clazz) {
+        XmlModalDefinition definition = clazz.getAnnotation(XmlModalDefinition.class);
+        return definition == null ? new DefaultVariable[0] : definition.defaultVars();
     }
 
     /**

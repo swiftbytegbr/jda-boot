@@ -1,6 +1,8 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
+import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
 import de.swiftbyte.jdaboot.interaction.modal.model.XmlModalLayoutDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +26,9 @@ public class TemplateModal {
     private final @Nullable XmlModalLayoutDefinition xmlDefinition;
 
     @Getter(AccessLevel.PACKAGE)
+    private final @NonNull XmlDefaultVariable @NonNull [] xmlAnnotationDefaultVars;
+
+    @Getter(AccessLevel.PACKAGE)
     private final @NonNull String id;
 
     /**
@@ -35,6 +40,7 @@ public class TemplateModal {
     protected TemplateModal(@NonNull ModalDefinition modalDefinition, @NonNull String id) {
         this.definition = modalDefinition;
         this.xmlDefinition = null;
+        this.xmlAnnotationDefaultVars = new XmlDefaultVariable[0];
         this.id = id;
     }
 
@@ -46,9 +52,37 @@ public class TemplateModal {
      * @since 1.0.0-beta.2
      */
     protected TemplateModal(@NonNull XmlModalLayoutDefinition xmlDefinition, @NonNull String id) {
+        this(xmlDefinition, id, new DefaultVariable[0]);
+    }
+
+    /**
+     * Constructor for an XML modal template definition.
+     *
+     * @param xmlDefinition  Parsed XML modal definition.
+     * @param id             Resolved modal id.
+     * @param defaultVars    Default variables configured on the XML modal executor.
+     * @since 1.0.0-beta.2
+     */
+    protected TemplateModal(@NonNull XmlModalLayoutDefinition xmlDefinition, @NonNull String id, @NonNull DefaultVariable @NonNull [] defaultVars) {
         this.definition = null;
         this.xmlDefinition = xmlDefinition;
+        this.xmlAnnotationDefaultVars = toXmlDefaultVars(defaultVars);
         this.id = id;
+    }
+
+    /**
+     * Converts annotation default variables into XML default variables.
+     *
+     * @param defaultVars The annotation default variables.
+     * @return The XML default variables.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull XmlDefaultVariable @NonNull [] toXmlDefaultVars(@NonNull DefaultVariable @NonNull [] defaultVars) {
+        XmlDefaultVariable[] result = new XmlDefaultVariable[defaultVars.length];
+        for (int i = 0; i < defaultVars.length; i++) {
+            result[i] = new XmlDefaultVariable(defaultVars[i].variable(), defaultVars[i].value());
+        }
+        return result;
     }
 
     /**

@@ -1,5 +1,6 @@
 package de.swiftbyte.jdaboot.annotation.interaction.modal;
 
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.interaction.modal.ModalExecutor;
 import org.jspecify.annotations.NonNull;
 
@@ -25,4 +26,12 @@ public @interface XmlModalDefinition {
      * @since 1.0.0-beta.2
      */
     @NonNull String id() default "";
+
+    /**
+     * The default variables available to XML modal layouts using this executor.
+     *
+     * @return The default variables.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull DefaultVariable @NonNull [] defaultVars() default {};
 }

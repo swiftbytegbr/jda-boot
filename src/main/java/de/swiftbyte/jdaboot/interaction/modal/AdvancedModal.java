@@ -33,6 +33,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -384,7 +385,7 @@ public class AdvancedModal {
 
         XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
         if (xmlDefinition != null) {
-            return VariableProcessor.processVariable(locale, old, variables, xmlDefinition.defaultVars());
+            return VariableProcessor.processVariable(locale, old, variables, getXmlDefaultVars());
         }
 
         return old;
@@ -426,13 +427,42 @@ public class AdvancedModal {
 
         XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
         if (xmlDefinition != null) {
-            for (XmlDefaultVariable defaultVar : xmlDefinition.defaultVars()) {
+            for (XmlDefaultVariable defaultVar : getXmlDefaultVars()) {
                 transferred.put(defaultVar.key(), defaultVar.value());
             }
         }
 
         transferred.putAll(variables);
         return transferred;
+    }
+
+    /**
+     * Returns XML modal default variables from the executor annotation and the XML layout.
+     * XML layout defaults override executor annotation defaults with the same key.
+     *
+     * @return The merged default variables.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull XmlDefaultVariable @NonNull [] getXmlDefaultVars() {
+        XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
+        if (xmlDefinition == null) {
+            return new XmlDefaultVariable[0];
+        }
+
+        LinkedHashMap<String, String> merged = new LinkedHashMap<>();
+        for (XmlDefaultVariable defaultVar : template.getXmlAnnotationDefaultVars()) {
+            merged.put(defaultVar.key(), defaultVar.value());
+        }
+        for (XmlDefaultVariable defaultVar : xmlDefinition.defaultVars()) {
+            merged.put(defaultVar.key(), defaultVar.value());
+        }
+
+        XmlDefaultVariable[] result = new XmlDefaultVariable[merged.size()];
+        int index = 0;
+        for (Map.Entry<String, String> entry : merged.entrySet()) {
+            result[index++] = new XmlDefaultVariable(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 
     /**
