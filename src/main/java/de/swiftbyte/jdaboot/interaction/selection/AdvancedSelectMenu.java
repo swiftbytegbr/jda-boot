@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot.interaction.selection;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectOption;
+import de.swiftbyte.jdaboot.utils.EmojiUtils;
 import de.swiftbyte.jdaboot.utils.StringUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.components.selections.SelectMenu;
 import net.dv8tion.jda.api.components.selections.SelectOption;
 import net.dv8tion.jda.api.components.selections.StringSelectMenu;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -276,7 +276,7 @@ public class AdvancedSelectMenu {
             }
 
             if (StringUtils.isNotBlank(optionDefinition.emoji())) {
-                option = option.withEmoji(Emoji.fromUnicode(processVar(optionDefinition.emoji())));
+                option = option.withEmoji(EmojiUtils.parseEmoji(processVar(optionDefinition.emoji())));
             }
 
             if (optionDefinition.isDefault()) {
@@ -292,7 +292,7 @@ public class AdvancedSelectMenu {
             }
 
             if (StringUtils.isNotBlank(optionDefinition.emoji())) {
-                option = option.withEmoji(Emoji.fromUnicode(processVar(optionDefinition.emoji())));
+                option = option.withEmoji(EmojiUtils.parseEmoji(processVar(optionDefinition.emoji())));
             }
 
             if (optionDefinition.isDefault()) {

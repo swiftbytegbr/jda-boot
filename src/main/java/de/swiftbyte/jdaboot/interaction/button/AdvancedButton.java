@@ -1,11 +1,11 @@
 package de.swiftbyte.jdaboot.interaction.button;
 
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
+import de.swiftbyte.jdaboot.utils.EmojiUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.components.buttons.Button;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -94,7 +94,7 @@ public class AdvancedButton {
         };
 
         if (!definition.emoji().isEmpty()) {
-            btn = btn.withEmoji(Emoji.fromUnicode(processVar(definition.emoji())));
+            btn = btn.withEmoji(EmojiUtils.parseEmoji(processVar(definition.emoji())));
         }
 
         return btn;

@@ -16,6 +16,7 @@ import de.swiftbyte.jdaboot.interaction.selection.EntitySelectMenuExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.SelectMenuManager;
 import de.swiftbyte.jdaboot.interaction.selection.StringSelectMenuExecutor;
 import de.swiftbyte.jdaboot.interaction.selection.TemplateSelectMenu;
+import de.swiftbyte.jdaboot.utils.EmojiUtils;
 import de.swiftbyte.jdaboot.variables.VariableProcessor;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +38,6 @@ import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.components.separator.Separator;
 import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
 import net.dv8tion.jda.api.components.thumbnail.Thumbnail;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jspecify.annotations.NonNull;
 
@@ -408,7 +408,7 @@ public class AdvancedComponentV2 {
         Button button = Button.link(processVar(node.url()), processVar(node.label()));
         String emoji = processVar(node.emoji()).trim();
         if (!emoji.isEmpty()) {
-            button = button.withEmoji(Emoji.fromFormatted(emoji));
+            button = button.withEmoji(EmojiUtils.parseEmoji(emoji));
         }
         return button.withDisabled(parseBoolean(node.disabled(), "disabled"));
     }
