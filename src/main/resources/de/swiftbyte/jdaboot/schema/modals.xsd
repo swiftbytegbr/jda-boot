@@ -14,12 +14,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="defaultVariablesType">
-        <xs:sequence>
-            <xs:element name="variable" type="c:defaultVarType" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
     <xs:complexType name="stringInputType">
         <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="style" type="inputStyleType"/>
@@ -69,7 +63,7 @@
     </xs:complexType>
 
     <xs:complexType name="entitySelectChannelTypeType">
-        <xs:attribute name="value" type="c:nonEmptyString" use="required"/>
+        <xs:attribute name="value" type="c:channelTypeType" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="entitySelectType">
@@ -133,7 +127,7 @@
 
     <xs:complexType name="layoutType">
         <xs:sequence>
-            <xs:element name="default-variables" type="defaultVariablesType" minOccurs="0"/>
+            <xs:element name="default-variables" type="c:defaultVariablesType" minOccurs="0"/>
             <xs:element name="label" type="labelType" maxOccurs="5"/>
         </xs:sequence>
         <xs:attribute name="id" type="c:idType" use="required"/>

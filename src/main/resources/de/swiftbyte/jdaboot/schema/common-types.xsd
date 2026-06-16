@@ -23,9 +23,34 @@
         <xs:attribute name="value" type="xs:string" use="required"/>
     </xs:complexType>
 
+    <xs:complexType name="defaultVariablesType">
+        <xs:sequence>
+            <xs:element name="variable" type="defaultVarType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="refType">
         <xs:attribute name="id" type="idType"/>
         <xs:attribute name="class" type="nonEmptyString"/>
     </xs:complexType>
+
+    <xs:simpleType name="channelTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TEXT"/>
+            <xs:enumeration value="PRIVATE"/>
+            <xs:enumeration value="VOICE"/>
+            <xs:enumeration value="GROUP"/>
+            <xs:enumeration value="CATEGORY"/>
+            <xs:enumeration value="NEWS"/>
+            <xs:enumeration value="STAGE"/>
+            <xs:enumeration value="GUILD_NEWS_THREAD"/>
+            <xs:enumeration value="GUILD_PUBLIC_THREAD"/>
+            <xs:enumeration value="GUILD_PRIVATE_THREAD"/>
+            <xs:enumeration value="GUILD_DIRECTORY"/>
+            <xs:enumeration value="FORUM"/>
+            <xs:enumeration value="MEDIA"/>
+            <xs:enumeration value="UNKNOWN"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

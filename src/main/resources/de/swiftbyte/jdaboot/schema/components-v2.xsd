@@ -7,12 +7,6 @@
 
     <xs:import namespace="https://jda-boot.swiftbyte.de/schema/common" schemaLocation="common-types.xsd"/>
 
-    <xs:complexType name="defaultVariablesType">
-        <xs:sequence>
-            <xs:element name="variable" type="c:defaultVarType" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
     <xs:complexType name="textDisplayType">
         <xs:attribute name="content" type="c:nonEmptyString" use="required"/>
     </xs:complexType>
@@ -120,7 +114,7 @@
 
     <xs:complexType name="layoutType">
         <xs:sequence>
-            <xs:element name="default-variables" type="defaultVariablesType" minOccurs="0"/>
+            <xs:element name="default-variables" type="c:defaultVariablesType" minOccurs="0"/>
             <xs:group ref="messageChildren" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="id" type="c:idType" use="required"/>
