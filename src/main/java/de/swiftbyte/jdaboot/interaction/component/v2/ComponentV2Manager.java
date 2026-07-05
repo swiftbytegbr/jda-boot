@@ -65,9 +65,11 @@ public class ComponentV2Manager {
     }
 
     /**
-     * Retrieves a Component V2 layout template by id.
+     * Retrieves a Component V2 layout template by its global id.
+     * Global ids are composed from the normalized XML path and layout id.
+     * Example: {@code components/example.xml#main}.
      *
-     * @param id The layout id.
+     * @param id The global layout id.
      * @return The template or null when not found.
      * @since 1.0.0-beta.2
      */
@@ -113,9 +115,9 @@ public class ComponentV2Manager {
     }
 
     /**
-     * Lists all known layout ids.
+     * Lists all known global layout ids.
      *
-     * @return Layout ids.
+     * @return Global layout ids.
      * @since 1.0.0-beta.2
      */
     public @NonNull List<@NonNull String> getLayoutIds() {
@@ -171,19 +173,32 @@ public class ComponentV2Manager {
             }
 
             for (Map.Entry<String, ComponentV2LayoutDefinition> entry : parsed.entrySet()) {
-                if (layoutsById.containsKey(entry.getKey())) {
+                String globalLayoutId = globalLayoutId(xmlPath, entry.getKey());
+                if (layoutsById.containsKey(globalLayoutId)) {
                     throw new ConfigurationException(
-                            String.format("Duplicate Component V2 layout id across XML files: %s", entry.getKey()),
+                            String.format("Duplicate Component V2 global layout id: %s", globalLayoutId),
                             xmlPath
                     );
                 }
-                layoutsById.put(entry.getKey(), entry.getValue());
+                layoutsById.put(globalLayoutId, entry.getValue());
             }
 
             xmlFileCache.put(xmlPath, parsed);
         }
 
         return xmlFileCache.get(xmlPath);
+    }
+
+    /**
+     * Builds the global layout id used for cross-file lookups.
+     *
+     * @param xmlPath  The normalized XML resource path.
+     * @param layoutId The layout id inside the XML file.
+     * @return The global layout id.
+     * @since 1.0.0-beta.2
+     */
+    private static @NonNull String globalLayoutId(@NonNull String xmlPath, @NonNull String layoutId) {
+        return xmlPath + "#" + layoutId;
     }
 
 }
