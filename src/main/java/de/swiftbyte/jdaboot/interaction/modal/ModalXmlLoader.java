@@ -9,6 +9,7 @@ import lombok.CustomLog;
 import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.interactions.FileType;
 import org.jspecify.annotations.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -311,6 +312,32 @@ public final class ModalXmlLoader {
         boolean required = booleanAttribute(element, "required", false);
         int minValues = intAttribute(element, "min-values", required ? 1 : 0, resourcePath);
         int maxValues = intAttribute(element, "max-values", 1, resourcePath);
+        List<FileType> fileTypes = new ArrayList<>();
+
+        for (Element child : childElements(element)) {
+            String childName = nodeName(child);
+            if (!"file-type".equals(childName)) {
+                throw new ConfigurationException(String.format(
+                        "Unsupported <file-input> child <%s>. Only <file-type> is allowed",
+                        childName
+                ), resourcePath);
+            }
+
+            String value = requiredAttribute(child, "value", resourcePath);
+            try {
+                fileTypes.add(switch (value) {
+                    case "image" -> FileType.IMAGE;
+                    case "video" -> FileType.VIDEO;
+                    case "audio" -> FileType.AUDIO;
+                    default -> FileType.ofExtension(value);
+                });
+            } catch (IllegalArgumentException e) {
+                throw new ConfigurationException(String.format(
+                        "Invalid file type '%s' in <file-input>",
+                        value
+                ), resourcePath, e);
+            }
+        }
 
         if (minValues < 0) {
             throw new ConfigurationException("<file-input> min-values cannot be negative", resourcePath);
@@ -325,7 +352,7 @@ public final class ModalXmlLoader {
             throw new ConfigurationException("<file-input> min-values cannot be greater than max-values", resourcePath);
         }
 
-        return new XmlModalNodes.FileInputNode(id, required, maxValues, minValues);
+        return new XmlModalNodes.FileInputNode(id, required, maxValues, minValues, List.copyOf(fileTypes));
     }
 
     /**

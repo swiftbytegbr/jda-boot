@@ -3,6 +3,7 @@ package de.swiftbyte.jdaboot.interaction.modal.model;
 import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.interactions.FileType;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -77,14 +78,29 @@ public final class XmlModalNodes {
      * @param required  Whether the input is required.
      * @param maxValues The maximum number of files.
      * @param minValues The minimum number of files.
+     * @param fileTypes The accepted file types, or an empty list if all file types are accepted.
      * @since 1.0.0-beta.2
      */
     public record FileInputNode(
             @NonNull String id,
             boolean required,
             int maxValues,
-            int minValues
+            int minValues,
+            @NonNull List<@NonNull FileType> fileTypes
     ) implements LabelChildNode {
+
+        /**
+         * Creates an unrestricted file input component.
+         *
+         * @param id        The custom component ID.
+         * @param required  Whether the input is required.
+         * @param maxValues The maximum number of files.
+         * @param minValues The minimum number of files.
+         * @since 1.0.0-beta.2
+         */
+        public FileInputNode(@NonNull String id, boolean required, int maxValues, int minValues) {
+            this(id, required, maxValues, minValues, List.of());
+        }
     }
 
     /**

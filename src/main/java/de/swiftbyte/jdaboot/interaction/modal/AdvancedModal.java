@@ -273,6 +273,7 @@ public class AdvancedModal {
             AttachmentUpload.Builder input = AttachmentUpload.create(processVar(inputNode.id()));
             input.setRequired(inputNode.required());
             input.setRequiredRange(inputNode.minValues(), inputNode.maxValues());
+            input.setFileTypes(inputNode.fileTypes());
             return input.build();
         }
 

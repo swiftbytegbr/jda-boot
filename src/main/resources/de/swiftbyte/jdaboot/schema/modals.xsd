@@ -24,7 +24,32 @@
         <xs:attribute name="value" type="xs:string"/>
     </xs:complexType>
 
+    <xs:simpleType name="fileTypePresetType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="image"/>
+            <xs:enumeration value="video"/>
+            <xs:enumeration value="audio"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="fileExtensionType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z0-9_.-]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="fileTypeValueType">
+        <xs:union memberTypes="fileTypePresetType fileExtensionType"/>
+    </xs:simpleType>
+
+    <xs:complexType name="fileTypeType">
+        <xs:attribute name="value" type="fileTypeValueType" use="required"/>
+    </xs:complexType>
+
     <xs:complexType name="fileInputType">
+        <xs:sequence>
+            <xs:element name="file-type" type="fileTypeType" minOccurs="0" maxOccurs="10"/>
+        </xs:sequence>
         <xs:attribute name="id" type="c:idType" use="required"/>
         <xs:attribute name="required" type="xs:boolean"/>
         <xs:attribute name="max-values" type="xs:int"/>

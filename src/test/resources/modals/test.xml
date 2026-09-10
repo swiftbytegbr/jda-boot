@@ -20,5 +20,16 @@
                 <option label="Dark" value="dark" description="Use the dark theme" default="true"/>
             </radio-group>
         </label>
+        <label text="Media" description="Upload media or a PDF">
+            <file-input id="media" required="false" max-values="3">
+                <file-type value="image"/>
+                <file-type value="video"/>
+                <file-type value="audio"/>
+                <file-type value="pdf"/>
+            </file-input>
+        </label>
+        <label text="Any file">
+            <file-input id="any-file" required="false"/>
+        </label>
     </layout>
 </modals>
