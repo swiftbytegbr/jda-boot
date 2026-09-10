@@ -200,15 +200,17 @@ public class AdvancedEmbed {
 
         if (StringUtils.isNotBlank(embed.thumbnailUrl())) {
             String thumbnailUrl = processVar(embed.thumbnailUrl());
+            String thumbnailDescription = processVar(embed.thumbnailDescription());
             if (StringUtils.isNotBlank(thumbnailUrl)) {
-                builder.setThumbnail(thumbnailUrl);
+                builder.setThumbnail(thumbnailUrl, thumbnailDescription);
             }
         }
 
         if (StringUtils.isNotBlank(embed.imageUrl())) {
             String imageUrl = processVar(embed.imageUrl());
+            String imageDescription = processVar(embed.imageDescription());
             if (StringUtils.isNotBlank(imageUrl)) {
-                builder.setImage(imageUrl);
+                builder.setImage(imageUrl, imageDescription);
             }
         }
 

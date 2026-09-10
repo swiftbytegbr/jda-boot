@@ -84,6 +84,14 @@ public @interface Embed {
     @NonNull String thumbnailUrl() default "";
 
     /**
+     * The thumbnail description of the embed.
+     *
+     * @return The thumbnail description of the embed.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull String thumbnailDescription() default "";
+
+    /**
      * The author of the embed.
      *
      * @return The author of the embed.
@@ -106,6 +114,14 @@ public @interface Embed {
      * @since alpha.4
      */
     @NonNull String imageUrl() default "";
+
+    /**
+     * The image description of the embed.
+     *
+     * @return The image description of the embed.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull String imageDescription() default "";
 
     /**
      * The fields of the embed.

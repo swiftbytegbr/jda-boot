@@ -26,7 +26,10 @@ public class TestClient {
 
     public static void main(String[] args) {
         JDABoot.run(TestClient.class, args);
-        JDABoot.getInstance().updateCommands("774993548579045386");
+    }
+
+    private void onReady() {
+        //JDABoot.getInstance().updateCommands("734084775199113376");
     }
 
     public static int testValue = 0;

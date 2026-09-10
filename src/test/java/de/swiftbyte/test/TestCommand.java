@@ -9,6 +9,7 @@ import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinitio
 import de.swiftbyte.jdaboot.annotation.interaction.component.ComponentByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
+import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;
@@ -42,6 +43,8 @@ public class TestCommand extends SlashCommandExecutor {
             basedOn = "testEmbed",
             title = "${test}Test",
             author = @EmbedAuthor(name = "${selfUsername}"),
+            imageUrl = "https://picsum.photos/200/300",
+            imageDescription = "Test Image",
             fields = {
                     @EmbedField(description = "#{test2}#{nested}")
             },
@@ -70,18 +73,7 @@ public class TestCommand extends SlashCommandExecutor {
         advancedEmbed.setVariable("test4", "test4");
         advancedEmbed.addDynamicField("Dynamisches Feld", "${test}", false);
 
-        event.replyEmbeds(advancedEmbed.build())
-                .addComponents(
-                        ActionRow.of(button.advancedButton()
-                                .setVariable("test", "Transferred Variable")
-                                .setVariable("user", event.getUser().getName())
-                                .build()),
-                        ActionRow.of(menu.advancedSelectMenu()
-                                .setVariable("test", "Test Variable")
-                                .addDynamicOption("Dynamic Option", "Dynamic Option")
-                                .build()),
-                        ActionRow.of(menu2.advancedSelectMenu().build())
-                ).queue();*/
+        event.replyEmbeds(advancedEmbed.build()).queue();*/
         event.replyComponents(
                 component.advancedComponent(event.getUserLocale())
                         .setVariable("title", "${imageUrl}")
