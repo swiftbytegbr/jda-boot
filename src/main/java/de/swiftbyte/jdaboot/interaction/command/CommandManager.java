@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.FileType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -29,7 +30,9 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -356,6 +359,14 @@ public class CommandManager extends ListenerAdapter {
             }
             if (option.type().equals(OptionType.CHANNEL)) {
                 optionData.setChannelTypes(option.channelTypes());
+            }
+            if(option.type().equals(OptionType.ATTACHMENT)) {
+                optionData.setFileTypes(Arrays.stream(option.fileTypes()).map(it -> switch (it) {
+                    case "image" -> FileType.IMAGE;
+                    case "video" -> FileType.VIDEO;
+                    case "audio" -> FileType.AUDIO;
+                    default -> FileType.ofExtension(it);
+                }).toList());
             }
             optionData.setNameLocalizations(generateDiscordLocalised(option.name()));
             optionData.setDescriptionLocalizations(generateDiscordLocalised(option.description()));

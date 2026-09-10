@@ -1,6 +1,7 @@
 package de.swiftbyte.jdaboot.annotation.interaction.command;
 
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.interactions.FileType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jspecify.annotations.NonNull;
 
@@ -101,6 +102,15 @@ public @interface CommandOption {
     @NonNull ChannelType @NonNull [] channelTypes() default {};
 
     /**
+     * The file types for the option. {@link FileType}. Use 'image', 'video' or 'audio' for all supported discord types.
+     *
+     * @see FileType
+     * @return The file types for the option.
+     * @since 1.0.0-beta.2
+     */
+    @NonNull String @NonNull [] fileTypes() default {};
+
+    /**
      * The choices for the option.
      *
      * @return The choices for the option.
@@ -134,5 +144,4 @@ public @interface CommandOption {
          */
         @NonNull String value();
     }
-
 }
