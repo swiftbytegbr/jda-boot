@@ -13,7 +13,10 @@ import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.normalizeResourcePath;
 public class ComponentV2Manager {
 
     private static final @NonNull String COMPONENTS_DIR = "components/";
+    private static final @NonNull String INLINE_XML_SOURCE = "inline Component V2 XML";
+    private static final @NonNull String XML_STREAM_SOURCE = "Component V2 XML stream";
 
     private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition>> xmlFileCache = new HashMap<>();
 
@@ -115,6 +120,68 @@ public class ComponentV2Manager {
     }
 
     /**
+     * Loads a Component V2 template from an XML string.
+     * The XML document must contain exactly one layout.
+     *
+     * @param xml The Component V2 XML document.
+     * @return The parsed component template.
+     * @throws ConfigurationException If the XML is invalid or does not contain exactly one layout.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateComponentV2 loadComponent(@NonNull String xml) {
+        return loadComponent(
+                new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
+                null,
+                INLINE_XML_SOURCE
+        );
+    }
+
+    /**
+     * Loads a selected Component V2 template from an XML string.
+     *
+     * @param xml      The Component V2 XML document.
+     * @param layoutId The ID of the layout to return.
+     * @return The parsed component template.
+     * @throws ConfigurationException If the XML is invalid or the layout does not exist.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateComponentV2 loadComponent(@NonNull String xml, @NonNull String layoutId) {
+        return loadComponent(
+                new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
+                layoutId,
+                INLINE_XML_SOURCE
+        );
+    }
+
+    /**
+     * Loads a Component V2 template from an XML stream.
+     * The XML document must contain exactly one layout. This method does not close the stream.
+     *
+     * @param xmlStream The Component V2 XML stream.
+     * @return The parsed component template.
+     * @throws ConfigurationException If the XML is invalid or does not contain exactly one layout.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateComponentV2 loadComponent(@NonNull InputStream xmlStream) {
+        return loadComponent(xmlStream, null, XML_STREAM_SOURCE);
+    }
+
+    /**
+     * Loads a selected Component V2 template from an XML stream.
+     * This method does not close the stream.
+     *
+     * @param xmlStream The Component V2 XML stream.
+     * @param layoutId  The ID of the layout to return.
+     * @return The parsed component template.
+     * @throws ConfigurationException If the XML is invalid or the layout does not exist.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateComponentV2 loadComponent(@NonNull InputStream xmlStream,
+                                                       @NonNull String layoutId) {
+        return loadComponent(xmlStream, layoutId, XML_STREAM_SOURCE);
+    }
+
+    /**
      * Lists all known global layout ids.
      *
      * @return Global layout ids.
@@ -187,6 +254,40 @@ public class ComponentV2Manager {
         }
 
         return xmlFileCache.get(xmlPath);
+    }
+
+    /**
+     * Parses an XML source and selects one component layout.
+     *
+     * @param xmlStream       The XML input stream.
+     * @param layoutId        The requested layout ID, or {@code null} when exactly one layout is expected.
+     * @param sourceReference A description of the XML source used in error messages.
+     * @return The selected component template.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull TemplateComponentV2 loadComponent(@NonNull InputStream xmlStream,
+                                                        @Nullable String layoutId,
+                                                        @NonNull String sourceReference) {
+        Map<String, ComponentV2LayoutDefinition> layouts = ComponentV2XmlLoader.load(xmlStream, sourceReference);
+
+        if (layoutId == null) {
+            if (layouts.size() != 1) {
+                throw new ConfigurationException(
+                        String.format("Component V2 XML must contain exactly one layout but contains %d", layouts.size()),
+                        sourceReference
+                );
+            }
+            return new TemplateComponentV2(layouts.values().iterator().next());
+        }
+
+        ComponentV2LayoutDefinition definition = layouts.get(layoutId);
+        if (definition == null) {
+            throw new ConfigurationException(
+                    String.format("Could not find Component V2 layout id '%s'", layoutId),
+                    sourceReference
+            );
+        }
+        return new TemplateComponentV2(definition);
     }
 
     /**

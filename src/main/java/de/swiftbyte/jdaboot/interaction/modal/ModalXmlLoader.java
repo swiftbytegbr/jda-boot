@@ -73,12 +73,35 @@ public final class ModalXmlLoader {
                 return Map.of();
             }
 
+            Map<String, XmlModalLayoutDefinition> definitions = load(xmlStream, resourcePath);
+            log.info("Loaded {} modal layout(s) from {}", definitions.size(), resourcePath);
+            return definitions;
+        } catch (ConfigurationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ConfigurationException("Failed to load modal XML", resourcePath, e);
+        }
+    }
+
+    /**
+     * Loads all modal layouts from an XML stream.
+     * The caller remains responsible for closing the stream.
+     *
+     * @param xmlStream       The XML input stream.
+     * @param sourceReference A description of the XML source used in error messages.
+     * @return The parsed modal layouts indexed by layout ID.
+     * @since 1.0.0-beta.2
+     */
+    static @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> load(
+            @NonNull InputStream xmlStream,
+            @NonNull String sourceReference) {
+        try {
             Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
             if (!"modals".equals(nodeName(root))) {
                 throw new ConfigurationException(String.format(
                         "Invalid root element '%s'. Expected 'modals'",
-                        nodeName(root)), resourcePath);
+                        nodeName(root)), sourceReference);
             }
 
             HashMap<String, XmlModalLayoutDefinition> definitions = new HashMap<>();
@@ -86,24 +109,23 @@ public final class ModalXmlLoader {
                 if (!"layout".equals(nodeName(layoutElement))) {
                     throw new ConfigurationException(String.format(
                             "Unsupported top-level element <%s>. Only <layout> is allowed",
-                            nodeName(layoutElement)), resourcePath);
+                            nodeName(layoutElement)), sourceReference);
                 }
 
-                XmlModalLayoutDefinition definition = parseLayout(layoutElement, resourcePath);
+                XmlModalLayoutDefinition definition = parseLayout(layoutElement, sourceReference);
                 if (definitions.containsKey(definition.id())) {
                     throw new ConfigurationException(String.format(
                             "Duplicate modal layout id '%s'",
-                            definition.id()), resourcePath);
+                            definition.id()), sourceReference);
                 }
                 definitions.put(definition.id(), definition);
             }
 
-            log.info("Loaded {} modal layout(s) from {}", definitions.size(), resourcePath);
             return Collections.unmodifiableMap(definitions);
         } catch (ConfigurationException e) {
             throw e;
         } catch (Exception e) {
-            throw new ConfigurationException("Failed to load modal XML", resourcePath, e);
+            throw new ConfigurationException("Failed to load modal XML", sourceReference, e);
         }
     }
 

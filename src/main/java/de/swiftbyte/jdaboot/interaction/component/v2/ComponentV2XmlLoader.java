@@ -67,12 +67,35 @@ public final class ComponentV2XmlLoader {
                 return Map.of();
             }
 
+            Map<String, ComponentV2LayoutDefinition> definitions = load(xmlStream, resourcePath);
+            log.info("Loaded {} Component V2 layout(s) from {}", definitions.size(), resourcePath);
+            return definitions;
+        } catch (ConfigurationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ConfigurationException("Failed to load Component V2 XML", resourcePath, e);
+        }
+    }
+
+    /**
+     * Loads all Component V2 layouts from an XML stream.
+     * The caller remains responsible for closing the stream.
+     *
+     * @param xmlStream       The XML input stream.
+     * @param sourceReference A description of the XML source used in error messages.
+     * @return The parsed layouts indexed by layout ID.
+     * @since 1.0.0-beta.2
+     */
+    static @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition> load(
+            @NonNull InputStream xmlStream,
+            @NonNull String sourceReference) {
+        try {
             Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
             if (!"components-v2".equals(nodeName(root))) {
                 throw new ConfigurationException(String.format(
                         "Invalid root element '%s'. Expected 'components-v2'",
-                        nodeName(root)), resourcePath);
+                        nodeName(root)), sourceReference);
             }
 
             HashMap<String, ComponentV2LayoutDefinition> definitions = new HashMap<>();
@@ -80,24 +103,23 @@ public final class ComponentV2XmlLoader {
                 if (!"layout".equals(nodeName(layoutElement))) {
                     throw new ConfigurationException(String.format(
                             "Unsupported top-level element <%s>. Only <layout> is allowed",
-                            nodeName(layoutElement)), resourcePath);
+                            nodeName(layoutElement)), sourceReference);
                 }
 
-                ComponentV2LayoutDefinition definition = parseLayout(layoutElement, resourcePath);
+                ComponentV2LayoutDefinition definition = parseLayout(layoutElement, sourceReference);
                 if (definitions.containsKey(definition.id())) {
                     throw new ConfigurationException(String.format(
                             "Duplicate Component V2 layout id '%s'",
-                            definition.id()), resourcePath);
+                            definition.id()), sourceReference);
                 }
                 definitions.put(definition.id(), definition);
             }
 
-            log.info("Loaded {} Component V2 layout(s) from {}", definitions.size(), resourcePath);
             return Collections.unmodifiableMap(definitions);
         } catch (ConfigurationException e) {
             throw e;
         } catch (Exception e) {
-            throw new ConfigurationException("Failed to load Component V2 XML", resourcePath, e);
+            throw new ConfigurationException("Failed to load Component V2 XML", sourceReference, e);
         }
     }
 

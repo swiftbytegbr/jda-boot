@@ -21,7 +21,10 @@ import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +42,8 @@ import static de.swiftbyte.jdaboot.xml.XmlLoaderSupport.normalizeResourcePath;
 public class ModalManager extends ListenerAdapter {
 
     private static final @NonNull String MODALS_DIR = "modals/";
+    private static final @NonNull String INLINE_XML_SOURCE = "inline modal XML";
+    private static final @NonNull String XML_STREAM_SOURCE = "modal XML stream";
 
     /**
      * The map of modal IDs to ModalExecutor instances.
@@ -181,6 +186,71 @@ public class ModalManager extends ListenerAdapter {
     }
 
     /**
+     * Loads a modal template from an XML string.
+     * The XML document must contain exactly one layout.
+     *
+     * @param xml The modal XML document.
+     * @return The parsed modal template.
+     * @throws ConfigurationException If the XML is invalid, does not contain exactly one layout,
+     *                                or references an unregistered modal executor.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateModal loadModal(@NonNull String xml) {
+        return loadModal(
+                new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
+                null,
+                INLINE_XML_SOURCE
+        );
+    }
+
+    /**
+     * Loads a selected modal template from an XML string.
+     *
+     * @param xml      The modal XML document.
+     * @param layoutId The ID of the layout to return.
+     * @return The parsed modal template.
+     * @throws ConfigurationException If the XML is invalid, the layout does not exist,
+     *                                or references an unregistered modal executor.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateModal loadModal(@NonNull String xml, @NonNull String layoutId) {
+        return loadModal(
+                new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
+                layoutId,
+                INLINE_XML_SOURCE
+        );
+    }
+
+    /**
+     * Loads a modal template from an XML stream.
+     * The XML document must contain exactly one layout. This method does not close the stream.
+     *
+     * @param xmlStream The modal XML stream.
+     * @return The parsed modal template.
+     * @throws ConfigurationException If the XML is invalid, does not contain exactly one layout,
+     *                                or references an unregistered modal executor.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateModal loadModal(@NonNull InputStream xmlStream) {
+        return loadModal(xmlStream, null, XML_STREAM_SOURCE);
+    }
+
+    /**
+     * Loads a selected modal template from an XML stream.
+     * This method does not close the stream.
+     *
+     * @param xmlStream The modal XML stream.
+     * @param layoutId  The ID of the layout to return.
+     * @return The parsed modal template.
+     * @throws ConfigurationException If the XML is invalid, the layout does not exist,
+     *                                or references an unregistered modal executor.
+     * @since 1.0.0-beta.2
+     */
+    public @NonNull TemplateModal loadModal(@NonNull InputStream xmlStream, @NonNull String layoutId) {
+        return loadModal(xmlStream, layoutId, XML_STREAM_SOURCE);
+    }
+
+    /**
      * Handles modal interaction events. When a modal is submitted, this method finds the corresponding
      * ModalExecutor instance and delegates the event to it.
      *
@@ -262,6 +332,40 @@ public class ModalManager extends ListenerAdapter {
             xmlFileCache.put(xmlPath, parsed);
         }
         return xmlFileCache.get(xmlPath);
+    }
+
+    /**
+     * Parses an XML source and selects one modal layout.
+     *
+     * @param xmlStream       The XML input stream.
+     * @param layoutId        The requested layout ID, or {@code null} when exactly one layout is expected.
+     * @param sourceReference A description of the XML source used in error messages.
+     * @return The selected modal template.
+     * @since 1.0.0-beta.2
+     */
+    private @NonNull TemplateModal loadModal(@NonNull InputStream xmlStream,
+                                              @Nullable String layoutId,
+                                              @NonNull String sourceReference) {
+        Map<String, XmlModalLayoutDefinition> layouts = ModalXmlLoader.load(xmlStream, sourceReference);
+
+        if (layoutId == null) {
+            if (layouts.size() != 1) {
+                throw new ConfigurationException(
+                        String.format("Modal XML must contain exactly one layout but contains %d", layouts.size()),
+                        sourceReference
+                );
+            }
+            return toTemplate(layouts.values().iterator().next());
+        }
+
+        XmlModalLayoutDefinition definition = layouts.get(layoutId);
+        if (definition == null) {
+            throw new ConfigurationException(
+                    String.format("Could not find modal layout id '%s'", layoutId),
+                    sourceReference
+            );
+        }
+        return toTemplate(definition);
     }
 
     /**
