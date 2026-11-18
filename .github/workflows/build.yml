@@ -28,7 +28,7 @@ jobs:
       - uses: stCarolas/setup-maven@v5.1
         with:
           maven-version: '3.9.16'
-      - name: Verify tests, JARs and Javadoc
+      - name: Verify formatting, tests, JARs and Javadoc
         run: mvn --batch-mode --no-transfer-progress clean verify
 
   secrets:

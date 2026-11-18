@@ -62,7 +62,11 @@
         <jspecify.version>1.0.1</jspecify.version>
         <junit.version>6.0.3</junit.version>
 
+        <!-- Formatter versions -->
+        <eclipse-formatter.version>4.41</eclipse-formatter.version>
+
         <!-- Plugin versions -->
+        <spotless-maven-plugin.version>3.11.0</spotless-maven-plugin.version>
         <maven-enforcer-plugin.version>3.7.0</maven-enforcer-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
@@ -148,6 +152,38 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <lineEndings>UNIX</lineEndings>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <eclipse>
+                            <version>${eclipse-formatter.version}</version>
+                            <file>${project.basedir}/formatter.xml</file>
+                        </eclipse>
+                        <formatAnnotations />
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-formatting</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
