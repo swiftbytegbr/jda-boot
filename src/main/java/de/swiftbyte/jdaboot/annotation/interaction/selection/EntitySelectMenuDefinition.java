@@ -10,7 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The EntitySelectMenuDefinition annotation is used to define an entity select menu and provide metadata about the menu.
+ * The EntitySelectMenuDefinition annotation is used to define an entity select menu and provide metadata about the
+ * menu.
  *
  * @since 1.0.0-alpha.11
  */

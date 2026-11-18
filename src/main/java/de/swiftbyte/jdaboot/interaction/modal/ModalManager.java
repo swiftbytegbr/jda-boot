@@ -57,7 +57,8 @@ public class ModalManager extends ListenerAdapter {
 
     private final @NonNull Class<?> mainClass;
 
-    private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition>> xmlFileCache = new HashMap<>();
+    private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String,
+            @NonNull XmlModalLayoutDefinition>> xmlFileCache = new HashMap<>();
 
 
     /**
@@ -263,7 +264,8 @@ public class ModalManager extends ListenerAdapter {
         String[] idParts = event.getModalId().split(";");
 
         if (modalExecutableList.containsKey(idParts[0])) {
-            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedModal.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
+            modalExecutableList.get(idParts[0]).onModalSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(
+                    AdvancedModal.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 
@@ -344,8 +346,8 @@ public class ModalManager extends ListenerAdapter {
      * @since 1.0.0-beta.2
      */
     private @NonNull TemplateModal loadModal(@NonNull InputStream xmlStream,
-                                              @Nullable String layoutId,
-                                              @NonNull String sourceReference) {
+                                             @Nullable String layoutId,
+                                             @NonNull String sourceReference) {
         Map<String, XmlModalLayoutDefinition> layouts = ModalXmlLoader.load(xmlStream, sourceReference);
 
         if (layoutId == null) {
@@ -397,7 +399,8 @@ public class ModalManager extends ListenerAdapter {
             Class<?> rawClass = Class.forName(modalClassName, true, mainClass.getClassLoader());
             if (!ModalExecutor.class.isAssignableFrom(rawClass)) {
                 throw new ObjectInitializationException(
-                        String.format("Referenced modal class '%s' does not extend %s", modalClassName, ModalExecutor.class.getName()),
+                        String.format("Referenced modal class '%s' does not extend %s", modalClassName, ModalExecutor.class
+                                .getName()),
                         rawClass,
                         source
                 );
@@ -406,7 +409,8 @@ public class ModalManager extends ListenerAdapter {
             String id = classList.get(rawClass);
             if (id == null || !modalExecutableList.containsKey(id)) {
                 throw new ConfigurationException(
-                        String.format("Could not find registered modal for class '%s' referenced by XML layout '%s'", modalClassName, definition.id()),
+                        String.format("Could not find registered modal for class '%s' referenced by XML layout '%s'",
+                                modalClassName, definition.id()),
                         definition.sourcePath(),
                         "/layout[@id='" + definition.id() + "']"
                 );

@@ -25,8 +25,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The AdvancedSelectMenu class is responsible for generating advanced select menus based on a provided TemplateSelectMenu.
- * It allows setting variables that can be used in the select menu and provides methods to generate the final select menu.
+ * The AdvancedSelectMenu class is responsible for generating advanced select menus based on a provided
+ * TemplateSelectMenu.
+ * It allows setting variables that can be used in the select menu and provides methods to generate the final select
+ * menu.
  *
  * @since 1.0.0-alpha.11
  */
@@ -39,14 +41,16 @@ public class AdvancedSelectMenu {
     private @NonNull DiscordLocale locale;
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
-    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String,
+            @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     private @NonNull List<EntitySelectMenu.@NonNull DefaultValue> defaultValues = new ArrayList<>();
 
     private @NonNull List<@NonNull DynamicStringSelectMenuOption> dynamicOptions = new ArrayList<>();
 
     /**
-     * Constructor for AdvancedSelectMenu. Initializes the select menu with the specified template, variables, and locale.
+     * Constructor for AdvancedSelectMenu. Initializes the select menu with the specified template, variables, and
+     * locale.
      *
      * @param template The TemplateSelectMenu to use as a base for the advanced select menu.
      * @param locale   The locale to use for the select menu.
@@ -106,7 +110,8 @@ public class AdvancedSelectMenu {
      * @return The AdvancedSelectMenu instance for chaining.
      * @since 1.0.0-alpha.11
      */
-    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull String label, @NonNull String value, @NonNull String description, String emoji, boolean isDefault) {
+    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull String label, @NonNull String value, @NonNull String description,
+                                                        String emoji, boolean isDefault) {
         dynamicOptions.add(new DynamicStringSelectMenuOption(label, value, description, emoji, isDefault));
         return this;
     }
@@ -143,7 +148,7 @@ public class AdvancedSelectMenu {
      * @return The AdvancedSelectMenu instance for chaining.
      * @since 1.0.0-alpha.11
      */
-    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull DynamicStringSelectMenuOption @NonNull ... dynamicOptions) {
+    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull DynamicStringSelectMenuOption @NonNull... dynamicOptions) {
         this.dynamicOptions.addAll(List.of(dynamicOptions));
         return this;
     }
@@ -155,7 +160,8 @@ public class AdvancedSelectMenu {
      * @return The AdvancedSelectMenu instance for chaining.
      * @since 1.0.0-alpha.11
      */
-    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull Collection<@NonNull DynamicStringSelectMenuOption> dynamicOptions) {
+    public @NonNull AdvancedSelectMenu addDynamicOption(@NonNull Collection<
+            @NonNull DynamicStringSelectMenuOption> dynamicOptions) {
         this.dynamicOptions.addAll(dynamicOptions);
         return this;
     }
@@ -174,7 +180,8 @@ public class AdvancedSelectMenu {
             return buildEntitySelectMenu(template.getEntityDefinition());
         }
 
-        throw new IllegalStateException("TemplateSelectMenu must have either a StringSelectMenuDefinition or an EntitySelectMenuDefinition");
+        throw new IllegalStateException(
+                "TemplateSelectMenu must have either a StringSelectMenuDefinition or an EntitySelectMenuDefinition");
     }
 
     /**
@@ -212,7 +219,8 @@ public class AdvancedSelectMenu {
      * @return A list of EntitySelectMenu.SelectTarget types for the entity select menu.
      * @since 1.0.0-alpha.11
      */
-    private @NonNull List<EntitySelectMenu.@NonNull SelectTarget> getEntitySelectMenuTargetTypes(@NonNull EntitySelectMenuDefinition definition) {
+    private @NonNull List<EntitySelectMenu.@NonNull SelectTarget> getEntitySelectMenuTargetTypes(
+                                                                                                 @NonNull EntitySelectMenuDefinition definition) {
 
         List<EntitySelectMenu.SelectTarget> selectTargets = new ArrayList<>();
 
@@ -320,7 +328,8 @@ public class AdvancedSelectMenu {
             return VariableProcessor.processVariable(locale, old, variables, template.getEntityDefinition().defaultVars());
         }
 
-        throw new IllegalStateException("TemplateSelectMenu must have either a StringSelectMenuDefinition or an EntitySelectMenuDefinition");
+        throw new IllegalStateException(
+                "TemplateSelectMenu must have either a StringSelectMenuDefinition or an EntitySelectMenuDefinition");
     }
 
     /**

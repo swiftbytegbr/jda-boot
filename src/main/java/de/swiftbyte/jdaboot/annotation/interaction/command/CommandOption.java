@@ -12,8 +12,10 @@ import java.lang.annotation.Target;
 
 /**
  * The CommandOption annotation is used to specify an option for a command.
- * It includes properties to specify the type, name, description, minimum length, maximum length, minimum value, maximum value,
- * whether the option is required, whether the option supports auto-complete, the channel types for the option, and the choices for the option.
+ * It includes properties to specify the type, name, description, minimum length, maximum length, minimum value, maximum
+ * value,
+ * whether the option is required, whether the option supports auto-complete, the channel types for the option, and the
+ * choices for the option.
  *
  * @since alpha.4
  */
@@ -104,8 +106,8 @@ public @interface CommandOption {
     /**
      * The file types for the option. {@link FileType}. Use 'image', 'video' or 'audio' for all supported discord types.
      *
-     * @see FileType
      * @return The file types for the option.
+     * @see FileType
      * @since 1.0.0-beta.2
      */
     @NonNull String @NonNull [] fileTypes() default {};

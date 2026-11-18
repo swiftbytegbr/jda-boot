@@ -112,12 +112,15 @@ public final class PlaceholderEngine {
      * @return The evaluated replacement, or an unresolved result.
      * @since 1.0.0-beta.2
      */
-    private @NonNull EvaluationResult resolvePlaceholder(char prefix, @NonNull String key, @NonNull ResolutionContext context, int depth) {
+    private @NonNull EvaluationResult resolvePlaceholder(char prefix, @NonNull String key, @NonNull ResolutionContext context,
+                                                         int depth) {
 
         PlaceholderReference reference = new PlaceholderReference(prefix, key);
         EvaluationResult cached = cacheResults ? context.cache.get(reference) : null;
 
-        if (cached != null) return cached;
+        if (cached != null) {
+            return cached;
+        }
 
         if (context.activeReferenceSet.contains(reference)) {
             throw new PlaceholderCycleException(createCycle(context.activeReferences, reference));
@@ -303,8 +306,8 @@ public final class PlaceholderEngine {
         private PlaceholderDepthException(int maxDepth,
                                           @NonNull List<@NonNull PlaceholderReference> activePath,
                                           @NonNull PlaceholderReference currentReference) {
-            super("Placeholder resolution exceeded maximum depth of " + maxDepth + ": "
-                    + formatReferences(appendReference(activePath, currentReference)));
+            super("Placeholder resolution exceeded maximum depth of " + maxDepth + ": " + formatReferences(appendReference(
+                    activePath, currentReference)));
             this.maxDepth = maxDepth;
             this.resolutionPath = appendReference(activePath, currentReference);
         }
@@ -502,8 +505,9 @@ public final class PlaceholderEngine {
      * @since 1.0.0-beta.2
      */
     private static @NonNull List<@NonNull PlaceholderReference> appendReference(
-            @NonNull List<@NonNull PlaceholderReference> references,
-            @NonNull PlaceholderReference reference) {
+                                                                                @NonNull List<
+                                                                                        @NonNull PlaceholderReference> references,
+                                                                                @NonNull PlaceholderReference reference) {
         List<PlaceholderReference> result = new ArrayList<>(references);
         result.add(reference);
         return List.copyOf(result);
@@ -512,14 +516,15 @@ public final class PlaceholderEngine {
     /**
      * Creates a cycle path beginning with the first occurrence of the repeated reference.
      *
-     * @param activeReferences The active resolution path.
+     * @param activeReferences  The active resolution path.
      * @param repeatedReference The repeated reference closing the cycle.
      * @return The detected cycle.
      * @since 1.0.0-beta.2
      */
     private static @NonNull List<@NonNull PlaceholderReference> createCycle(
-            @NonNull Iterable<@NonNull PlaceholderReference> activeReferences,
-            @NonNull PlaceholderReference repeatedReference) {
+                                                                            @NonNull Iterable<
+                                                                                    @NonNull PlaceholderReference> activeReferences,
+                                                                            @NonNull PlaceholderReference repeatedReference) {
         List<PlaceholderReference> cycle = new ArrayList<>();
         boolean cycleStarted = false;
         for (PlaceholderReference reference : activeReferences) {
@@ -542,7 +547,7 @@ public final class PlaceholderEngine {
      * @since 1.0.0-beta.2
      */
     private static @NonNull String formatReferences(
-            @NonNull List<@NonNull PlaceholderReference> references) {
+                                                    @NonNull List<@NonNull PlaceholderReference> references) {
         return references.stream()
                 .map(PlaceholderReference::token)
                 .reduce((left, right) -> left + " -> " + right)

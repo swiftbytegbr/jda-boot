@@ -87,8 +87,8 @@ public final class ComponentV2XmlLoader {
      * @since 1.0.0-beta.2
      */
     static @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition> load(
-            @NonNull InputStream xmlStream,
-            @NonNull String sourceReference) {
+                                                                                    @NonNull InputStream xmlStream,
+                                                                                    @NonNull String sourceReference) {
         try {
             Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
@@ -185,7 +185,8 @@ public final class ComponentV2XmlLoader {
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
-        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element, resourcePath)) {
+        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element,
+                resourcePath)) {
             defaultVars.add(new XmlDefaultVariable(variableDefinition.key(), variableDefinition.value()));
         }
         return defaultVars;
@@ -270,12 +271,16 @@ public final class ComponentV2XmlLoader {
             }
         }
 
-        boolean hasExactlyOneStringSelect = buttonCount == 0 && stringSelectCount == 1 && entitySelectCount == 0 && children.size() == 1;
-        boolean hasExactlyOneEntitySelect = buttonCount == 0 && entitySelectCount == 1 && stringSelectCount == 0 && children.size() == 1;
+        boolean hasExactlyOneStringSelect = buttonCount == 0 && stringSelectCount == 1 && entitySelectCount == 0 && children
+                .size() == 1;
+        boolean hasExactlyOneEntitySelect = buttonCount == 0 && entitySelectCount == 1 && stringSelectCount == 0 && children
+                .size() == 1;
         boolean hasValidButtons = buttonCount >= 1 && buttonCount <= 5 && stringSelectCount == 0 && entitySelectCount == 0;
 
         if (!hasValidButtons && !hasExactlyOneStringSelect && !hasExactlyOneEntitySelect) {
-            throw new ConfigurationException("<action-row> must be either 1-5 buttons OR exactly one string-select-ref OR exactly one entity-select-ref", resourcePath);
+            throw new ConfigurationException(
+                    "<action-row> must be either 1-5 buttons OR exactly one string-select-ref OR exactly one entity-select-ref",
+                    resourcePath);
         }
 
         return new ComponentV2Nodes.ActionRowNode(List.copyOf(children));

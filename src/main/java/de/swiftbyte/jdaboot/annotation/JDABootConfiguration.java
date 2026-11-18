@@ -50,8 +50,7 @@ public @interface JDABootConfiguration {
      * @return An array of ShardManagerBuilderCustomizer classes.
      * @since 1.0.0-beta.2
      */
-    @NonNull
-    Class<? extends ShardManagerBuilderCustomizer> @NonNull [] builderCustomizers() default {};
+    @NonNull Class<? extends ShardManagerBuilderCustomizer> @NonNull [] builderCustomizers() default {};
 
     /**
      * Specifies the GatewayIntents that the JDA instance should be configured with.

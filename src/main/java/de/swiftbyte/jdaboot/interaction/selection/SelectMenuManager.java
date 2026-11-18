@@ -24,8 +24,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The SelectMenuManager class extends ListenerAdapter and is responsible for managing bot select menus in the application.
- * It maintains a map of select menu IDs to StringSelectMenuExecutor or EntitySelectMenuExecutor instances, and handles select menu interaction events.
+ * The SelectMenuManager class extends ListenerAdapter and is responsible for managing bot select menus in the
+ * application.
+ * It maintains a map of select menu IDs to StringSelectMenuExecutor or EntitySelectMenuExecutor instances, and handles
+ * select menu interaction events.
  *
  * @since 1.0.0-alpha.11
  */
@@ -163,10 +165,12 @@ public class SelectMenuManager extends ListenerAdapter {
     public @Nullable TemplateSelectMenu getSelectMenu(@NonNull String id) {
 
         if (stringSelectMenuExecutableList.containsKey(id)) {
-            StringSelectMenuDefinition definition = stringSelectMenuExecutableList.get(id).getClass().getAnnotation(StringSelectMenuDefinition.class);
+            StringSelectMenuDefinition definition = stringSelectMenuExecutableList.get(id).getClass().getAnnotation(
+                    StringSelectMenuDefinition.class);
             return new TemplateSelectMenu(definition, id);
         } else if (entitySelectMenuExecutableList.containsKey(id)) {
-            EntitySelectMenuDefinition definition = entitySelectMenuExecutableList.get(id).getClass().getAnnotation(EntitySelectMenuDefinition.class);
+            EntitySelectMenuDefinition definition = entitySelectMenuExecutableList.get(id).getClass().getAnnotation(
+                    EntitySelectMenuDefinition.class);
             return new TemplateSelectMenu(definition, id);
         } else {
             return null;
@@ -210,7 +214,8 @@ public class SelectMenuManager extends ListenerAdapter {
         String[] idParts = event.getComponentId().split(";");
 
         if (stringSelectMenuExecutableList.containsKey(idParts[0])) {
-            stringSelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
+            stringSelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects
+                    .requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 
@@ -226,7 +231,8 @@ public class SelectMenuManager extends ListenerAdapter {
         String[] idParts = event.getComponentId().split(";");
 
         if (entitySelectMenuExecutableList.containsKey(idParts[0])) {
-            entitySelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
+            entitySelectMenuExecutableList.get(idParts[0]).onSelectMenuSubmit(event, idParts.length == 2 ? Objects
+                    .requireNonNullElse(AdvancedSelectMenu.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 }

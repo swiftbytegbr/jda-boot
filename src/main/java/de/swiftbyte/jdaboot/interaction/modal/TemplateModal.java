@@ -58,12 +58,13 @@ public class TemplateModal {
     /**
      * Constructor for an XML modal template definition.
      *
-     * @param xmlDefinition  Parsed XML modal definition.
-     * @param id             Resolved modal id.
-     * @param defaultVars    Default variables configured on the XML modal executor.
+     * @param xmlDefinition Parsed XML modal definition.
+     * @param id            Resolved modal id.
+     * @param defaultVars   Default variables configured on the XML modal executor.
      * @since 1.0.0-beta.2
      */
-    protected TemplateModal(@NonNull XmlModalLayoutDefinition xmlDefinition, @NonNull String id, @NonNull DefaultVariable @NonNull [] defaultVars) {
+    protected TemplateModal(@NonNull XmlModalLayoutDefinition xmlDefinition, @NonNull String id,
+                            @NonNull DefaultVariable @NonNull [] defaultVars) {
         this.definition = null;
         this.xmlDefinition = xmlDefinition;
         this.xmlAnnotationDefaultVars = toXmlDefaultVars(defaultVars);

@@ -33,7 +33,8 @@ public class TemplateComponentV2 {
      * @param defaultVars The default variables configured on the injection annotation.
      * @since 1.0.0-beta.2
      */
-    protected TemplateComponentV2(@NonNull ComponentV2LayoutDefinition definition, @NonNull DefaultVariable @NonNull [] defaultVars) {
+    protected TemplateComponentV2(@NonNull ComponentV2LayoutDefinition definition,
+                                  @NonNull DefaultVariable @NonNull [] defaultVars) {
         this.definition = definition;
         this.annotationDefaultVars = toXmlDefaultVars(defaultVars);
     }

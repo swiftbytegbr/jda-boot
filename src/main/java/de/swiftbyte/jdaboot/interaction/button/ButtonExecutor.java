@@ -21,10 +21,12 @@ public abstract class ButtonExecutor {
      * Called when the button is clicked.
      *
      * @param event     The button interaction event.
-     * @param variables The variables set in the advanced button, empty when fix id is used and button was created before a restart.
+     * @param variables The variables set in the advanced button, empty when fix id is used and button was created
+     *                  before a restart.
      * @since alpha.4
      */
-    public abstract void onButtonClick(@NonNull ButtonInteractionEvent event, @NonNull Map<@NonNull String, @NonNull String> variables);
+    public abstract void onButtonClick(@NonNull ButtonInteractionEvent event, @NonNull Map<@NonNull String,
+            @NonNull String> variables);
 
     /**
      * Replies with an embed using the user's locale.
@@ -68,7 +70,8 @@ public abstract class ButtonExecutor {
      * @param locale    The locale used to build the component.
      * @since 1.0.0-beta.2
      */
-    protected void reply(@NonNull ButtonInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull ButtonInteractionEvent event, @NonNull TemplateComponentV2 component,
+                         @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().queue();
     }
 
@@ -114,7 +117,8 @@ public abstract class ButtonExecutor {
      * @param locale The locale used to build the embed.
      * @since 1.0.0-beta.2
      */
-    protected void replyEphemeral(@NonNull ButtonInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull ButtonInteractionEvent event, @NonNull TemplateEmbed embed,
+                                  @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 
@@ -137,7 +141,8 @@ public abstract class ButtonExecutor {
      * @param locale    The locale used to build the component.
      * @since 1.0.0-beta.2
      */
-    protected void replyEphemeral(@NonNull ButtonInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull ButtonInteractionEvent event, @NonNull TemplateComponentV2 component,
+                                  @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().setEphemeral(true).queue();
     }
 }

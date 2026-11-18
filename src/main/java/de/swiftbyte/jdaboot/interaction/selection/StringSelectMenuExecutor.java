@@ -21,10 +21,12 @@ public abstract class StringSelectMenuExecutor {
      * Called when the string select menu is submitted.
      *
      * @param event     The string select menu interaction event.
-     * @param variables The variables set in the advanced select menu, empty when fix id is used and select menu was created before a restart.
+     * @param variables The variables set in the advanced select menu, empty when fix id is used and select menu was
+     *                  created before a restart.
      * @since 1.0.0-alpha.11
      */
-    public abstract void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull Map<@NonNull String, @NonNull String> variables);
+    public abstract void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull Map<@NonNull String,
+            @NonNull String> variables);
 
     /**
      * Replies with an embed using the user's locale.
@@ -45,7 +47,8 @@ public abstract class StringSelectMenuExecutor {
      * @param locale The locale used to build the embed.
      * @since 1.0.0-beta.2
      */
-    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateEmbed embed,
+                         @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).queue();
     }
 
@@ -68,7 +71,8 @@ public abstract class StringSelectMenuExecutor {
      * @param locale    The locale used to build the component.
      * @since 1.0.0-beta.2
      */
-    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateComponentV2 component,
+                         @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().queue();
     }
 
@@ -91,7 +95,8 @@ public abstract class StringSelectMenuExecutor {
      * @param locale The locale used to build the modal.
      * @since 1.0.0-beta.2
      */
-    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateModal modal, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull StringSelectInteractionEvent event, @NonNull TemplateModal modal,
+                         @NonNull DiscordLocale locale) {
         event.replyModal(modal.advancedModal(locale).build()).queue();
     }
 
@@ -114,7 +119,8 @@ public abstract class StringSelectMenuExecutor {
      * @param locale The locale used to build the embed.
      * @since 1.0.0-beta.2
      */
-    protected void replyEphemeral(@NonNull StringSelectInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull StringSelectInteractionEvent event, @NonNull TemplateEmbed embed,
+                                  @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 
@@ -137,7 +143,8 @@ public abstract class StringSelectMenuExecutor {
      * @param locale    The locale used to build the component.
      * @since 1.0.0-beta.2
      */
-    protected void replyEphemeral(@NonNull StringSelectInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull StringSelectInteractionEvent event, @NonNull TemplateComponentV2 component,
+                                  @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().setEphemeral(true).queue();
     }
 }

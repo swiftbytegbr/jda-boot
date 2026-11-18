@@ -31,7 +31,8 @@ import java.util.concurrent.Executors;
 @CustomLog
 public class EventManager implements EventListener {
 
-    private @NonNull HashMap<@NonNull Class<@NonNull Event>, @NonNull List<Map.@NonNull Entry<@NonNull Method, @NonNull Object>>> handlers = new HashMap<>();
+    private @NonNull HashMap<@NonNull Class<@NonNull Event>, @NonNull List<Map.@NonNull Entry<@NonNull Method,
+            @NonNull Object>>> handlers = new HashMap<>();
 
     private @NonNull ExecutorService executor;
 
@@ -90,13 +91,15 @@ public class EventManager implements EventListener {
         Class<?>[] params = method.getParameterTypes();
 
         if (params.length != 1) {
-            throw new ElementRegistrationException("Method is annotated with @EventHandler but has more or less than 1 parameter!", method);
+            throw new ElementRegistrationException(
+                    "Method is annotated with @EventHandler but has more or less than 1 parameter!", method);
         }
 
         Class<?> firstParam = params[0];
 
         if (!Event.class.isAssignableFrom(firstParam)) {
-            throw new ElementRegistrationException("Method is annotated with @EventHandler but the parameter is not a child of Event!", method);
+            throw new ElementRegistrationException(
+                    "Method is annotated with @EventHandler but the parameter is not a child of Event!", method);
         }
 
         //noinspection unchecked
@@ -122,7 +125,8 @@ public class EventManager implements EventListener {
                             try {
                                 method.invoke(instance, event);
                             } catch (Exception e) {
-                                log.error("Error while invoking event handler {} in class {}", method.getName(), method.getDeclaringClass().getName(), e);
+                                log.error("Error while invoking event handler {} in class {}", method.getName(), method
+                                        .getDeclaringClass().getName(), e);
                             }
                         });
                     } else {

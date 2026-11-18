@@ -11,7 +11,8 @@ import java.lang.annotation.Target;
 
 /**
  * The Embed annotation is used to specify the properties of an embed.
- * It includes properties to specify the URL, title, description, color, hex color, thumbnail URL, author, footer, image URL, fields, and default variables of the embed.
+ * It includes properties to specify the URL, title, description, color, hex color, thumbnail URL, author, footer, image
+ * URL, fields, and default variables of the embed.
  *
  * @since alpha.4
  */

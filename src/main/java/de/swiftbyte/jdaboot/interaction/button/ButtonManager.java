@@ -134,7 +134,8 @@ public class ButtonManager extends ListenerAdapter {
         String[] idParts = event.getComponentId().split(";");
 
         if (buttonExecutableList.containsKey(idParts[0])) {
-            buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? Objects.requireNonNullElse(AdvancedButton.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
+            buttonExecutableList.get(idParts[0]).onButtonClick(event, idParts.length == 2 ? Objects.requireNonNullElse(
+                    AdvancedButton.getVariablesFromId(idParts[1]), new HashMap<>()) : new HashMap<>());
         }
     }
 

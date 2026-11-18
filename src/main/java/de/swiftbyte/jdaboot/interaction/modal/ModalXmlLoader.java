@@ -93,8 +93,8 @@ public final class ModalXmlLoader {
      * @since 1.0.0-beta.2
      */
     static @NonNull Map<@NonNull String, @NonNull XmlModalLayoutDefinition> load(
-            @NonNull InputStream xmlStream,
-            @NonNull String sourceReference) {
+                                                                                 @NonNull InputStream xmlStream,
+                                                                                 @NonNull String sourceReference) {
         try {
             Document document = XmlLoaderSupport.parseDocument(xmlStream, SCHEMA);
             Element root = document.getDocumentElement();
@@ -220,7 +220,8 @@ public final class ModalXmlLoader {
     private static @NonNull List<@NonNull XmlDefaultVariable> parseDefaultVariables(@NonNull Element element,
                                                                                     @NonNull String resourcePath) {
         List<XmlDefaultVariable> defaultVars = new ArrayList<>();
-        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element, resourcePath)) {
+        for (XmlLoaderSupport.XmlVariableDefinition variableDefinition : XmlLoaderSupport.parseDefaultVariables(element,
+                resourcePath)) {
             defaultVars.add(new XmlDefaultVariable(variableDefinition.key(), variableDefinition.value()));
         }
         return defaultVars;
@@ -475,7 +476,8 @@ public final class ModalXmlLoader {
         }
 
         if (!targets.contains(EntitySelectMenu.SelectTarget.CHANNEL) && !channelTypes.isEmpty()) {
-            throw new ConfigurationException("<entity-select> channel-type is only allowed when target CHANNEL is configured", resourcePath);
+            throw new ConfigurationException("<entity-select> channel-type is only allowed when target CHANNEL is configured",
+                    resourcePath);
         }
 
         return new XmlModalNodes.EntitySelectNode(
@@ -580,8 +582,8 @@ public final class ModalXmlLoader {
      * @since 1.0.0-beta.2
      */
     private static @NonNull List<XmlModalNodes.GroupOptionNode> parseGroupOptions(
-            @NonNull Element element,
-            @NonNull String resourcePath) {
+                                                                                  @NonNull Element element,
+                                                                                  @NonNull String resourcePath) {
         List<XmlModalNodes.GroupOptionNode> options = new ArrayList<>();
         for (Element child : childElements(element)) {
             String childName = nodeName(child);
@@ -632,16 +634,20 @@ public final class ModalXmlLoader {
         boolean disabled = booleanAttribute(element, "disabled", false);
 
         if (minValues < 0) {
-            throw new ConfigurationException(String.format("<%s> min-values cannot be negative", nodeName(element)), resourcePath);
+            throw new ConfigurationException(String.format("<%s> min-values cannot be negative", nodeName(element)),
+                    resourcePath);
         }
         if (maxValues <= 0) {
-            throw new ConfigurationException(String.format("<%s> max-values must be greater than 0", nodeName(element)), resourcePath);
+            throw new ConfigurationException(String.format("<%s> max-values must be greater than 0", nodeName(element)),
+                    resourcePath);
         }
         if (required && minValues == 0) {
-            throw new ConfigurationException(String.format("<%s> min-values must be at least 1 when required=true", nodeName(element)), resourcePath);
+            throw new ConfigurationException(String.format("<%s> min-values must be at least 1 when required=true", nodeName(
+                    element)), resourcePath);
         }
         if (minValues > maxValues) {
-            throw new ConfigurationException(String.format("<%s> min-values cannot be greater than max-values", nodeName(element)), resourcePath);
+            throw new ConfigurationException(String.format("<%s> min-values cannot be greater than max-values", nodeName(
+                    element)), resourcePath);
         }
 
         return new SelectSettings(id, placeholder, required, minValues, maxValues, disabled);
@@ -659,12 +665,12 @@ public final class ModalXmlLoader {
      * @since 1.0.0-beta.2
      */
     private record SelectSettings(
-            @NonNull String id,
-            @NonNull String placeholder,
-            boolean required,
-            int minValues,
-            int maxValues,
-            boolean disabled
+                                  @NonNull String id,
+                                  @NonNull String placeholder,
+                                  boolean required,
+                                  int minValues,
+                                  int maxValues,
+                                  boolean disabled
     ) {
     }
 }

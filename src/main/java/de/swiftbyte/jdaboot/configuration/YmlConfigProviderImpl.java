@@ -34,11 +34,10 @@ public class YmlConfigProviderImpl extends ConfigProvider {
         ymlConfig = new HashMap<>();
 
         for (String profile : activeProfiles) {
-            configFileName = profile.equals("default")
-                    ? "config.yml"
-                    : "config-" + profile + ".yml";
+            configFileName = profile.equals("default") ? "config.yml" : "config-" + profile + ".yml";
 
-            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
+                    configFileName)) {
                 if (resourceStream != null) {
                     Map<String, Object> loadedConfig = new Yaml().load(resourceStream);
                     if (loadedConfig != null) {
@@ -65,10 +64,8 @@ public class YmlConfigProviderImpl extends ConfigProvider {
             Object sourceValue = entry.getValue();
 
             if (targetValue instanceof Map<?, ?> targetMap && sourceValue instanceof Map<?, ?> sourceMap) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> typedTargetMap = (Map<String, Object>) targetMap;
-                @SuppressWarnings("unchecked")
-                Map<String, Object> typedSourceMap = (Map<String, Object>) sourceMap;
+                @SuppressWarnings("unchecked") Map<String, Object> typedTargetMap = (Map<String, Object>) targetMap;
+                @SuppressWarnings("unchecked") Map<String, Object> typedSourceMap = (Map<String, Object>) sourceMap;
                 mergeMaps(typedTargetMap, typedSourceMap);
             } else {
                 target.put(entry.getKey(), sourceValue);

@@ -42,9 +42,9 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record LabelNode(
-            @NonNull String text,
-            @NonNull String description,
-            @NonNull LabelChildNode child
+                            @NonNull String text,
+                            @NonNull String description,
+                            @NonNull LabelChildNode child
     ) {
     }
 
@@ -61,13 +61,13 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record StringInputNode(
-            @NonNull String id,
-            @NonNull TextInputStyle style,
-            @NonNull String placeholder,
-            boolean required,
-            int maxLength,
-            int minLength,
-            @NonNull String defaultValue
+                                  @NonNull String id,
+                                  @NonNull TextInputStyle style,
+                                  @NonNull String placeholder,
+                                  boolean required,
+                                  int maxLength,
+                                  int minLength,
+                                  @NonNull String defaultValue
     ) implements LabelChildNode {
     }
 
@@ -82,11 +82,11 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record FileInputNode(
-            @NonNull String id,
-            boolean required,
-            int maxValues,
-            int minValues,
-            @NonNull List<@NonNull FileType> fileTypes
+                                @NonNull String id,
+                                boolean required,
+                                int maxValues,
+                                int minValues,
+                                @NonNull List<@NonNull FileType> fileTypes
     ) implements LabelChildNode {
 
         /**
@@ -113,10 +113,10 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record StringSelectOptionNode(
-            @NonNull String label,
-            @NonNull String value,
-            @NonNull String description,
-            boolean defaultOption
+                                         @NonNull String label,
+                                         @NonNull String value,
+                                         @NonNull String description,
+                                         boolean defaultOption
     ) {
     }
 
@@ -133,13 +133,13 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record StringSelectNode(
-            @NonNull String id,
-            @NonNull String placeholder,
-            boolean required,
-            int maxValues,
-            int minValues,
-            boolean disabled,
-            @NonNull List<@NonNull StringSelectOptionNode> options
+                                   @NonNull String id,
+                                   @NonNull String placeholder,
+                                   boolean required,
+                                   int maxValues,
+                                   int minValues,
+                                   boolean disabled,
+                                   @NonNull List<@NonNull StringSelectOptionNode> options
     ) implements LabelChildNode {
     }
 
@@ -157,14 +157,14 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record EntitySelectNode(
-            @NonNull String id,
-            @NonNull String placeholder,
-            boolean required,
-            int maxValues,
-            int minValues,
-            boolean disabled,
-            @NonNull List<EntitySelectMenu.SelectTarget> targets,
-            @NonNull List<ChannelType> channelTypes
+                                   @NonNull String id,
+                                   @NonNull String placeholder,
+                                   boolean required,
+                                   int maxValues,
+                                   int minValues,
+                                   boolean disabled,
+                                   @NonNull List<EntitySelectMenu.SelectTarget> targets,
+                                   @NonNull List<ChannelType> channelTypes
     ) implements LabelChildNode {
     }
 
@@ -176,8 +176,8 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record CheckboxNode(
-            @NonNull String id,
-            boolean defaultValue
+                               @NonNull String id,
+                               boolean defaultValue
     ) implements LabelChildNode {
     }
 
@@ -191,10 +191,10 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record GroupOptionNode(
-            @NonNull String label,
-            @NonNull String value,
-            @NonNull String description,
-            boolean defaultOption
+                                  @NonNull String label,
+                                  @NonNull String value,
+                                  @NonNull String description,
+                                  boolean defaultOption
     ) {
     }
 
@@ -209,11 +209,11 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record CheckboxGroupNode(
-            @NonNull String id,
-            boolean required,
-            int minValues,
-            int maxValues,
-            @NonNull List<@NonNull GroupOptionNode> options
+                                    @NonNull String id,
+                                    boolean required,
+                                    int minValues,
+                                    int maxValues,
+                                    @NonNull List<@NonNull GroupOptionNode> options
     ) implements LabelChildNode {
     }
 
@@ -226,9 +226,9 @@ public final class XmlModalNodes {
      * @since 1.0.0-beta.2
      */
     public record RadioGroupNode(
-            @NonNull String id,
-            boolean required,
-            @NonNull List<@NonNull GroupOptionNode> options
+                                 @NonNull String id,
+                                 boolean required,
+                                 @NonNull List<@NonNull GroupOptionNode> options
     ) implements LabelChildNode {
     }
 }

@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * Defines the contract for configuration providers.
- * Provides methods to retrieve configuration values of various types, check for the existence of a key, and reload the configuration.
+ * Provides methods to retrieve configuration values of various types, check for the existence of a key, and reload the
+ * configuration.
  *
  * @since alpha.4
  */

@@ -9,7 +9,6 @@ import de.swiftbyte.jdaboot.annotation.interaction.command.SlashCommandDefinitio
 import de.swiftbyte.jdaboot.annotation.interaction.component.ComponentByPath;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuByClass;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuByClass;
-import de.swiftbyte.jdaboot.embed.AdvancedEmbed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import de.swiftbyte.jdaboot.interaction.button.TemplateButton;
 import de.swiftbyte.jdaboot.interaction.command.SlashCommandExecutor;

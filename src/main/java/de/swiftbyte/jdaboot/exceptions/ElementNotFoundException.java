@@ -10,7 +10,8 @@ public class ElementNotFoundException extends RuntimeException {
     }
 
     public ElementNotFoundException(@NonNull String message, @NonNull String identifier, @NonNull Field field) {
-        super(String.format("%s (Identifier: %s, Class: %s, Method: %s)", message, identifier, field.getDeclaringClass().getName(), field.getName()));
+        super(String.format("%s (Identifier: %s, Class: %s, Method: %s)", message, identifier, field.getDeclaringClass()
+                .getName(), field.getName()));
     }
 
     public ElementNotFoundException(@NonNull String message, @NonNull String identifier) {

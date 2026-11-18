@@ -85,7 +85,7 @@ class FileConfigProviderTest {
     @ParameterizedTest(name = "{0}: reload removes values no longer present")
     @MethodSource("providers")
     void reloadsWithoutRetainingRemovedKeys(String extension, Supplier<ConfigProvider> factory,
-                                           String base, String dev, String local) throws IOException {
+                                            String base, String dev, String local) throws IOException {
         Path file = resources.resolve("config." + extension);
         Files.writeString(file, base);
         ConfigProvider provider = factory.get();

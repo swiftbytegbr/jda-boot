@@ -13,7 +13,8 @@ import java.util.HashMap;
 
 /**
  * The EmbedManager class is responsible for managing embeds in the application.
- * It uses reflection to find fields annotated with @Embed and sets them to a new instance of TemplateEmbed created with the @Embed annotation.
+ * It uses reflection to find fields annotated with @Embed and sets them to a new instance of TemplateEmbed created with
+ * the @Embed annotation.
  *
  * @since alpha.4
  */

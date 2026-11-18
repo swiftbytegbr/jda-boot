@@ -168,9 +168,9 @@
                             <version>${eclipse-formatter.version}</version>
                             <file>${project.basedir}/formatter.xml</file>
                         </eclipse>
-                        <formatAnnotations />
-                        <trimTrailingWhitespace />
-                        <endWithNewline />
+                        <formatAnnotations/>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
                 <executions>
@@ -203,7 +203,7 @@
                                 <requireMavenVersion>
                                     <version>[${maven.minimum.version},)</version>
                                 </requireMavenVersion>
-                                <banDuplicatePomDependencyVersions />
+                                <banDuplicatePomDependencyVersions/>
                             </rules>
                         </configuration>
                     </execution>

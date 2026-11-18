@@ -148,7 +148,8 @@ public class AdvancedComponentV2 {
             return buildSection(sectionNode);
         }
 
-        throw new ObjectInitializationException("Unsupported message node type: " + node.getClass().getName(), node.getClass(), sourceReference());
+        throw new ObjectInitializationException("Unsupported message node type: " + node.getClass().getName(), node.getClass(),
+                sourceReference());
     }
 
     /**
@@ -184,7 +185,8 @@ public class AdvancedComponentV2 {
             return buildEntitySelect(entityRef);
         }
 
-        throw new ObjectInitializationException("Unsupported action-row child type: " + node.getClass().getName(), node.getClass(), sourceReference());
+        throw new ObjectInitializationException("Unsupported action-row child type: " + node.getClass().getName(), node
+                .getClass(), sourceReference());
     }
 
     /**
@@ -237,7 +239,8 @@ public class AdvancedComponentV2 {
             return buildSection(sectionNode);
         }
 
-        throw new ObjectInitializationException("Unsupported container child type: " + node.getClass().getName(), node.getClass(), sourceReference());
+        throw new ObjectInitializationException("Unsupported container child type: " + node.getClass().getName(), node.getClass(),
+                sourceReference());
     }
 
     /**
@@ -269,7 +272,8 @@ public class AdvancedComponentV2 {
             return TextDisplay.of(processVar(textNode.content()));
         }
 
-        throw new ObjectInitializationException("Unsupported section content type: " + node.getClass().getName(), node.getClass(), sourceReference());
+        throw new ObjectInitializationException("Unsupported section content type: " + node.getClass().getName(), node.getClass(),
+                sourceReference());
     }
 
     /**
@@ -292,7 +296,8 @@ public class AdvancedComponentV2 {
             return thumbnail.withSpoiler(parseBoolean(thumbnailNode.spoiler(), "spoiler"));
         }
 
-        throw new ObjectInitializationException("Unsupported section accessory type: " + node.getClass().getName(), node.getClass(), sourceReference());
+        throw new ObjectInitializationException("Unsupported section accessory type: " + node.getClass().getName(), node
+                .getClass(), sourceReference());
     }
 
     /**
@@ -389,7 +394,8 @@ public class AdvancedComponentV2 {
         }
 
         if (templateButton == null) {
-            throw new ElementNotFoundException("Could not find button in Component V2 layout (XML: " + sourceReference() + ")", ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
+            throw new ElementNotFoundException("Could not find button in Component V2 layout (XML: " + sourceReference() + ")",
+                    ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
         }
 
         AdvancedButton advancedButton = templateButton.advancedButton(locale);
@@ -430,14 +436,17 @@ public class AdvancedComponentV2 {
         if (ref.id() != null && !ref.id().isBlank()) {
             templateSelectMenu = selectMenuManager.getSelectMenu(processVar(ref.id()));
         } else if (ref.className() != null && !ref.className().isBlank()) {
-            Class<? extends StringSelectMenuExecutor> clazz = loadAndValidateClass(processVar(ref.className()), StringSelectMenuExecutor.class);
+            Class<? extends StringSelectMenuExecutor> clazz = loadAndValidateClass(processVar(ref.className()),
+                    StringSelectMenuExecutor.class);
             templateSelectMenu = selectMenuManager.getStringSelectMenu(clazz);
         } else {
-            throw new ObjectInitializationException("string-select-ref must define id or class", ref.getClass(), sourceReference());
+            throw new ObjectInitializationException("string-select-ref must define id or class", ref.getClass(),
+                    sourceReference());
         }
 
         if (templateSelectMenu == null) {
-            throw new ElementNotFoundException("Could not find select menu in Component V2 layout (XML: " + sourceReference() + ")", ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
+            throw new ElementNotFoundException("Could not find select menu in Component V2 layout (XML: " + sourceReference() +
+                    ")", ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
         }
 
         AdvancedSelectMenu advancedSelectMenu = templateSelectMenu.advancedSelectMenu(locale);
@@ -447,7 +456,8 @@ public class AdvancedComponentV2 {
         if (builtMenu instanceof StringSelectMenu stringSelectMenu) {
             return stringSelectMenu;
         }
-        throw new ObjectInitializationException("Select menu is not a string select menu", builtMenu.getClass(), sourceReference());
+        throw new ObjectInitializationException("Select menu is not a string select menu", builtMenu.getClass(),
+                sourceReference());
     }
 
     /**
@@ -467,14 +477,17 @@ public class AdvancedComponentV2 {
         if (ref.id() != null && !ref.id().isBlank()) {
             templateSelectMenu = selectMenuManager.getSelectMenu(processVar(ref.id()));
         } else if (ref.className() != null && !ref.className().isBlank()) {
-            Class<? extends EntitySelectMenuExecutor> clazz = loadAndValidateClass(processVar(ref.className()), EntitySelectMenuExecutor.class);
+            Class<? extends EntitySelectMenuExecutor> clazz = loadAndValidateClass(processVar(ref.className()),
+                    EntitySelectMenuExecutor.class);
             templateSelectMenu = selectMenuManager.getEntitySelectMenu(clazz);
         } else {
-            throw new ObjectInitializationException("entity-select-ref must define id or class", ref.getClass(), sourceReference());
+            throw new ObjectInitializationException("entity-select-ref must define id or class", ref.getClass(),
+                    sourceReference());
         }
 
         if (templateSelectMenu == null) {
-            throw new ElementNotFoundException("Could not find select menu in Component V2 layout (XML: " + sourceReference() + ")", ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
+            throw new ElementNotFoundException("Could not find select menu in Component V2 layout (XML: " + sourceReference() +
+                    ")", ref.id() != null ? processVar(ref.id()) : processVar(ref.className()));
         }
 
         AdvancedSelectMenu advancedSelectMenu = templateSelectMenu.advancedSelectMenu(locale);
@@ -484,7 +497,8 @@ public class AdvancedComponentV2 {
         if (builtMenu instanceof EntitySelectMenu entitySelectMenu) {
             return entitySelectMenu;
         }
-        throw new ObjectInitializationException("Select menu is not an entity select menu", builtMenu.getClass(), sourceReference());
+        throw new ObjectInitializationException("Select menu is not an entity select menu", builtMenu.getClass(),
+                sourceReference());
     }
 
     /**

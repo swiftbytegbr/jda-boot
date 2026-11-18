@@ -14,9 +14,9 @@ import java.util.List;
  * @since 1.0.0-beta.2
  */
 public record ComponentV2LayoutDefinition(
-        @NonNull String id,
-        @NonNull String sourcePath,
-        @NonNull XmlDefaultVariable @NonNull [] defaultVars,
-        @NonNull List<ComponentV2Nodes.MessageTopLevelNode> components
+                                          @NonNull String id,
+                                          @NonNull String sourcePath,
+                                          @NonNull XmlDefaultVariable @NonNull [] defaultVars,
+                                          @NonNull List<ComponentV2Nodes.MessageTopLevelNode> components
 ) {
 }

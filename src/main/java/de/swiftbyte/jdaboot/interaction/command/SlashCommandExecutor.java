@@ -47,7 +47,8 @@ public abstract class SlashCommandExecutor {
         reply(event, embed, event.getUserLocale());
     }
 
-    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed,
+                         @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).queue();
     }
 
@@ -55,7 +56,8 @@ public abstract class SlashCommandExecutor {
         reply(event, component, event.getUserLocale());
     }
 
-    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateComponentV2 component,
+                         @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().queue();
     }
 
@@ -63,7 +65,8 @@ public abstract class SlashCommandExecutor {
         reply(event, modal, event.getUserLocale());
     }
 
-    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateModal modal, @NonNull DiscordLocale locale) {
+    protected void reply(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateModal modal,
+                         @NonNull DiscordLocale locale) {
         event.replyModal(modal.advancedModal(locale).build()).queue();
     }
 
@@ -71,7 +74,8 @@ public abstract class SlashCommandExecutor {
         replyEphemeral(event, embed, event.getUserLocale());
     }
 
-    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateEmbed embed,
+                                  @NonNull DiscordLocale locale) {
         event.replyEmbeds(embed.advancedEmbed(locale).build()).setEphemeral(true).queue();
     }
 
@@ -79,7 +83,8 @@ public abstract class SlashCommandExecutor {
         replyEphemeral(event, component, event.getUserLocale());
     }
 
-    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateComponentV2 component, @NonNull DiscordLocale locale) {
+    protected void replyEphemeral(@NonNull SlashCommandInteractionEvent event, @NonNull TemplateComponentV2 component,
+                                  @NonNull DiscordLocale locale) {
         event.replyComponents(component.advancedComponent(locale).build()).useComponentsV2().setEphemeral(true).queue();
     }
 }

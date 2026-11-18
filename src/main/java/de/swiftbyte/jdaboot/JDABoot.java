@@ -113,7 +113,9 @@ public final class JDABoot {
         } catch (InterruptedException e) {
             throw new JDABootInitializationException("Error while logging in to Discord", e);
         } catch (InvalidTokenException e) {
-            throw new JDABootInitializationException("There is an invalid token provided in the config. You can create a token here: https://discord.com/developers/applications", e);
+            throw new JDABootInitializationException(
+                    "There is an invalid token provided in the config. You can create a token here: https://discord.com/developers/applications",
+                    e);
         } catch (Exception e) {
             throw new JDABootInitializationException("An error occurred while logging in to Discord!", e);
         }
@@ -140,7 +142,8 @@ public final class JDABoot {
             minShardId = configProvider.getInt("discord.sharding.minShardId", 0);
             int maxShardId = configProvider.getInt("discord.sharding.maxShardId", totalShards - 1);
 
-            log.info("Sharding is enabled. Total shards: {}, Min shard ID: {}, Max shard ID: {}", totalShards, minShardId, maxShardId);
+            log.info("Sharding is enabled. Total shards: {}, Min shard ID: {}, Max shard ID: {}", totalShards, minShardId,
+                    maxShardId);
 
             builder.setShardsTotal(totalShards);
             builder.setShards(minShardId, maxShardId);
@@ -177,7 +180,8 @@ public final class JDABoot {
         }
 
         JDABootConfigurationManager.getBuilderCustomizers().forEach(clazz -> {
-            ShardManagerBuilderCustomizer customizer = (ShardManagerBuilderCustomizer) JDABootObjectManager.getOrInitialiseObject(clazz);
+            ShardManagerBuilderCustomizer customizer = (ShardManagerBuilderCustomizer) JDABootObjectManager.getOrInitialiseObject(
+                    clazz);
             customizer.customize(builder);
         });
 
@@ -216,7 +220,8 @@ public final class JDABoot {
      * @since alpha.2
      */
     public void updateCommands() {
-        getFirstJDA().updateCommands().addCommands(JDABootConfigurationManager.getCommandManager().getGlobalData().values()).queue();
+        getFirstJDA().updateCommands().addCommands(JDABootConfigurationManager.getCommandManager().getGlobalData().values())
+                .queue();
     }
 
     /**

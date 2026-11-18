@@ -37,7 +37,8 @@ import java.util.List;
 
 /**
  * Manages the configuration for the JDABoot framework.
- * It applies the configuration specified by the {@link JDABootConfiguration} annotation and initializes various managers.
+ * It applies the configuration specified by the {@link JDABootConfiguration} annotation and initializes various
+ * managers.
  *
  * @see JDABootConfiguration
  * @see ConfigProvider
@@ -147,7 +148,8 @@ public final class JDABootConfigurationManager {
 
         configProviderChain = (ConfigProviderChain) JDABootObjectManager.getOrInitialiseObject(ConfigProviderChain.class);
         for (Class<? extends ConfigProvider> configProvider : jdaBootConfiguration.additionalConfigProviders()) {
-            configProviderChain.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(configProvider));
+            configProviderChain.addConfigProviderToChain((ConfigProvider) JDABootObjectManager.getOrInitialiseObject(
+                    configProvider));
         }
 
         List<String> activeProfiles = resolveActiveProfiles(jdaBootConfiguration);
@@ -157,8 +159,9 @@ public final class JDABootConfigurationManager {
         try {
             translationProvider = jdaBootConfiguration.translationProvider().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new ObjectInitializationException("Failed to instantiate translation provider", jdaBootConfiguration.translationProvider(), e);
+                NoSuchMethodException e) {
+            throw new ObjectInitializationException("Failed to instantiate translation provider", jdaBootConfiguration
+                    .translationProvider(), e);
         }
 
         builderCustomizers = List.of(jdaBootConfiguration.builderCustomizers());

@@ -25,7 +25,8 @@ public class ObjectInitializationException extends RuntimeException {
         super(String.format("%s (Class: %s, Field: %s)", message, field.getDeclaringClass().getName(), field.getName()), t);
     }
 
-    public ObjectInitializationException(@NonNull String message, @NonNull Class<?> clazz, @NonNull String source, @NonNull Throwable t) {
+    public ObjectInitializationException(@NonNull String message, @NonNull Class<?> clazz, @NonNull String source,
+                                         @NonNull Throwable t) {
         super(String.format("%s (Class: %s, XML: %s)", message, clazz.getName(), source), t);
     }
 

@@ -40,13 +40,14 @@ class PlaceholderEngineTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "plain text",
-            "before ${missing} after",
-            "${not-closed",
-            "#{unregistered}",
-            "${outer.${missing}}"
-    })
+    @ValueSource(
+            strings = {
+                    "plain text",
+                    "before ${missing} after",
+                    "${not-closed",
+                    "#{unregistered}",
+                    "${outer.${missing}}"
+            })
     void preservesUnknownAndUnclosedPlaceholders(String text) {
         PlaceholderEngine engine = PlaceholderEngine.builder()
                 .resolver('$', key -> null)

@@ -55,7 +55,8 @@ public class AdvancedModal {
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
     private @NonNull List<@NonNull DynamicModalRow> dynamicRows = new ArrayList<>();
-    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String,
+            @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     /**
      * Constructor for AdvancedModal. Initializes the modal with the specified template, variables, and locale.
@@ -121,7 +122,9 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public @NonNull AdvancedModal addDynamicModalRow(@NonNull String id, @NonNull String label, @NonNull TextInputStyle style, @NonNull String placeholder, boolean required, int maxLength, int minLength, @NonNull String defaultValue) {
+    public @NonNull AdvancedModal addDynamicModalRow(@NonNull String id, @NonNull String label, @NonNull TextInputStyle style,
+                                                     @NonNull String placeholder, boolean required, int maxLength, int minLength,
+                                                     @NonNull String defaultValue) {
         dynamicRows.add(new DynamicModalRow(id, label, style, placeholder, required, maxLength, minLength, defaultValue));
         return this;
     }
@@ -133,7 +136,7 @@ public class AdvancedModal {
      * @return The AdvancedModal instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public @NonNull AdvancedModal addDynamicRows(@NonNull DynamicModalRow @NonNull ... dynamicModalRow) {
+    public @NonNull AdvancedModal addDynamicRows(@NonNull DynamicModalRow @NonNull... dynamicModalRow) {
         dynamicRows.addAll(List.of(dynamicModalRow));
         return this;
     }
@@ -237,7 +240,8 @@ public class AdvancedModal {
         } catch (Exception e) {
             XmlModalLayoutDefinition xmlDefinition = template.getXmlDefinition();
             if (xmlDefinition != null) {
-                throw new ElementBuildException("Failed to build modal", xmlDefinition.sourcePath() + ", layout: " + xmlDefinition.id(), e);
+                throw new ElementBuildException("Failed to build modal", xmlDefinition.sourcePath() + ", layout: " + xmlDefinition
+                        .id(), e);
             }
             throw new ElementBuildException("Failed to build modal", e);
         }

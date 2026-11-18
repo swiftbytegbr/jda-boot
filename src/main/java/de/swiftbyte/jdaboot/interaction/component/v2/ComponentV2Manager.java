@@ -35,7 +35,8 @@ public class ComponentV2Manager {
     private static final @NonNull String INLINE_XML_SOURCE = "inline Component V2 XML";
     private static final @NonNull String XML_STREAM_SOURCE = "Component V2 XML stream";
 
-    private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull ComponentV2LayoutDefinition>> xmlFileCache = new HashMap<>();
+    private final @NonNull HashMap<@NonNull String, @NonNull Map<@NonNull String,
+            @NonNull ComponentV2LayoutDefinition>> xmlFileCache = new HashMap<>();
 
     private final @NonNull HashMap<@NonNull String, @NonNull ComponentV2LayoutDefinition> layoutsById = new HashMap<>();
 
@@ -55,7 +56,8 @@ public class ComponentV2Manager {
 
         reflections.getFieldsAnnotatedWith(ComponentByPath.class).forEach(field -> {
             if (!TemplateComponentV2.class.isAssignableFrom(field.getType())) {
-                throw new ElementRegistrationException("Fields annotated with @ComponentByPath must be of type TemplateComponentV2", field);
+                throw new ElementRegistrationException(
+                        "Fields annotated with @ComponentByPath must be of type TemplateComponentV2", field);
             }
 
             ComponentByPath annotation = field.getAnnotation(ComponentByPath.class);
@@ -65,7 +67,8 @@ public class ComponentV2Manager {
             TemplateComponentV2 component = resolveComponentForField(field, xmlPath, layoutId, annotation.defaultVars());
             JDABootObjectManager.injectField(field.getDeclaringClass(), field, component);
 
-            log.info("Registered component v2 field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(), xmlPath);
+            log.info("Registered component v2 field {}.{} from {}", field.getDeclaringClass().getName(), field.getName(),
+                    xmlPath);
         });
     }
 
@@ -177,7 +180,7 @@ public class ComponentV2Manager {
      * @since 1.0.0-beta.2
      */
     public @NonNull TemplateComponentV2 loadComponent(@NonNull InputStream xmlStream,
-                                                       @NonNull String layoutId) {
+                                                      @NonNull String layoutId) {
         return loadComponent(xmlStream, layoutId, XML_STREAM_SOURCE);
     }
 
@@ -194,9 +197,9 @@ public class ComponentV2Manager {
     /**
      * Resolves the XML component template requested by an annotated field.
      *
-     * @param field    The field receiving the template.
-     * @param xmlPath  The normalized XML resource path.
-     * @param layoutId The requested layout ID, or an empty string for a single-layout file.
+     * @param field       The field receiving the template.
+     * @param xmlPath     The normalized XML resource path.
+     * @param layoutId    The requested layout ID, or an empty string for a single-layout file.
      * @param defaultVars The default variables configured on the injection annotation.
      * @return The resolved component template.
      * @since 1.0.0-beta.2
@@ -209,7 +212,8 @@ public class ComponentV2Manager {
         if (layoutId.isBlank()) {
             if (layouts.size() != 1) {
                 throw new ElementRegistrationException(
-                        String.format("Component XML '%s' contains %d layouts. Please set layoutId in @ComponentByPath", xmlPath, layouts.size()),
+                        String.format("Component XML '%s' contains %d layouts. Please set layoutId in @ComponentByPath", xmlPath,
+                                layouts.size()),
                         field
                 );
             }
@@ -266,8 +270,8 @@ public class ComponentV2Manager {
      * @since 1.0.0-beta.2
      */
     private @NonNull TemplateComponentV2 loadComponent(@NonNull InputStream xmlStream,
-                                                        @Nullable String layoutId,
-                                                        @NonNull String sourceReference) {
+                                                       @Nullable String layoutId,
+                                                       @NonNull String sourceReference) {
         Map<String, ComponentV2LayoutDefinition> layouts = ComponentV2XmlLoader.load(xmlStream, sourceReference);
 
         if (layoutId == null) {

@@ -33,7 +33,8 @@ public class VariableProcessor {
      * @return The processed string with placeholders replaced by variable values.
      * @since alpha.4
      */
-    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<
+            @NonNull String, @NonNull String> variables, @NonNull DefaultVariable @NonNull [] defaultVariable) {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
@@ -47,7 +48,8 @@ public class VariableProcessor {
      * @return The processed text.
      * @since 1.0.0-beta.2
      */
-    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
+    public static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<
+            @NonNull String, @NonNull String> variables, @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         return processVariable(locale, old, variables, toDefaultMap(defaultVariable));
     }
 
@@ -84,7 +86,8 @@ public class VariableProcessor {
      * @return The processed text.
      * @since 1.0.0-beta.2
      */
-    private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<@NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
+    private static @NonNull String processVariable(@NonNull DiscordLocale locale, @NonNull String old, @NonNull Map<
+            @NonNull String, @NonNull String> variables, @NonNull Map<@NonNull String, @NonNull String> defaultVariables) {
         PlaceholderEngine engine = PlaceholderEngine.builder()
                 .resolver('$', key -> {
                     String variable = getVariable(key, variables);
@@ -116,7 +119,8 @@ public class VariableProcessor {
      * @return The default variable lookup map.
      * @since alpha.4
      */
-    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull DefaultVariable @NonNull [] defaultVariable) {
+    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(
+                                                                                   @NonNull DefaultVariable @NonNull [] defaultVariable) {
         HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (DefaultVariable variable : defaultVariable) {
             defaultVariables.put(variable.variable(), variable.value());
@@ -131,7 +135,8 @@ public class VariableProcessor {
      * @return The default variable lookup map.
      * @since 1.0.0-beta.2
      */
-    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(@NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
+    private static @NonNull HashMap<@NonNull String, @NonNull String> toDefaultMap(
+                                                                                   @NonNull XmlDefaultVariable @NonNull [] defaultVariable) {
         HashMap<String, String> defaultVariables = new HashMap<>(defaultVariable.length);
         for (XmlDefaultVariable variable : defaultVariable) {
             defaultVariables.put(variable.key(), variable.value());
@@ -179,7 +184,7 @@ public class VariableProcessor {
      * @since 1.0.0-beta.2
      */
     private static @NonNull String formatReferences(
-            @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
+                                                    @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
         StringBuilder result = new StringBuilder();
         for (PlaceholderEngine.PlaceholderReference reference : references) {
             if (!result.isEmpty()) {

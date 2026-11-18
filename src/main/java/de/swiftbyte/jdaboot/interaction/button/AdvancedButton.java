@@ -30,7 +30,8 @@ public class AdvancedButton {
     private @NonNull DiscordLocale locale;
 
     private @NonNull HashMap<@NonNull String, @NonNull String> variables = new HashMap<>();
-    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String, @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
+    private static final @NonNull ConcurrentHashMap<@NonNull String, @NonNull Map<@NonNull String,
+            @NonNull String>> variableTransfer = new ConcurrentHashMap<>();
 
     /**
      * Constructor for AdvancedButton. Initializes the button with the specified template, variables, and locale.

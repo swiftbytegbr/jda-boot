@@ -129,11 +129,10 @@ public class PropertiesConfigProviderImpl extends ConfigProvider {
         properties = new Properties();
 
         for (String profile : activeProfiles) {
-            String configFileName = profile.equals("default")
-                    ? "config.properties"
-                    : "config-" + profile + ".properties";
+            String configFileName = profile.equals("default") ? "config.properties" : "config-" + profile + ".properties";
 
-            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName)) {
+            try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
+                    configFileName)) {
                 if (resourceStream != null) {
                     properties.load(resourceStream);
                 }

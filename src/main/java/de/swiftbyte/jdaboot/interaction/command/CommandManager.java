@@ -30,7 +30,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -151,7 +150,8 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /**
-     * Handles command autocomplete interaction events. When a command autocomplete is invoked, this method finds the corresponding
+     * Handles command autocomplete interaction events. When a command autocomplete is invoked, this method finds the
+     * corresponding
      * command instance and delegates the event to it.
      *
      * @param event The command autocomplete interaction event.
@@ -167,7 +167,8 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /**
-     * Handles user context interaction events. When a user context command is invoked, this method finds the corresponding
+     * Handles user context interaction events. When a user context command is invoked, this method finds the
+     * corresponding
      * command instance and delegates the event to it.
      *
      * @param event The user context interaction event.
@@ -179,7 +180,8 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /**
-     * Handles message context interaction events. When a message context command is invoked, this method finds the corresponding
+     * Handles message context interaction events. When a message context command is invoked, this method finds the
+     * corresponding
      * command instance and delegates the event to it.
      *
      * @param event The message context interaction event.
@@ -191,7 +193,8 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /**
-     * Handles generic context interaction events. When a context command is invoked, this method finds the corresponding
+     * Handles generic context interaction events. When a context command is invoked, this method finds the
+     * corresponding
      * command instance and delegates the event to it.
      *
      * @param event The generic context interaction event.
@@ -261,7 +264,8 @@ public class CommandManager extends ListenerAdapter {
         for (SubcommandGroup subcommandGroup : command.subcommandGroups()) {
 
             String subGroupId = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.name());
-            String subGroupDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup.description());
+            String subGroupDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, subcommandGroup
+                    .description());
             SubcommandGroupData subGroupData = new SubcommandGroupData(subGroupId, subGroupDescription);
 
             subGroupData.setNameLocalizations(generateDiscordLocalised(subcommandGroup.name()));
@@ -283,7 +287,8 @@ public class CommandManager extends ListenerAdapter {
      * @return The built CommandData.
      * @since alpha.4
      */
-    private @NonNull CommandData buildUserOrChatCommand(SlashCommandDefinition.@NonNull Type type, @NonNull String id, @NonNull SlashCommandDefinition command) {
+    private @NonNull CommandData buildUserOrChatCommand(SlashCommandDefinition.@NonNull Type type, @NonNull String id,
+                                                        @NonNull SlashCommandDefinition command) {
 
         CommandData data = null;
 
@@ -343,7 +348,8 @@ public class CommandManager extends ListenerAdapter {
 
             String optionId = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, option.name());
             String optionDescription = TranslationProcessor.processTranslation(DiscordLocale.ENGLISH_US, option.description());
-            OptionData optionData = new OptionData(option.type(), optionId, optionDescription, option.required(), option.autoComplete());
+            OptionData optionData = new OptionData(option.type(), optionId, optionDescription, option.required(), option
+                    .autoComplete());
 
             if (option.maxLength() > 0) {
                 optionData.setMaxLength(option.maxLength());
@@ -360,7 +366,7 @@ public class CommandManager extends ListenerAdapter {
             if (option.type().equals(OptionType.CHANNEL)) {
                 optionData.setChannelTypes(option.channelTypes());
             }
-            if(option.type().equals(OptionType.ATTACHMENT)) {
+            if (option.type().equals(OptionType.ATTACHMENT)) {
                 optionData.setFileTypes(Arrays.stream(option.fileTypes()).map(it -> switch (it) {
                     case "image" -> FileType.IMAGE;
                     case "video" -> FileType.VIDEO;

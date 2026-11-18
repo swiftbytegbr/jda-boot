@@ -68,7 +68,8 @@ public class TranslationProcessor {
             try {
                 return translationProvider.getTranslation(key, Locale.ENGLISH);
             } catch (MissingResourceException e) {
-                log.warn("Translation key '{}' was not found for locale '{}' or fallback locale 'en'", key, locale.getLocale(), e);
+                log.warn("Translation key '{}' was not found for locale '{}' or fallback locale 'en'", key, locale.getLocale(),
+                        e);
                 return "MISSING TRANSLATION";
             }
         }
@@ -82,7 +83,7 @@ public class TranslationProcessor {
      * @since 1.0.0-beta.2
      */
     private static @NonNull String formatReferences(
-            @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
+                                                    @NonNull Iterable<PlaceholderEngine.PlaceholderReference> references) {
         StringBuilder result = new StringBuilder();
         for (PlaceholderEngine.PlaceholderReference reference : references) {
             if (!result.isEmpty()) {

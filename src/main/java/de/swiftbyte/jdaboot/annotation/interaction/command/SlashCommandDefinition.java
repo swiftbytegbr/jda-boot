@@ -12,8 +12,10 @@ import java.lang.annotation.Target;
 
 /**
  * The Command annotation is used to create a command.
- * It must belong to a public class that implements the SlashCommand, UserContextCommand, or MessageContextCommand interface.
- * It includes properties to specify the name, description, type, enabledFor, guildOnly, isGlobal, options, subcommandGroups, subcommands of the command.
+ * It must belong to a public class that implements the SlashCommand, UserContextCommand, or MessageContextCommand
+ * interface.
+ * It includes properties to specify the name, description, type, enabledFor, guildOnly, isGlobal, options,
+ * subcommandGroups, subcommands of the command.
  *
  * @since alpha.4
  */
@@ -56,13 +58,15 @@ public @interface SlashCommandDefinition {
     /**
      * Specifies whether the command should only be used on servers,
      * bot dms or in private channels.
-     * Private channels require {@link IntegrationType#USER_INSTALL} at {@link SlashCommandDefinition#integrationTypes()}
+     * Private channels require {@link IntegrationType#USER_INSTALL} at
+     * {@link SlashCommandDefinition#integrationTypes()}
      * Default: {@link InteractionContextType#ALL}
      *
      * @return The contexts of the command
      * @since 1.0.0-alpha.13
      */
-    @NonNull InteractionContextType @NonNull [] contexts() default {InteractionContextType.GUILD, InteractionContextType.BOT_DM, InteractionContextType.PRIVATE_CHANNEL};
+    @NonNull InteractionContextType @NonNull [] contexts() default {InteractionContextType.GUILD, InteractionContextType.BOT_DM,
+            InteractionContextType.PRIVATE_CHANNEL};
 
     /**
      * Specifies whether the command can be installed on guilds or users

@@ -19,12 +19,12 @@ import java.util.List;
  * @since 1.0.0-beta.2
  */
 public record XmlModalLayoutDefinition(
-        @NonNull String id,
-        @NonNull String sourcePath,
-        @Nullable String modalId,
-        @Nullable String modalClassName,
-        @NonNull String title,
-        @NonNull XmlDefaultVariable @NonNull [] defaultVars,
-        @NonNull List<XmlModalNodes.LabelNode> labels
+                                       @NonNull String id,
+                                       @NonNull String sourcePath,
+                                       @Nullable String modalId,
+                                       @Nullable String modalClassName,
+                                       @NonNull String title,
+                                       @NonNull XmlDefaultVariable @NonNull [] defaultVars,
+                                       @NonNull List<XmlModalNodes.LabelNode> labels
 ) {
 }

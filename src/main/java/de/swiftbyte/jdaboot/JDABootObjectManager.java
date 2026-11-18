@@ -39,7 +39,9 @@ public final class JDABootObjectManager {
             Constructor<?> constructor = clazz.getDeclaredConstructor();
 
             if (constructor.getParameterCount() != 0) {
-                throw new ObjectInitializationException("Failed to initialise new object because it does not have a no-args constructor! Arg constructors will be supported in an future version!", clazz);
+                throw new ObjectInitializationException(
+                        "Failed to initialise new object because it does not have a no-args constructor! Arg constructors will be supported in an future version!",
+                        clazz);
             }
 
             constructor.setAccessible(true);
@@ -107,8 +109,10 @@ public final class JDABootObjectManager {
     }
 
     /**
-     * Tries to cast a value to a given type. Currently, this only works for primitive types and strings. In future releases
-     * we may add an interface to define a custom cast option for custom data types. This method is used to convert a setting
+     * Tries to cast a value to a given type. Currently, this only works for primitive types and strings. In future
+     * releases
+     * we may add an interface to define a custom cast option for custom data types. This method is used to convert a
+     * setting
      * value to the needed data type.
      *
      * @param type   The type the given object should be castet to
@@ -175,7 +179,8 @@ public final class JDABootObjectManager {
      * @throws ElementExecutionException If the method could not be run.
      * @since 1.0.0-alpha.5
      */
-    public static @Nullable Object runMethod(@NonNull Class<?> clazz, @NonNull Method method, @Nullable Object @Nullable ... args) {
+    public static @Nullable Object runMethod(@NonNull Class<?> clazz, @NonNull Method method,
+                                             @Nullable Object @Nullable... args) {
         try {
             if (Modifier.isStatic(method.getModifiers())) {
                 if (!method.canAccess(null)) {

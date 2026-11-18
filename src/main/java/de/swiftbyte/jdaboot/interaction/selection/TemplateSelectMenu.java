@@ -27,7 +27,8 @@ public class TemplateSelectMenu {
     private final @NonNull String id;
 
     /**
-     * Constructor for TemplateSelectMenu. Initializes the template with the specified EntitySelectMenuDefinition annotation.
+     * Constructor for TemplateSelectMenu. Initializes the template with the specified EntitySelectMenuDefinition
+     * annotation.
      *
      * @param selectMenuDefinition The EntitySelectMenuDefinition annotation to use as a template.
      * @since 1.0.0-alpha.11
@@ -39,7 +40,8 @@ public class TemplateSelectMenu {
     }
 
     /**
-     * Constructor for TemplateSelectMenu. Initializes the template with the specified StringSelectMenuDefinition annotation.
+     * Constructor for TemplateSelectMenu. Initializes the template with the specified StringSelectMenuDefinition
+     * annotation.
      *
      * @param selectMenuDefinition The StringSelectMenuDefinition annotation to use as a template.
      * @since 1.0.0-alpha.11

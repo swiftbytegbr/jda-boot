@@ -48,7 +48,8 @@ public class AdvancedEmbed {
      * @param locale    The locale to use for the embed.
      * @since alpha.4
      */
-    private AdvancedEmbed(@NonNull TemplateEmbed template, @NonNull HashMap<@NonNull String, @NonNull String> variables, @NonNull DiscordLocale locale) {
+    private AdvancedEmbed(@NonNull TemplateEmbed template, @NonNull HashMap<@NonNull String, @NonNull String> variables,
+                          @NonNull DiscordLocale locale) {
         this.template = template;
         this.variables = variables;
         this.locale = locale;
@@ -130,7 +131,7 @@ public class AdvancedEmbed {
      * @return The AdvancedEmbed instance for chaining.
      * @since 1.0.0-alpha.7
      */
-    public @NonNull AdvancedEmbed addDynamicFields(@NonNull DynamicEmbedField @NonNull ... dynamicFields) {
+    public @NonNull AdvancedEmbed addDynamicFields(@NonNull DynamicEmbedField @NonNull... dynamicFields) {
         this.dynamicFields.addAll(List.of(dynamicFields));
         return this;
     }
@@ -186,7 +187,8 @@ public class AdvancedEmbed {
             if (basedOn != null) {
                 builder.copyFrom(basedOn.advancedEmbed(locale).setVariables(variables).generateEmbedBuilder(timestamp));
             } else {
-                throw new ElementNotFoundException(String.format("Could not base embed on embed with ID %s because it does not exist", embed.basedOn()), embed.id());
+                throw new ElementNotFoundException(String.format(
+                        "Could not base embed on embed with ID %s because it does not exist", embed.basedOn()), embed.id());
             }
         }
 
@@ -231,7 +233,8 @@ public class AdvancedEmbed {
             String authorUrl = processVar(embed.author().url());
             String authorIconUrl = processVar(embed.author().iconUrl());
             if (StringUtils.isNotBlank(authorName)) {
-                builder.setAuthor(authorName, StringUtils.isNotBlank(authorUrl) ? authorUrl : null, StringUtils.isNotBlank(authorIconUrl) ? authorIconUrl : null);
+                builder.setAuthor(authorName, StringUtils.isNotBlank(authorUrl) ? authorUrl : null,
+                        StringUtils.isNotBlank(authorIconUrl) ? authorIconUrl : null);
             }
         }
 
