@@ -73,7 +73,7 @@ class PlaceholderEngineTest {
                 .resolver('#', Map.of("second", "${first}")::get)
                 .build();
 
-        var exception = assertThrows(PlaceholderEngine.PlaceholderCycleException.class,
+        PlaceholderEngine.PlaceholderCycleException exception = assertThrows(PlaceholderEngine.PlaceholderCycleException.class,
                 () -> engine.resolve("${first}"));
 
         assertEquals(List.of("${first}", "#{second}", "${first}"),
@@ -93,7 +93,7 @@ class PlaceholderEngineTest {
                 )::get)
                 .build();
 
-        var exception = assertThrows(PlaceholderEngine.PlaceholderDepthException.class,
+        PlaceholderEngine.PlaceholderDepthException exception = assertThrows(PlaceholderEngine.PlaceholderDepthException.class,
                 () -> engine.resolve("${first}"));
 
         assertEquals(2, exception.getMaxDepth());

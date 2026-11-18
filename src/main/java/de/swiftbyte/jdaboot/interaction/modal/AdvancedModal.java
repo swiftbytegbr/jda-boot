@@ -1,5 +1,7 @@
 package de.swiftbyte.jdaboot.interaction.modal;
 
+import de.swiftbyte.jdaboot.annotation.DefaultVariable;
+
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalRow;
 import de.swiftbyte.jdaboot.exceptions.ElementBuildException;
 import de.swiftbyte.jdaboot.interaction.component.v2.model.XmlDefaultVariable;
@@ -425,7 +427,7 @@ public class AdvancedModal {
         HashMap<String, String> transferred = new HashMap<>();
 
         if (template.getDefinition() != null) {
-            for (var defaultVar : template.getDefinition().defaultVars()) {
+            for (DefaultVariable defaultVar : template.getDefinition().defaultVars()) {
                 transferred.put(defaultVar.variable(), defaultVar.value());
             }
         }
