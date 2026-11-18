@@ -47,9 +47,27 @@
 
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependency versions -->
+        <jda.version>6.7.0</jda.version>
+        <slf4j.version>2.0.20</slf4j.version>
+        <logback.version>1.6.7</logback.version>
+        <reflections.version>0.10.2</reflections.version>
+        <lombok.version>1.18.48</lombok.version>
+        <snakeyaml.version>2.7</snakeyaml.version>
+        <dotenv-java.version>3.2.0</dotenv-java.version>
+        <jspecify.version>1.0.1</jspecify.version>
+        <junit.version>6.0.3</junit.version>
+
+        <!-- Plugin versions -->
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -57,7 +75,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>6.7.0</version>
+            <version>${jda.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -65,26 +83,26 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.20</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.6.7</version>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- Reflections -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
+            <version>${reflections.version}</version>
         </dependency>
 
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.48</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -92,20 +110,34 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.7</version>
+            <version>${snakeyaml.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
-            <version>3.2.0</version>
+            <version>${dotenv-java.version}</version>
         </dependency>
 
         <!-- Nullability Annotations -->
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
-            <version>1.0.1</version>
+            <version>${jspecify.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Automated tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -113,8 +145,32 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <failIfNoTests>true</failIfNoTests>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -128,7 +184,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -142,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.8</version>
+                <version>${maven-gpg-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -157,7 +213,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.12.0</version>
+                <version>${central-publishing-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>maven-central</publishingServerId>
