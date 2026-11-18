@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.interaction.button.ButtonDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalByPath;
@@ -15,7 +15,7 @@ import java.util.Map;
         emoji = "\uD83D\uDC4D",
         type = ButtonDefinition.Type.PRIMARY
 )
-public class TestButton extends ButtonExecutor {
+public class ManualButton extends ButtonExecutor {
 
     @ModalByPath("test.xml")
     private TemplateModal modal;

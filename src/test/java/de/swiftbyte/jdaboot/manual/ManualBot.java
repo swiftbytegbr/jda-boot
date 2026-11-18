@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.JDABoot;
 import de.swiftbyte.jdaboot.MemberCachePolicyConfiguration;
@@ -16,16 +16,16 @@ import org.jspecify.annotations.NonNull;
         intents = {GatewayIntent.GUILD_MESSAGES},
         disabledCacheFlags = {CacheFlag.VOICE_STATE},
         memberCachePolicy = MemberCachePolicyConfiguration.DEFAULT,
-        builderCustomizers = {TestClient.ShardManagerBuilderCustomizerImpl.class}
+        builderCustomizers = {ManualBot.ShardManagerBuilderCustomizerImpl.class}
 )
 @Slf4j
-public class TestClient {
+public class ManualBot {
 
     @SetValue("app.version")
     private String version;
 
     public static void main(String[] args) {
-        JDABoot.run(TestClient.class, args);
+        JDABoot.run(ManualBot.class, args);
     }
 
     private void onReady() {
@@ -48,7 +48,7 @@ public class TestClient {
 
         @Override
         public void customize(@NonNull DefaultShardManagerBuilder builder) {
-            builder.setVoiceDispatchInterceptor(new TestVoiceDispatchInterceptor());
+            builder.setVoiceDispatchInterceptor(new ManualVoiceDispatchInterceptor());
         }
     }
 }

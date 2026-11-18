@@ -13,7 +13,7 @@
                     <text-display content="#{command.test.description}"/>
                 </content>
                 <accessory>
-                    <button-ref class="de.swiftbyte.test.TestButton"/>
+                    <button-ref class="de.swiftbyte.jdaboot.manual.ManualButton"/>
                 </accessory>
             </section>
             <separator spacing="LARGE"/>
@@ -37,10 +37,10 @@
             </action-row>
         </container>
         <action-row>
-            <entity-select-ref class="de.swiftbyte.test.TestEntitySelectMenu"/>
+            <entity-select-ref class="de.swiftbyte.jdaboot.manual.ManualEntitySelectMenu"/>
         </action-row>
         <action-row>
-            <string-select-ref class="de.swiftbyte.test.TestStringSelectMenu"/>
+            <string-select-ref class="de.swiftbyte.jdaboot.manual.ManualStringSelectMenu"/>
         </action-row>
         <media-gallery>
             <item url="https://picsum.photos/200/300"/>

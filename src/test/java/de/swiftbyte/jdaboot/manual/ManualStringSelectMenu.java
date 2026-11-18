@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectMenuDefinition;
 import de.swiftbyte.jdaboot.annotation.interaction.selection.StringSelectOption;
@@ -18,7 +18,7 @@ import java.util.Map;
         placeholder = "Placeholder",
         maxOptions = 2
 )
-public class TestStringSelectMenu extends StringSelectMenuExecutor {
+public class ManualStringSelectMenu extends StringSelectMenuExecutor {
 
     @Override
     public void onSelectMenuSubmit(@NonNull StringSelectInteractionEvent event, @NonNull Map<String, String> variables) {

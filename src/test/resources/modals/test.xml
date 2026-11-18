@@ -2,7 +2,7 @@
 <modals xmlns="https://jda-boot.swiftbyte.de/schema/modals"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://jda-boot.swiftbyte.de/schema/modals modals.xsd">
-    <layout id="test_modal_layout" modal-class="de.swiftbyte.test.TestModal" title="${title} Modal">
+    <layout id="test_modal_layout" modal-class="de.swiftbyte.jdaboot.manual.ManualModal" title="${title} Modal">
         <label text="Confirmation" description="Confirm the selection">
             <checkbox-group id="confirmation" required="true">
                 <option label="confirmation" value="confirmation"/>

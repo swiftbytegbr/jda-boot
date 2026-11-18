@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 
 import de.swiftbyte.jdaboot.annotation.interaction.modal.ModalDefinition;
@@ -37,7 +37,7 @@ import java.util.Map;
                 )
         }
 )
-public class TestModal extends ModalExecutor {
+public class ManualModal extends ModalExecutor {
 
     @Override
     public void onModalSubmit(@NonNull ModalInteractionEvent event, @NonNull Map<String, String> variables) {

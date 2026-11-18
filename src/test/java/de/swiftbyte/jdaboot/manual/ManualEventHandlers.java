@@ -1,11 +1,11 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.EventHandler;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 
-public class TestEvent {
+public class ManualEventHandlers {
 
     @Embed(
             title = "${test}Test",

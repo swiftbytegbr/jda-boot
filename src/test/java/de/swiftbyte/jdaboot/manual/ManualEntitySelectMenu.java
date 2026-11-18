@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.interaction.selection.EntitySelectMenuDefinition;
 import de.swiftbyte.jdaboot.interaction.selection.EntitySelectMenuExecutor;
@@ -11,7 +11,7 @@ import java.util.Map;
         placeholder = "Placeholder",
         enableChannel = true
 )
-public class TestEntitySelectMenu extends EntitySelectMenuExecutor {
+public class ManualEntitySelectMenu extends EntitySelectMenuExecutor {
 
     @Override
     public void onSelectMenuSubmit(@NonNull EntitySelectInteractionEvent event, @NonNull Map<String, String> variables) {

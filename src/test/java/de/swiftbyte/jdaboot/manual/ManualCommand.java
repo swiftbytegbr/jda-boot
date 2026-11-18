@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
 import de.swiftbyte.jdaboot.annotation.embed.EmbedAuthor;
@@ -37,7 +37,7 @@ import java.util.List;
                         required = true)
         }
 )
-public class TestCommand extends SlashCommandExecutor {
+public class ManualCommand extends SlashCommandExecutor {
 
     @Embed(
             basedOn = "testEmbed",
@@ -55,13 +55,13 @@ public class TestCommand extends SlashCommandExecutor {
     @ComponentByPath("test.xml")
     private TemplateComponentV2 component;
 
-    @ButtonByClass(TestButton.class)
+    @ButtonByClass(ManualButton.class)
     public TemplateButton button;
 
-    @StringSelectMenuByClass(TestStringSelectMenu.class)
+    @StringSelectMenuByClass(ManualStringSelectMenu.class)
     private TemplateSelectMenu menu;
 
-    @EntitySelectMenuByClass(TestEntitySelectMenu.class)
+    @EntitySelectMenuByClass(ManualEntitySelectMenu.class)
     private TemplateSelectMenu menu2;
 
     @Override

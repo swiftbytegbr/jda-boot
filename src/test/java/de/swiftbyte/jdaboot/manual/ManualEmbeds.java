@@ -1,4 +1,4 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import de.swiftbyte.jdaboot.annotation.DefaultVariable;
 import de.swiftbyte.jdaboot.annotation.embed.Embed;
@@ -8,7 +8,7 @@ import de.swiftbyte.jdaboot.annotation.embed.EmbedFooter;
 import de.swiftbyte.jdaboot.embed.EmbedColor;
 import de.swiftbyte.jdaboot.embed.TemplateEmbed;
 
-public class EmbedClass {
+public class ManualEmbeds {
 
     @Embed(
             basedOn = "baseEmbed",

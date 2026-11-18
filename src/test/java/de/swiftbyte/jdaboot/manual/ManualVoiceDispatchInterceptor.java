@@ -1,11 +1,11 @@
-package de.swiftbyte.test;
+package de.swiftbyte.jdaboot.manual;
 
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import org.jetbrains.annotations.NotNull;
 
-public class TestVoiceDispatchInterceptor implements VoiceDispatchInterceptor {
+public class ManualVoiceDispatchInterceptor implements VoiceDispatchInterceptor {
 
-    public TestVoiceDispatchInterceptor() {
+    public ManualVoiceDispatchInterceptor() {
         System.out.println("VoiceDispatchInterceptor created.");
     }
 
